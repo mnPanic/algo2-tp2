@@ -355,169 +355,25 @@ Debemos observar que este invariante no es magico, sino que es una declaraci�n
 
   \InterfazFuncion{nuevoMapa}{\In{n}{nat}}{mapa}%
   {$res \igobs nuevaHab(n)$}%
-  [TODO]
+  [$\Theta(n^2)$]
   [genera un mapa de tamano n x n.]
 
-  \InterfazFuncion{ocupar}
-    {\In{m}{mapa}, \In{c}{$tupla(int, int)$}}
-    {mapa}
-    {c \in casilleros(m) \yluego libre(m, c) \wedge }
-
-  \InterfazFuncion{AgregarAdelante}{\Inout{l}{lista($\alpha$)}, \In{a}{$\alpha$}}{itLista($\alpha$}
-  [$l \igobs l_0$]
-  {$l \igobs \secuencia{a}[l_0]$ $\land$ $res$ $=$ CrearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($res$) $=$ $l$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ como primer elemento de la lista.  Retorna un iterador a $l$, de forma tal que Siguiente devuelva $a$.]
-  [el elemento $a$ agrega por copia. El iterador se invalida si y s�lo si se elimina el elemento siguiente del iterador sin utilizar la funci�n \NombreFuncion{EliminarSiguiente}.]
-
-  \InterfazFuncion{AgregarAtras}{\Inout{l}{lista($\alpha$)}, \In{a}{$\alpha$}}{itLista($\alpha$)}
-  [$l \igobs l_0$]
-  {$l \igobs l_0 \circ a$ $\land$ $res$ $=$ CrearItBi($l_0$, $a$) $\land$ alias(SecuSuby($res$) $=$ $l$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ como �ltimo elemento de la lista. Retorna un iterador a $l$, de forma tal que Siguiente devuelva $a$.]
-  [el elemento $a$ se agrega por copia. El iterador se invalida si y s�lo si se elimina el elemento siguiente del iterador sin utilizar la funci�n \NombreFuncion{EliminarSiguiente}.]
-
-  \InterfazFuncion{EsVac�a?}{\In{l}{lista($\alpha$)}}{bool}
-  {$res$ $\igobs$ vacia?($l$)}
+  \InterfazFuncion{ocupar}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{mapa}%
+  [$c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]%
+  {$res$ $\igobs$ $ocupar(c,h)$}%
   [$\Theta(1)$]
-  [devuelve \texttt{true} si y s�lo si $l$ no contiene elementos]
+  [ocupa una posicion del mapa siempre y cuando este no deje de ser conexo.]
 
-  \InterfazFuncion{Fin}{\Inout{l}{lista($\alpha$)}}{}
-  [$l \igobs l_0$ $\land$ $\lnot$vac�a?($l$)]
-  {$l$ $\igobs$ fin($l_0$)}
+  \InterfazFuncion{tam}{\In{m}{mapa}}{nat}%
+  {$res$ $\igobs$ $tam(m)$}%
   [$\Theta(1)$]
-  [elimina el primer elemento de $l$]
-
-  \InterfazFuncion{Comienzo}{\Inout{l}{lista($\alpha$)}}{}
-  [$l \igobs l_0$ $\land$ $\lnot$vac�a?($l$)]
-  {$l$ $\igobs$ com($l_0$)}
+  [devuelve el tamano del mapa.]
+    
+  \InterfazFuncion{libre}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{bool}%
+  [$c \in casilleros(m)$]%
+  {$res$ $\igobs$ $libre(c, m)$}
   [$\Theta(1)$]
-  [elimina el �ltimo elemento de $l$]
-
-  \InterfazFuncion{Primero}{\In{l}{lista($\alpha$)}}{$\alpha$}
-  [$\lnot$vac�a?($l$)]
-  {alias($res$ $\igobs$ prim($l$))}
-  [$\Theta(1)$]
-  [devuelve el primer elemento de la lista.]
-  [$res$ es modificable si y s�lo si $l$ es modificable.]
-
-  \InterfazFuncion{Ultimo}{\In{l}{lista($\alpha$)}}{$\alpha$}
-  [$\lnot$vac�a?($l$)]
-  {alias($res$ $\igobs$ ult($l$))}
-  [$\Theta(1)$]
-  [devuelve el �ltimo elemento de la lista.]
-  [$res$ es modificable si y s�lo si $l$ es modificable.]
-
-
-  \InterfazFuncion{Longitud}{\In{l}{lista($\alpha$)}}{nat}
-  {$res$ $\igobs$ long($l$)}
-  [$\Theta(1)$]
-  [devuelve la cantidad de elementos que tiene la lista.]
-
-
-  \InterfazFuncion{$\bullet$[$\bullet$]}{\In{l}{lista($\alpha$)}, \In{i}{nat}}{$\alpha$}
-  [$i$ $<$ long($l$)]
-  {alias($res$ $\igobs$ iesimo($l$, $i$))}
-  [$\Theta(i)$]
-  [devuelve el elemento que se encuentra en la $i$-�sima posici�n de la lista en base $0$.  Es decir, {$l[i]$} devuelve el elemento que se encuentra en la posici�n $i+1$.]  
-  [$res$ es modificable si y s�lo si $l$ es modificable.]
-
-  \InterfazFuncion{Copiar}{\In{l}{lista($\alpha$)}}{lista($\alpha$)}
-  {$res \igobs l$}
-  [{$\displaystyle\Theta\left(\sum_{i=1}^{\ell}copy({l[i]})\right)$, donde $\ell$ $=$ long($l$).}]
-  [genera una copia nueva de la lista.]
-
-  \InterfazFuncion{$\bullet = \bullet$}{\In{l_1}{lista($\alpha$)}, \In{l_2}{lista($\alpha$)}}{bool}
-  {$res \igobs l_1 = l_2$}
-  [{$\displaystyle\Theta\left(\sum_{i=1}^{\ell}{equal(l_1[i],l_2[i])}\right)$, donde $\ell = \min\{\text{long}(l_1),\text{long}(l_2)\}$}.]
-  [compara $l_1$ y $l_2$ por igualdad, cuando $\alpha$ posee operaci�n de igualdad.]
-  []%no hay aliasing
-  [{\parbox[t]{\textwidth-3cm}{%
-    \InterfazFuncion{$\bullet = \bullet$}{\In{a_1}{$\alpha$}, \In{a_2}{$\alpha$}}{bool}
-    {$res \igobs (a_1 = a_2)$}
-    [$\Theta(equal(a_1, a_2))$]
-    [funci�n de igualdad de $\alpha$'s]
-  }}]
-
-  \Titulo{Operaciones del iterador}
-
-  El iterador que presentamos permite modificar la lista recorrida.  Sin embargo, cuando la lista es no modificable, no se pueden utilizar las funciones que la modificar�an, teniendo en cuenta el aliasing existente entre el iterador y la lista iterada.  Cuando la lista es modificable, vamos a decir que el iterador generado es modificable.
-
-  \InterfazFuncion{CrearIt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi(\secuencia{}, $l$) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Siguiente} se obtenga el primer elemento de $l$.]
-  [el iterador se invalida si y s�lo si se elimina el elemento siguiente del iterador sin utilizar la funci�n \NombreFuncion{EliminarSiguiente}.]
-
-  \InterfazFuncion{CrearItUlt}{\In{l}{lista($\alpha$)}}{itLista($\alpha$)}
-  {$res$ $\igobs$ crearItBi($l$, \secuencia{}) $\land$ alias(SecuSuby($it$) $=$ $l$)}
-  [$\Theta(1)$]
-  [crea un iterador bidireccional de la lista, de forma tal que al pedir \NombreFuncion{Anterior} se obtenga el �ltimo elemento de $l$.]  
-  [el iterador se invalida si y s�lo si se elimina el elemento siguiente del iterador sin utilizar la funci�n \NombreFuncion{EliminarSiguiente}.]
-
-  \InterfazFuncion{HaySiguiente}{\In{it}{itLista($\alpha$)}}{bool}
-  {$res$ $\igobs$ haySiguiente?($it$)}
-  [$\Theta(1)$]
-  [devuelve \texttt{true} si y s�lo si en el iterador todav�a quedan elementos para avanzar.]
-
-  \InterfazFuncion{HayAnterior}{\In{it}{itLista($\alpha$)}}{bool}
-  {$res$ $\igobs$ hayAnterior?($it$)}
-  [$\Theta(1)$]
-  [devuelve \texttt{true} si y s�lo si en el iterador todav�a quedan elementos para retroceder.]
-
-  \InterfazFuncion{Siguiente}{\In{it}{itLista($\alpha$)}}{$\alpha$}
-  [HaySiguiente?($it$)]
-  {alias($res$ $\igobs$ Siguiente($it$))}
-  [$\Theta(1)$]
-  [devuelve el elemento siguiente a la posici�n del iterador.]
-  [$res$ es modificable si y s�lo si $it$ es modificable.]
-
-  \InterfazFuncion{Anterior}{\In{it}{itLista($\alpha$)}}{$\alpha$}
-  [HayAnterior?($it$)]
-  {alias($res$ $\igobs$ Anterior($it$))}
-  [$\Theta(1)$]
-  [devuelve el elemento anterior del iterador.]
-  [$res$ es modificable si y s�lo si $it$ es modificable.]
-
-
-  \InterfazFuncion{Avanzar}{\Inout{it}{itLista($\alpha$)}}{}
-  [$it = it_0$ $\land$ HaySiguiente?($it$)]
-  {$it$ $\igobs$ Avanzar($it_0$)}
-  [$\Theta(1)$]
-  [avanza el iterador a la posici�n siguiente.]
-
-  \InterfazFuncion{Retroceder}{\Inout{it}{itLista($\alpha$)}}{}
-  [$it = it_0$ $\land$ HayAnterior?($it$)]
-  {$it$ $\igobs$ Retroceder($it_0$)}
-  [$\Theta(1)$]
-  [retrocede el iterador a la posici�n anterior.]
-
-  \InterfazFuncion{EliminarSiguiente}{\Inout{it}{itLista($\alpha$)}}{}
-  [$it = it_0$ $\land$ HaySiguiente?($it$)]
-  {$it$ $\igobs$ EliminarSiguiente($it_0$)}
-  [$\Theta(1)$]
-  [elimina de la lista iterada el valor que se encuentra en la posici�n siguiente del iterador.]
-
-  \InterfazFuncion{EliminarAnterior}{\Inout{it}{itLista($\alpha$)}}{}
-  [$it = it_0$ $\land$ HayAnterior?($it$)]
-  {$it$ $\igobs$ EliminarAnterior($it_0$)}
-  [$\Theta(1)$]
-  [elimina de la lista iterada el valor que se encuentra en la posici�n anterior del iterador.]
-
-  \InterfazFuncion{AgregarComoSiguiente}{\Inout{it}{itLista($\alpha$)}, \In{a}{$\alpha$}}{}
-  [$it = it_0$]
-  {$it$ $\igobs$ AgregarComoSiguiente($it_0$, $a$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ a la lista iterada, entre las posiciones anterior y siguiente del iterador, dejando al iterador posicionado de forma tal que al llamar a \NombreFuncion{Siguiente} se obtenga $a$.]
-  [el elemento $a$ se agrega por copia.]
-
-
-  \InterfazFuncion{AgregarComoAnterior}{\Inout{it}{itLista($\alpha$)}, \In{a}{$\alpha$}}{}
-  [$it = it_0$]
-  {$it$ $\igobs$ AgregarComoAnterior($it_0$, $a$)}
-  [$\Theta(copy(a))$]
-  [agrega el elemento $a$ a la lista iterada, entre las posiciones anterior y siguiente del iterador, dejando al iterador posicionado de forma tal que al llamar a \NombreFuncion{Anterior} se obtenga $a$.]
-  [el elemento $a$ se agrega por copia.]
+  [devuelve si un elemento esta ocupado.]
 
 \end{Interfaz}
 
@@ -527,16 +383,10 @@ Debemos observar que este invariante no es magico, sino que es una declaraci�n
 
   El objetivo de este m�dulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del �ltimo apunta al primero y el anterior del primero apunta al �ltimo.  La estructura de representaci�n, su invariante de representaci�n y su funci�n de abstracci�n son las siguientes.
 
-  \begin{Estructura}{lista$(\alpha)$}[lst]
-    \begin{Tupla}[lst]
-      \tupItem{primero}{puntero(nodo)}%
-      \tupItem{longitud}{nat}%
-    \end{Tupla}
-
-    \begin{Tupla}[nodo]
-      \tupItem{dato}{$\alpha$}%
-      \tupItem{anterior}{puntero(nodo)}%
-      \tupItem{siguiente}{puntero(nodo)}%
+  \begin{Estructura}{mapa}[m]
+    \begin{Tupla}[m]
+      \tupItem{tamano}{nat}%
+      \tupItem{casilleros}{vec(vec(bool))}%
     \end{Tupla}
   \end{Estructura}
 
@@ -545,24 +395,8 @@ Debemos observar que este invariante no es magico, sino que es una declaraci�n
     ($\forall i$: nat)(Nodo($l$,$i$)\DRef siguiente $=$ Nodo($l$,$i+1$)\DRef anterior) $\land$ \\
     ($\forall i$: nat)($1 \leq i <$ $l$.longitud $\implies$ Nodo($l$,$i$) $\neq$ $l$.primero)}\mbox{}
 
-  ~      
-
-  \tadOperacion{Nodo}{lst/l,nat}{puntero(nodo)}{$l$.primero $\neq$ NULL}
-  \tadAxioma{Nodo($l$,$i$)}{\IF $i = 0$ THEN $l$.primero ELSE Nodo(FinLst($l$), $i-1$) FI}
-
-  ~
-
-  \tadOperacion{FinLst}{lst}{lst}{}
-  \tadAxioma{FinLst($l$)}{Lst($l$.primero\DRef siguiente, $l$.longitud $-$ $\min$\{$l$.longitud, $1$\})}
-
-  ~
-
-  \tadOperacion{Lst}{puntero(nodo),nat}{lst}{}
-  \tadAxioma{Lst($p,n$)}{$\langle p, n\rangle$}
-
-  ~
  
-  \AbsFc[lst]{secu($\alpha$)}[l]{\IF $l$.longitud $=$ $0$ THEN \secuencia{} ELSE \secuencia{$l$.primero\DRef dato}[Abs(FinLst($l$))] FI}
+  \AbsFc[mapa]{hab}[m]{$m.tamano$ $\igobs$ $tam(h)$ $\yluego$ ($\forall t$: tuple(nat,nat))($0 \leq$ $\Pi_1(t)$, $\Pi_2(t) < m.tamano - 1$ $\impluego$ libre(m, t) $\igobs$ $m.casilleros[\Pi_1(t)][\Pi_2(t)]$)}
 
   \Titulo{Representaci�n del iterador}
 
