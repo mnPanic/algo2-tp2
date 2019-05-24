@@ -343,18 +343,36 @@ estamos diciendo que $s$ y $c$ comparten la misma memoria de forma tal que cualq
 
 Debemos observar que este invariante no es magico, sino que es una declaración como cualquier otra, y el programado debe asegurarse que este invariante se cumpla.  En particular, en el ejemplo anterior, no deberiamos permitir la inserción de elementos repetido en $s$, ya que dejaría de ser una posible permutación de un conjunto.
 
-\section{Módulo Lista Enlazada($\alpha$)}
+\section{Módulo Mapa}
 
 
 \begin{Interfaz}
   
   \textbf{generos}: \TipoVariable{mapa}.
 
-  \textbf{se explica con}: \tadNombre{Secuencia$(\alpha)$}, \tadNombre{Iterador Bidireccional($\alpha$)}.
-
-  \textbf{géneros}: \TipoVariable{lista$(\alpha)$}, \TipoVariable{itLista($\alpha$)}.
+  \textbf{se explica con}: \tadNombre{Habitación}.
 
   \Titulo{Operaciones básicas de lista}
+  \InterfazFuncion{nuevoMapa}{\In{n}{nat}}{mapa}%
+  {$res \igobs nuevaHab(n)$}%
+  [$\Theta(n^2)$]
+  [genera un mapa de tamano n x n.]
+
+  \InterfazFuncion{ocupar}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{mapa}%
+  [$c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]%
+  {$res$ $\igobs$ $ocupar(c,h)$}%
+  [$\Theta(1)$]
+  [ocupa una posicion del mapa siempre y cuando este no deje de ser conexo.]
+
+  \InterfazFuncion{tam}{\In{m}{mapa}}{nat}%
+  {$res$ $\igobs$ $tam(m)$}%
+  [devuelve el tamano del mapa.]
+    
+  \InterfazFuncion{libre}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{bool}%
+  [$c \in casilleros(m)$]%
+  {$res$ $\igobs$ $libre(c, m)$}
+  [$\Theta(1)$]
+  [devuelve si un elemento esta ocupado.]
 
 \end{Interfaz}
 
