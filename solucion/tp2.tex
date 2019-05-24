@@ -359,8 +359,9 @@ Debemos observar que este invariante no es magico, sino que es una declaración c
   [genera un mapa de tamano n x n.]
 
   \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{c}{$tupla(int, int)$}}{}%
-  [$c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]%
-  {$res$ $\igobs$ $ocupar(c,h)$}%
+  [$m \igobs m_0$ $\land$ $c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]
+  %lo de m = m0 es igualdad observacional, no?
+  {$m$ $\igobs$ $ocupar(c,m_0)$}%
   [$\Theta(1)$]
   [ocupa una posicion del mapa siempre y cuando este no deje de ser conexo.]
 
@@ -379,7 +380,7 @@ Debemos observar que este invariante no es magico, sino que es una declaración c
 
 \begin{Representacion}
   
-  \Titulo{Representación de la lista}
+  \Titulo{Representación del mapa}
 
   El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
@@ -390,7 +391,7 @@ Debemos observar que este invariante no es magico, sino que es una declaración c
     \end{Tupla}
   \end{Estructura}
 
-  \Rep[lst][l]{
+  \Rep[mapa][m]{
     La longitud de m.casilleros es igual a tamano $\land$\\
     La longitud del vector m.casilleros es igual a la de todo otro vector dentro de el) $\land$\\
     Es conexa % Trivial
@@ -422,27 +423,24 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 \end{algorithm}
 
 \begin{algorithm}[H]{\textbf{iOcupar}(\Inout{m}{mapa}, \In{c}{tupla(int, int)})}
-	\begin{algorithmic}
-			 \State $it \gets CrearIt(l)$ 				\Comment $\Theta(1)$
-			 \State $AgregarComoSiguiente(it, a)$	\Comment $\Theta(copy(a))$
-			 \State $res \gets it$					\Comment $\Theta(1)$
+  \begin{algorithmic}
+			 \State $m[\Pi_1(c)][\Pi_2(c)] \gets true$ 				\Comment $\Theta(1)$
 
 			\medskip
-			\Statex \underline{Complejidad:} $\Theta(copy(a))$
-			\Statex \underline{Justificación:} El algoritmo tiene llamadas a funciones con costo $\Theta(1)$ y $\Theta(copy(a))$. Aplicando álgebra de órdenes: \\ $\Theta(1)$ + $\Theta(1)$ + $\Theta(copy(a))$ = $\Theta(copy(a))$
+			\Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} El acceso a una posición de un vector y su modificación es $\Theta(1)$ (TURBIO)
+      %%%%%%%%%%%%% OJO, LA FUNCIÓN [] DEL MÓDULO VECTOR PERMITE MODIFICAR? (VECTOR ES ARRAY DE PUNTEROS) %%%%%%%%%%%%
     	\end{algorithmic}
 \end{algorithm}
 
 
-\begin{algorithm}[H]{\textbf{iAgregarAtras}(\Inout{l}{lst}, \In{a}{$\alpha$}) $\to$ $res$ : $iter$}
+\begin{algorithm}[H]{\textbf{iLibre}(\In{m}{mapa}, \In{c}{tupla(int, int)}) $\to$ $res$ : bool}
 	\begin{algorithmic}[1]
-			 \State $it \gets CrearItUlt(l)$	\Comment $\Theta(1)$
-			 \State $AgregarComoSiguiente(it, a)$	\Comment $\Theta(copy(a))$
-			 \State $res \gets it$	\Comment $\Theta(1)$
+			 \State $res \gets m[\Pi_1(c)][\Pi_2(c)]$	\Comment $\Theta(1)$
 
 			\medskip
-			\Statex \underline{Complejidad:} $\Theta(copy(a))$
-			\Statex \underline{Justificación:} El algoritmo tiene llamadas a funciones con costo $\Theta(1)$ y $\Theta(copy(a))$. Aplicando álgebra de órdenes:  $\Theta(1)$+$\Theta(copy(a))$+$\Theta(1)$ =  $\Theta(copy(a))$
+			\Statex \underline{Complejidad:} $\Theta(1)$
+			\Statex \underline{Justificación:} El acceso a una posición de un vector es $\Theta(1)$
     	\end{algorithmic}
 \end{algorithm}
 	
