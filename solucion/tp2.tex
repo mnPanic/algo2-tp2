@@ -445,21 +445,22 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 	
 
 \begin{algorithm}[H]{\textbf{iNuevoMapa}(\In{n}{nat}) $\to$ $res$ : $mapa$}
-	\begin{algorithmic}[1]
+  \begin{algorithmic}[1]
+      \State $m.tamano \gets n$                   \Comment $\Theta(1)$
       \State $v \gets Vacia()$	                  \Comment $\Theta(1)$
       \State $i \gets 0$                          \Comment $\Theta(1)$
-      \While{$i < n$}
-        \State $v.AgregarAtras(false)$            \Comment $O(1)$
-        \State $i \gets i + 1$                    \Comment $O(1)$
+      \While{$i < n$}                             \Comment $O(n)$
+        \State $v.AgregarAtras(false)$
+        \State $i \gets i + 1$
       \EndWhile
       \State $i \gets 0$
-      \While{$i < n$}                             \Comment $\Theta(n^2)$
-        \State $res.AgregarAtras(v.Copiar())$     \Comment $\Theta(n)$
+      \While{$i < n$}                             \Comment $O(n^2)$
+        \State $res.AgregarAtras(v.Copiar())$     \Comment $O(n)$
         \State $i \gets i + 1$                    \Comment $O(1)$
       \EndWhile
       \medskip
       \Statex \underline{Complejidad:} $\Theta(n^2)$
-      \Statex \underline{Justificación:} Copiar un booleano es $\Theta(1)$, un vector de n bools posiciones $\Theta(n)$, entonces agregar n veces la copia del vector es $\Theta(n^2))$
+      \Statex \underline{Justificación:} Copiar un vector de n booleanos es $O(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $O(n^2)$
     	\end{algorithmic}
 \end{algorithm}
 
