@@ -362,4 +362,128 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
 \newpage
 
+\section{Módulo Dirección}
+
+Aqui va la descripción
+
+\begin{Interfaz}
+  \textbf{generos}: \TipoVariable{dir}.
+
+  \textbf{se explica con}: \tadNombre{Dirección}.
+
+  \Titulo{Operaciones básicas de Dirección}
+
+  \InterfazFuncion{arriba}{}{dir}%
+  {$res \igobs  \uparrow$}%
+  [$\Theta(1)$]
+  [genera la dirección arriba.]
+
+  \InterfazFuncion{abajo}{}{dir}%
+  {$res \igobs  \downarrow$}%
+  [$\Theta(1)$]
+  [genera la dirección abajo.]
+
+  \InterfazFuncion{izquierda}{}{dir}%
+  {$res \igobs  \leftarrow$}%
+  [$\Theta(1)$]
+  [genera la dirección izquierda.]
+
+  \InterfazFuncion{derecha}{}{dir}%
+  {$res \igobs  \rightarrow$}%
+  [$\Theta(1)$]
+  [genera la dirección derecha.]
+
+  \InterfazFuncion{invertir}{\Inout{d}{dir}}{}
+  {$res \igobs invertir(d)$}
+  [$\Theta(1)$]
+  [invierte la dirección.]
+
+\end{Interfaz}
+
+\begin{Representacion}
+  
+  \Titulo{Representación de Dirección}
+
+  \begin{Estructura}
+    {dir}[string]
+  \end{Estructura}
+
+  \Rep[dir][d]{\\
+    d \igobs $"arriba"$    $\lor$\\
+    d \igobs $"abajo"$     $\lor$\\
+    d \igobs $"izquierda"$ $\lor$\\
+    d \igobs $"derecha"$
+  }
+  
+  \mbox{}
+
+  \Abs[dir]{dir}[d]{d$_{tad}$}{(d \igobs $"arriba"$  $\land$ d$_{tad}$ \igobs $\uparrow$) $\lor$\\
+  (d \igobs $"abajo"$     $\land$ d$_{tad}$ \igobs $\uparrow$)   $\lor$\\
+  (d \igobs $"izquierda"$ $\land$ d$_{tad}$ \igobs $\leftarrow$) $\lor$\\
+  (d \igobs $"derecha"$   $\land$ d$_{tad}$ \igobs $\rightarrow$)
+  }
+
+\end{Representacion}
+
+\bigskip
+
+\begin{Algoritmos}
+  \Titulo{Algoritmos del módulo}
+  \medskip
+  
+  \begin{algorithm}[H]{\textbf{iArriba}() $\to$ $res$ : dir}
+    	\begin{algorithmic}[1]
+       \State $res \gets "arriba"$ \Comment $\Theta(1)$
+			\medskip
+			\Statex \underline{Complejidad:} $\Theta(1)$
+    	\end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iAbajo}() $\to$ $res$ : dir}
+    \begin{algorithmic}[1]
+     \State $res \gets "abajo"$ \Comment $\Theta(1)$
+    \medskip
+    \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+  
+  \begin{algorithm}[H]{\textbf{iIzquierda}() $\to$ $res$ : dir}
+    \begin{algorithmic}[1]
+     \State $res \gets "izquierda"$ \Comment $\Theta(1)$
+    \medskip
+    \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+
+  \begin{algorithm}[H]{\textbf{iDerecha}() $\to$ $res$ : dir}
+    \begin{algorithmic}[1]
+     \State $res \gets "derecha"$ \Comment $\Theta(1)$
+    \medskip
+    \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iInvertir}(\Inout{d}{dir})}
+    \begin{algorithmic}[1]
+     \State $switch(d)$         \Comment $\Theta(1)$
+     \State $case\ "arriba":$
+     \State $\tab d \gets "abajo"$
+     \State $case\ "abajo":$
+     \State $\tab d \gets "arriba"$ %skere
+     \State $case\ "izquierda":$
+     \State $\tab d \gets "derecha"$
+     \State $case\ "derecha":$
+     \State $\tab d \gets "izquierda"$
+
+    \medskip
+    \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+\end{Algoritmos}
+
+\newpage
+
+
 \end{document}
