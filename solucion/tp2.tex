@@ -235,6 +235,91 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
 \newpage
 
+\section{Módulo Juego}
+
+  Aqui va la descripción
+
+  \begin{Interfaz}
+    \textbf{generos}: \TipoVariable{juego}.
+    \textbf{se explica con}: \tadNombre{Juego}.
+
+    \Titulo{Operaciones básicas de Juego}
+    
+    % Generadores
+    \InterfazFuncion{nuevoJuego}{\In{m}{mapa}, \In{pjs}{conj(string)}, \In{eventosFan}{vector(evento))}}{juego}%
+    [$\neg vacio(pjs) \land (\forall e: evento) (e \in eventosFan \impluego e.pos \in posiciones(m))$]
+    {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
+    [$\Theta(?)$]
+    [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
+
+    \InterfazFuncion{pasar}{\In{j}{juego}}{juego}%
+    {$res \igobs pasar(j)$}%
+    [$\Theta(?)$]
+    [actualiza sin acción de algún jugador.]
+
+    \InterfazFuncion{step}{\In{j}{juego}, \In{a}{accion}, \In{pj}{string}}{juego}%
+    [$pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
+    {$res \igobs pasar(j)$}%
+    [$\Theta(?)$]
+    [actualiza con la acción $a$ del jugador $pj$.]
+
+  \end{Interfaz}
+
+  \begin{Representacion}
+    
+    \Titulo{Representación de Juego}
+    \begin{Estructura}{juego}[j]
+      \begin{Tupla}[j]
+        \tupItem{paso}{nat}\\
+        \tupItem{ronda}{nat}\\
+        \tupItem{jugadores}{diccTrie(string, infoPJ)}\\
+        \tupItem{jugadoresVivos}{conj(puntero(infoPJ))}\\
+        \tupItem{fantasmas}{vector(infoFan)}\\
+        \tupItem{fantasmasVivos}{conj(puntero(infoFan))}\\
+        \tupItem{fantasmaEspecial}{nat}
+      \end{Tupla}
+      
+      \mbox{}
+
+      \begin{Tupla}[infoPJ]
+        \tupItem{identidad}{string}
+        \tupItem{eventos}{vector(evento)}
+        \tupItem{vivo?}{bool}
+      \end{Tupla}
+
+      \begin{Tupla}[infoFan]
+        \tupItem{eventos}{vector(evento)}        
+      \end{Tupla}
+    \end{Estructura}
+
+    \Rep[mapa][m]{}
+    
+    \mbox{}
+    \Abs[mapa]{hab}[m]{h}{}
+
+  \end{Representacion}
+
+  \bigskip
+
+  \begin{Algoritmos}
+
+  En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
+
+  \medskip
+    
+  \Titulo{Algoritmos del módulo}
+      \medskip
+    
+  \begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
+        \begin{algorithmic}[1]
+        \State $res \gets m.tamano$ \Comment $\Theta(1)$
+        \medskip
+        \Statex \underline{Complejidad:} $\Theta(1)$
+        \end{algorithmic}
+  \end{algorithm}
+  \end{Algoritmos}
+
+\newpage
 
 \section{Módulo Mapa}
 
@@ -519,7 +604,7 @@ Aqui va la descripción
 
 \begin{Representacion}
   
-  \Titulo{Representación de X}
+  \Titulo{Representación de Acción}
 
   El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
