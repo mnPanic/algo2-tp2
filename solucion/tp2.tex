@@ -59,6 +59,9 @@
 \let\ModificadorArgumento=\textbf
 \newcommand{\res}{$res$\xspace}
 \newcommand{\tab}{\hspace*{7mm}}
+\newcommand{\ttab}{\tab \tab}
+\newcommand{\tttab}{\tab \tab \tab}
+\newcommand{\ttttab}{\tab \tab \tab \tab}
 
 \newcommandx{\TipoFuncion}[3]{%
   \NombreFuncion{#1}(#2) \ifx#3\empty\else $\to$ \res\,: \TipoVariable{#3}\fi%
@@ -263,6 +266,60 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
     [$\Theta(?)$]
     [actualiza con la acción $a$ del jugador $pj$.]
 
+
+    \InterfazFuncion{jugadoresVivos}{\In{j}{juego}}{conj(puntero(infoPJ))}%
+    {$(\forall p : puntero(infoPJ)) (p \in res \impluego\\
+    \tttab (p\rightarrow id \in jugadores(j)) \yluego \\
+    \tttab (p\rightarrow vivo? \land jugadorVivo(p\rightarrow id, j)) \land \\
+    \tttab ((\forall e : evento) (e \in p\rightarrow eventos \impluego \\
+    \ttttab (e.pos \igobs posJugador(p\rightarrow id, j)) \land \\
+    \ttttab (e.dir \igobs dirJugador(p\rightarrow id, j))) 
+    )$}%
+    [$\Theta(1)$]
+    [devuelve un conjunto con punteros a la información de los personajes que están vivos.]
+    [res es no modificable.]
+  
+    \InterfazFuncion{fantasmasVivos}{\In{j}{juego}}{conj(infoFan)}%
+    {$fantasmaValido(j, res)$}%
+    [$\Theta(1)$]
+    [devuelve un conjunto referencias a la información de los fantasmas que están vivos.]
+    [las referencias son no modificables.]
+
+    \InterfazFuncion{fantasmaEspecial}{\In{j}{juego}}{infoFan}
+    {$res \igobs fantasmaEspecial(j)$}
+    [$\Theta(1)$]
+    [devuelve el fantasma especial.]
+    [res es una referencia no modificable.]
+
+    \InterfazFuncion{fantasmasVivosQueDisparan}{\In{j}{juego}}{conj(infoFan)}
+    {$fantasmaValido(j, res) \yluego\\
+    \ttab ((\forall f : infoFan) (f \in res \impluego disparando(f.eventos, step(j)))$}
+    [$O(\#fv)$]
+    [devuelve un conjunto con punteros a la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
+    [res es un conjunto de referencias no modificables.]
+
+    \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
+    [$pj \in jugadores(j)$]
+    {$res \igobs jugadorVivo(pj, j)$}
+    [$O(|j|)$]
+    [devuelve si un jugador está vivo]
+
+    \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
+    {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
+    [$O(\#fv * m)$]
+    [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas en la última *ronda* (TODO: ronda o paso?).]
+
+
+    Predicados auxiliares:
+
+    fantasmaValido(j, fs):\\
+    $\tab (\forall f : infoFan) (f \in res \impluego\\
+    \ttab (f.eventos \in fantasmas(j)) \yluego \\
+    \ttab (fantasmaVivo(f.eventos, j)) \land \\
+    \ttab ((\forall e : evento) (e \in f.eventos \impluego \\
+    \tttab (e.pos \igobs posFantasma(f.eventos, j)) \land \\
+    \tttab (e.dir \igobs dirFantasma(f.eventos, j))))$
+
   \end{Interfaz}
 
   \begin{Representacion}
@@ -272,17 +329,18 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
       \begin{Tupla}[j]
         \tupItem{paso}{nat}\\
         \tupItem{ronda}{nat}\\
+        \tupItem{mapa}{m}\\
+        \tupItem{mapaDisparos}{arreglo(arreglo(nat))}\\
         \tupItem{jugadores}{diccTrie(string, infoPJ)}\\
         \tupItem{jugadoresVivos}{conj(puntero(infoPJ))}\\
         \tupItem{fantasmas}{vector(infoFan)}\\
-        \tupItem{fantasmasVivos}{conj(puntero(infoFan))}\\
+        \tupItem{fantasmasVivos}{conj(nat)}\\
         \tupItem{fantasmaEspecial}{nat}
       \end{Tupla}
       
       \mbox{}
 
       \begin{Tupla}[infoPJ]
-        \tupItem{identidad}{string}
         \tupItem{eventos}{vector(evento)}
         \tupItem{vivo?}{bool}
       \end{Tupla}
