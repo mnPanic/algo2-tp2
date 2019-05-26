@@ -1,2 +1,8 @@
 Vector
     Complejidad de AgregarAtras
+
+Puntero
+    Se puede devolver un puntero no modificable?
+    contexto: JugadoresVivos
+
+Predicados auxiliares para las pre y pos?
