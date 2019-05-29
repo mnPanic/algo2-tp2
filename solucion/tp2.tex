@@ -176,6 +176,7 @@
 
 
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
+\newcommand{\BigO}{\ensuremath{\mathcal{O}}}
 
 \begin{document}
 
@@ -185,6 +186,86 @@
 \tableofcontents
 
 \newpage
+
+%for jugador, posInicial in jugadores:
+%    it = infoJugadores.add(jugador, infoPJ{})
+%    jugadores.definir(jugador, it)
+
+\section{Diccionario Trie ($\alpha$)}
+
+  El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.
+
+  \begin{Interfaz}
+
+    \textbf{parámetros formales}\hangindent=2\parindent\\
+    \parbox{1.7cm}{\textbf{géneros}}$\alpha$\\
+    \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+      \InterfazFuncion{Copiar}{\In{s}{$\alpha$}}{$\alpha$}
+      {$res \igobs s$}
+      [$\Theta(copy(s))$]
+      [función de copia de $\alpha$]
+    }
+
+    \textbf{se explica con}: \tadNombre{Diccionario$(string, \alpha)$}.
+
+    \textbf{géneros}: \TipoVariable{dicc$(string, \alpha)$}.
+
+    \Titulo{Operaciones básicas de diccionario}
+
+    \InterfazFuncion{Vacío}{}{dicc$(string, \alpha)$}%
+    {$res$ $\igobs$ vacio}%
+    [$\Theta(1)$]
+    [genera un diccionario vacío.]
+
+    \InterfazFuncion{Definir}{\Inout{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
+    [$d \igobs d_0$ $\land$ $\lnot$\ definido?($d$, $k$)]
+    {$d$ $\igobs$ definir($d, k, s$)}
+    [$\Theta(copy(string) + copy(s))$]
+    [define la clave $k$ $\not\in$ claves($d$) con el significado $s$ en el diccionario.]
+    [los elementos $k$ y $s$ se definen por copia.]
+
+    \InterfazFuncion{Definido?}{\In{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}}{bool}
+    {$res$ $\igobs$ def?($d$, $k$)}
+    [$\BigO(|k|)$]
+    [devuelve \texttt{true} si y sólo $k$ está definido en el diccionario.]
+
+    \InterfazFuncion{Significado}{\In{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}}{$\sigma$}
+    [def?($d$, $k$)]
+    {alias($res$ $\igobs$ obtener($d$, $k$))}
+    [$\Theta(|k|)$]
+    [devuelve el significado de la clave $k$ en $d$.]
+    [$res$ es modificable si y sólo si $d$ es modificable.]
+
+  \end{Interfaz}
+
+  \begin{Representacion}
+    
+    \Titulo{Representación del diccionario}
+    \begin{Estructura}{dicc$(string, \alpha)$}[dic]
+
+      \begin{Tupla}[dic]%
+        \tupItemF{raiz}{puntero(nodo)}%
+      \end{Tupla}
+
+      \mbox{}
+
+      \begin{Tupla}[nodo]
+        \tupItem{significado}{$\alpha$}\\
+        \tupItemF{siguientes}{arreglo(puntero(nodo))[255]}
+      \end{Tupla}
+
+    \end{Estructura}
+
+    \Rep[dic][d]{\#claves(secuADicc($d$.claves)) $=$ long($d$.claves) $\land$ long($d$.claves) = long($d$.significados)}
+
+    ~
+
+    \AbsFc[dicc]{dicc($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
+  \end{Representacion}
+
+  \begin{Algoritmos}
+    
+  \end{Algoritmos}
 
 
 \newpage
