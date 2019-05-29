@@ -132,12 +132,25 @@
 
 \newcommandx{\tupItem}[3][1={\ }]{%
     %\hspace*{3mm}%
-    \ifthenelse{\boolean{EstructuraHayItems}}{%
-        ,#1%
-    }{}%
-    \emph{#2}: \TipoVariable{#3}%
-    \setboolean{EstructuraHayItems}{true}%
+    \emph{#2}: \TipoVariable{#3},%
 }
+\newcommandx{\tupItemF}[3][1={\ }]{%
+    %\hspace*{3mm}%
+    \emph{#2}: \TipoVariable{#3}%
+}
+
+\newcommandx{\Comentario}[1]{
+  // #1\\
+}
+
+%\newcommandx{\tupItem}[3][1={\ }]{%
+%    %\hspace*{3mm}%
+%    \ifthenelse{\boolean{EstructuraHayItems}}{%
+%        ,#1%
+%    }{}%
+%    \emph{#2}: \TipoVariable{#3}%
+%    \setboolean{EstructuraHayItems}{true}%
+%}
 
 \newcommandx{\RepFc}[3][1={estr},2={e}]{%
   \tadOperacion{Rep}{#1}{bool}{}%
@@ -325,29 +338,59 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
   \begin{Representacion}
     
     \Titulo{Representación de Juego}
-    \begin{Estructura}{juego}[j]
+    \begin{Estructura}{juego}[estr]
       \begin{Tupla}[j]
+        \Comentario{General}
         \tupItem{paso}{nat}\\
         \tupItem{ronda}{nat}\\
         \tupItem{mapa}{m}\\
+
+        \Comentario{Disparos}
         \tupItem{mapaDisparos}{arreglo(arreglo(nat))}\\
-        \tupItem{jugadores}{diccTrie(string, infoPJ)}\\
-        \tupItem{jugadoresVivos}{conj(puntero(infoPJ))}\\
-        \tupItem{fantasmas}{vector(infoFan)}\\
-        \tupItem{fantasmasVivos}{conj(nat)}\\
-        \tupItem{fantasmaEspecial}{nat}
+        \tupItem{disparosUltimoPaso}{conj(posicion)}\\
+
+        \Comentario{Jugadores}
+        \tupItem{jugadores}{diccTrie(string, itConjLineal(infoPJ))}\\ % iterador a infoJugadores
+        \tupItem{infoJugadores}{conj(infoPJ)}\\
+        \tupItem{infoActualJugadoresVivos}{conj(infoActualPJ)}\\
+        \tupItem{jugadoresVivos}{conj(itConjLineal(infoPJ))}\\
+
+        \Comentario{Fantasmas}
+        \tupItem{infoFantasmas}{conj(infoFan)}\\
+        \tupItem{infoActualFantasmasVivos}{conj(infoActualFan)}\\
+        \tupItem{fantasmasVivos}{conj(itConjLineal(infoFan))}\\
+        \tupItemF{fantasmaEspecial}{itConjLineal(infoActualFan)}
       \end{Tupla}
       
       \mbox{}
 
       \begin{Tupla}[infoPJ]
-        \tupItem{eventos}{vector(evento)}
-        \tupItem{vivo?}{bool}
+        \tupItem{eventos}{vector(evento)}\\
+        % Solo cuando está vivo
+        \tupItemF{infoActual}{itConjLineal(infoActualPJ)}
       \end{Tupla}
 
-      \begin{Tupla}[infoFan]
-        \tupItem{eventos}{vector(evento)}        
+      \mbox{}
+
+      \begin{Tupla}[infoActualPJ]
+        \tupItem{identidad}{string}\\
+        \tupItem{posicion}{pos}\\
+        \tupItemF{direccion}{dir}
       \end{Tupla}
+
+      \mbox{}
+
+      \begin{Tupla}[infoFan]
+        \tupItemF{eventos}{vector(evento)}        
+      \end{Tupla}
+
+      \mbox{}
+
+      \begin{Tupla}[infoActualFan]
+        \tupItem{posicion}{pos}\\
+        \tupItemF{direccion}{dir}
+      \end{Tupla}
+
     \end{Estructura}
 
     \Rep[mapa][m]{}
