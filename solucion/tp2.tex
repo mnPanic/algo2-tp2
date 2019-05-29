@@ -186,68 +186,6 @@
 
 \newpage
 
-\section{Módulo X}
-
-Aqui va la descripción
-
-\begin{Interfaz}
-  \textbf{generos}: \TipoVariable{x}.
-  \textbf{se explica con}: \tadNombre{X}.
-
-  \Titulo{Operaciones básicas de X}
-  \InterfazFuncion{nuevoX}{\In{n}{nat}}{X}%
-  {$res \igobs nuevaHab(n)$}%
-  [$\Theta(n^2)$]
-  [genera un mapa de tamano n x n.]
-
-\end{Interfaz}
-
-\begin{Representacion}
-  
-  \Titulo{Representación de X}
-
-  El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
-
-  \begin{Estructura}{mapa}[m]
-    \begin{Tupla}[m]
-      \tupItem{tamano}{nat}%
-      \tupItem{casilleros}{vec(vec(bool))}%
-    \end{Tupla}
-  \end{Estructura}
-
-  \Rep[mapa][m]{
-    La longitud de m.casilleros es igual a tamano $\land$\\
-    La longitud del vector m.casilleros es igual a la de todo otro vector dentro de el) $\land$\\
-    Es conexa % Trivial
-  }
-  
-  \mbox{}
-
-  \Abs[mapa]{hab}[m]{h}{$m.tamano$ $\igobs$ $tam(h)$ $\yluego$\\
-    ($\forall t$: tuple(nat,nat))($0 \leq$ $\Pi_1(t)$, $\Pi_2(t) < m.tamano - 1$ $\impluego$\\
-    libre(m, t) $\igobs$ $m.casilleros[\Pi_1(t)][\Pi_2(t)]$)}
-
-\end{Representacion}
-
-\bigskip
-
-\begin{Algoritmos}
-
-En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
-
-\medskip
-	
- \Titulo{Algoritmos del módulo}
-  	\medskip
-  
-\begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
-    	\begin{algorithmic}[1]
-       \State $res \gets m.tamano$ \Comment $\Theta(1)$
-			\medskip
-			\Statex \underline{Complejidad:} $\Theta(1)$
-    	\end{algorithmic}
-\end{algorithm}
-\end{Algoritmos}
 
 \newpage
 
