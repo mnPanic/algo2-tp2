@@ -267,7 +267,8 @@
 
     \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : dicc($string$, $\alpha$)}
       \begin{algorithmic}[1]
-           \State $res \gets \& \langle NULL, \ arreglo\_estático[255] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
+           \State // Reserva la memoria y crea un arreglo estático de 255 posiciones del constructor por defecto de $\alpha$
+           \State $res \gets \langle raiz: NULL, \ siguientes: arreglo\_estatico[255] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\BigO(1)$
@@ -280,8 +281,7 @@
         \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
         \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-        \State \ \  $\textbf{if} \ (actual \DRef siguientes [toASCII(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
-        \State \ \ \ \ $\textbf{then} \ actual \gets (actual \DRef siguientes [toASCII(c)])$     \Comment $\Theta(1)$                                        \Comment $\Theta(1)$
+        \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
         \State $\textbf{end for}$                                    
 
         \State $res \gets (actual \DRef significado)$                                            \Comment $\Theta(1)$
@@ -298,9 +298,9 @@
            \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
            \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-           \State \ \  $\textbf{if} \ (actual \DRef siguientes [toASCII(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
-           \State \ \ \ \ $\textbf{then} \ actual \gets (actual \DRef siguientes [toASCII(c)])$     \Comment $\Theta(1)$
-           \State \ \ \ \ $\textbf{else} \ res \gets false$                                         \Comment $\Theta(1)$
+           \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
+           \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$     \Comment $\Theta(1)$
+           \State \tab  $\textbf{else} \ res \gets false$                                         \Comment $\Theta(1)$
            \State $\textbf{end for}$                                    
 
            \State $res \gets true$                                                                  \Comment $\Theta(1)$
