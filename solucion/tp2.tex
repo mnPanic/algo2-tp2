@@ -208,28 +208,28 @@
 
     \textbf{se explica con}: \tadNombre{Diccionario$(string, \alpha)$}.
 
-    \textbf{géneros}: \TipoVariable{dicc$(string, \alpha)$}.
+    \textbf{géneros}: \TipoVariable{diccTrie$(string, \alpha)$}.
 
     \Titulo{Operaciones básicas de diccionario}
 
-    \InterfazFuncion{Vacío}{}{dicc$(string, \alpha)$}%
+    \InterfazFuncion{Vacío}{}{diccTrie$(string, \alpha)$}%
     {$res$ $\igobs$ vacio}%
     [$\Theta(1)$]
     [genera un diccionario vacío.]
 
-    \InterfazFuncion{Definir}{\Inout{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
+    \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
     [$d \igobs d_0$ $\land$ $\lnot$\ definido?($d$, $k$)]
     {$d$ $\igobs$ definir($d, k, s$)}
     [$\Theta(copy(string) + copy(s))$]
     [define la clave $k$ $\not\in$ claves($d$) con el significado $s$ en el diccionario.]
     [los elementos $k$ y $s$ se definen por copia.]
 
-    \InterfazFuncion{Definido?}{\In{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}}{bool}
+    \InterfazFuncion{Definido?}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{bool}
     {$res$ $\igobs$ def?($d$, $k$)}
     [$\BigO(|k|)$]
     [devuelve \texttt{true} si y sólo $k$ está definido en el diccionario.]
 
-    \InterfazFuncion{Significado}{\In{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}}{$\sigma$}
+    \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\sigma$}
     [def?($d$, $k$)]
     {alias($res$ $\igobs$ obtener($d$, $k$))}
     [$\Theta(|k|)$]
@@ -241,7 +241,7 @@
   \begin{Representacion}
     
     \Titulo{Representación del diccionario}
-    \begin{Estructura}{dicc$(string, \alpha)$}[dic]
+    \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
 
       \begin{Tupla}[dic]%
         \tupItemF{raiz}{puntero(nodo)}%
@@ -260,11 +260,57 @@
 
     ~
 
-    \AbsFc[dicc]{dicc($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
+    \AbsFc[diccTrie]{diccTrie($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
   \end{Representacion}
 
   \begin{Algoritmos}
+
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : diccTrie($string$, $\alpha$)}
+      \begin{algorithmic}[1]
+           \State // Reserva la memoria y crea un arreglo estático de 255 posiciones del constructor por defecto de $\alpha$
+           \State $res \gets \langle raiz: NULL, \ siguientes: arreglo\_estatico[255] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
     
+          \medskip
+          \Statex \underline{Complejidad:} $\BigO(1)$
+          \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
+          \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$})$\to$ $res$ : $\alpha$}
+      \begin{algorithmic}[1]
+        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+        \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
+        \State $\textbf{end for}$                                    
+
+        \State $res \gets (actual \DRef significado)$                                            \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad será $\Theta(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
+
+    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}) $\to$ $res$ : bool}
+      \begin{algorithmic}[1]
+           \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+           \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
+           \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$     \Comment $\Theta(1)$
+           \State \tab  $\textbf{else} \ res \gets false$                                         \Comment $\Theta(1)$
+           \State $\textbf{end for}$                                    
+
+           \State $res \gets true$                                                                  \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\BigO(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como máximo. Luego la complejidad será $\BigO(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
   \end{Algoritmos}
 
 
