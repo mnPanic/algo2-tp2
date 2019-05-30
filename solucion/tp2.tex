@@ -264,7 +264,53 @@
   \end{Representacion}
 
   \begin{Algoritmos}
+
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : dicc($string$, $\alpha$)}
+      \begin{algorithmic}[1]
+           \State $res \gets \& \langle NULL, \ arreglo\_estático[255] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
     
+          \medskip
+          \Statex \underline{Complejidad:} $\BigO(1)$
+          \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
+          \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{dicc($string$, $\alpha$)}, \In{k}{$string$})$\to$ $res$ : $\alpha$}
+      \begin{algorithmic}[1]
+        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+        \State \ \  $\textbf{if} \ (actual \DRef siguientes [toASCII(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
+        \State \ \ \ \ $\textbf{then} \ actual \gets (actual \DRef siguientes [toASCII(c)])$     \Comment $\Theta(1)$                                        \Comment $\Theta(1)$
+        \State $\textbf{end for}$                                    
+
+        \State $res \gets (actual \DRef significado)$                                            \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad será $\Theta(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
+
+    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dicc($string$, $\alpha$)}, \In{k}{$string$}) $\to$ $res$ : bool}
+      \begin{algorithmic}[1]
+           \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+           \State \ \  $\textbf{if} \ (actual \DRef siguientes [toASCII(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
+           \State \ \ \ \ $\textbf{then} \ actual \gets (actual \DRef siguientes [toASCII(c)])$     \Comment $\Theta(1)$
+           \State \ \ \ \ $\textbf{else} \ res \gets false$                                         \Comment $\Theta(1)$
+           \State $\textbf{end for}$                                    
+
+           \State $res \gets true$                                                                  \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\BigO(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como máximo. Luego la complejidad será $\BigO(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
   \end{Algoritmos}
 
 
