@@ -251,7 +251,7 @@
 
       \begin{Tupla}[nodo]
         \tupItem{significado}{$\alpha$}\\
-        \tupItemF{siguientes}{arreglo(puntero(nodo))[255]}
+        \tupItemF{siguientes}{arreglo(puntero(nodo))[256]}
       \end{Tupla}
 
     \end{Estructura}
@@ -267,8 +267,8 @@
 
     \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : diccTrie($string$, $\alpha$)}
       \begin{algorithmic}[1]
-           \State // Reserva la memoria y crea un arreglo estático de 255 posiciones del constructor por defecto de $\alpha$
-           \State $res \gets \langle raiz: NULL, \ siguientes: arreglo\_estatico[255] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
+           \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacíos, y lo asigna a la raiz.
+           \State $res \gets \& \langle significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\BigO(1)$
