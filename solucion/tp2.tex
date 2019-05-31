@@ -218,9 +218,9 @@
     [genera un diccionario vacío.]
 
     \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
-    [$d \igobs d_0$ $\land$ $\lnot$\ definido?($d$, $k$)]
+    [$d \igobs d_0$]
     {$d$ $\igobs$ definir($d, k, s$)}
-    [$\Theta(copy(string) + copy(s))$]
+    [$\Theta(|k| + copy(s))$]
     [define la clave $k$ $\not\in$ claves($d$) con el significado $s$ en el diccionario.]
     [los elementos $k$ y $s$ se definen por copia.]
 
@@ -298,9 +298,10 @@
            \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
            \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-           \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $       \Comment $\Theta(1)$
-           \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$     \Comment $\Theta(1)$
-           \State \tab  $\textbf{else} \ res \gets false$                                         \Comment $\Theta(1)$
+           \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $        \Comment $\Theta(1)$
+           \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
+           \State \ttab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
+           \State \tab $\textbf{end if}$
            \State $\textbf{end for}$                                    
 
            \State $res \gets true$                                                                  \Comment $\Theta(1)$
@@ -311,6 +312,27 @@
           \end{algorithmic}
     \end{algorithm}
 
+    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$})}
+      \begin{algorithmic}[1]
+          \State $Nodo \ actual \gets d.raiz$
+          \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
+          \State \tab   // Si no tengo siguiente, lo creo
+          \State \tab   $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
+          \State \ttab  $\ actual \DRef siguientes[toInt(c)] = nuevoNodo()$                                   \Comment $\Theta(1)$
+          \State \tab   $\textbf{end if}$
+          \State \tab   $actual \gets (actual \DRef siguientes [toInt(c)])$                                   \Comment $\Theta(1)$
+          \State $\textbf{end for}$  
+          \State
+          \State // Estoy parado en el nodo que va a tener el significado.
+          \State // Le asigno una copia del provisto.
+          \State $actual \DRef significado \gets copy(s)$                                                     \Comment $\Theta(copy(s))$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
+          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$.
+          \end{algorithmic}
+    \end{algorithm}
+  
   \end{Algoritmos}
 
 
