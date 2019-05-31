@@ -177,6 +177,7 @@
 
 \newcommand{\DRef}{\ensuremath{\rightarrow}}
 \newcommand{\BigO}{\ensuremath{\mathcal{O}}}
+\newcommand{\tuple}[1]{\langle #1 \rangle}
 
 \begin{document}
 
@@ -193,7 +194,8 @@
 
 \section{Diccionario Trie ($\alpha$)}
 
-  El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.
+  \noindent{El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.\\
+  Solo se definen e implementan las operaciones que serán utilizadas.
 
   \begin{Interfaz}
 
@@ -262,13 +264,12 @@
 
     \AbsFc[diccTrie]{diccTrie($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
   \end{Representacion}
-
   \begin{Algoritmos}
 
     \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : diccTrie($string$, $\alpha$)}
       \begin{algorithmic}[1]
            \State // Le asigna un nuevo nodo a la raiz
-           \State $res \gets nuevoNodo()$ 				\Comment $\Theta(1)$
+           \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
@@ -336,7 +337,7 @@
     \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : diccTrie($string$, $\alpha$)} \Comment Función privada que crea un nuevo nodo
       \begin{algorithmic}[1]
            \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacíos
-           \State $res \gets \& \langle significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha \rangle$ 				\Comment $\Theta(1)$
+           \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha}$ 				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
