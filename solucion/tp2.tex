@@ -258,7 +258,9 @@
 
     \end{Estructura}
 
-    \Rep[dic][d]{\#claves(secuADicc($d$.claves)) $=$ long($d$.claves) $\land$ long($d$.claves) = long($d$.significados)}
+    \Rep[diccTrie][d]{
+      raiz no está contenido en ninguno de sus siguientes ni sus siguientes
+    }
 
     ~
 
@@ -266,7 +268,7 @@
   \end{Representacion}
   \begin{Algoritmos}
 
-    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : diccTrie($string$, $\alpha$)}
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : dic}
       \begin{algorithmic}[1]
            \State // Le asigna un nuevo nodo a la raiz
            \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
@@ -334,7 +336,7 @@
           \end{algorithmic}
     \end{algorithm}
   
-    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : diccTrie($string$, $\alpha$)} \Comment Función privada que crea un nuevo nodo
+    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Función privada que crea un nuevo nodo
       \begin{algorithmic}[1]
            \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacíos
            \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha}$ 				\Comment $\Theta(1)$
