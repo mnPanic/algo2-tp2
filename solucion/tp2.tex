@@ -514,11 +514,69 @@
   \Titulo{Algoritmos del módulo}
       \medskip
     
-  \begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
+  \begin{algorithm}[H]{\textbf{iIniciar}(\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento)}) $\to$ $res$ : estr}
         \begin{algorithmic}[1]
-        \State $res \gets m.tamano$ \Comment $\Theta(1)$
+        \State // Inicializo la estructura
+        \State $res: \langle$
+        \State \tab // Inicializo contadores
+        \State \tab $paso : 0,$                     \Comment $\Theta(1)$
+        \State \tab $ronda : 0,$                     \Comment $\Theta(1)$
+        \\
+        \State \tab // Seteo el mapa 
+        \State \tab $mapa: m,$                     \Comment $\Theta(1)$
+        \\
+        \State \tab // Inicializo el mapa de disparos con el mismo tamaño que el mapa
+        \State \tab $mapaDisparos: arreglo\_dimensionable(arreglo\_dimensionable(nat)[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
+        \State \tab $disparosUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
+        \\
+        \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
+        \State \tab $infoActualJugadoresVivos: Vacio(),$
+        \State \tab $infoJugadoresVivos: Vacio(),$
+        \State \tab $infoJugadores: Vacia(),$
+        \State \tab $infoFantasmas: Vacio(),$
+        \State \tab $infoActualFantasmasVivos: Vacio(),$
+        \State \tab $infoFantasmasVivos: Vacia(),$
+        \State \tab $infoFantasmaEspecial: CrearIt(Vacio())$ % TODO
+        \State $\rangle$
+        \\
+        \State // Suponemos la existencia de la función
+        \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ conj(jugador)\ pjs)$ 
+        \\
+        \State // Obtengo las posiciones y direcciones de jugadores
+        \State $localPJs \gets localizarJugadores(m, pjs)$ \
+        \\
+        \State // Lleno las estructuras de jugadores
+        \State $\textbf{for} \ (j,\ localizacion : \ localPJs) \ \ \textbf{do}$
+        \State \tab // Creo la infoActual y la agrego a su conjunto
+        \State \tab $infoActual \gets \tuple{identidad: j,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
+        \State \tab $itInfoActual \gets AgregarRapido(res.infoActualJugadoresVivos,\ infoActual)$
+        \\
+        \State \tab // Creo la infoPJ con la actual
+        \State \tab $info \gets iNuevaInfoPJ(j,\ localizacion,\ itInfoActual)$
+        \State \tab // La agrego al trie y me guardo el puntero a la info guardada
+        \State \tab $infoPtr \gets \& Definir(res.infoJugadores,\ j,\ info)$
+        \\
+        \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
+        \State \tab $AgregarRapido(res.infoJugadoresVivos,\ infoPtr)$
+        \State $\textbf{end for}$
+        \\
+        \State // Lleno las estructuras de fantasmas
+        \State // Creo la infoActual y la agrego a su conjunto
+        \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$
+        \State $itInfoActualFan \gets AgregarRapido(infoActualFan, res.infoActualFantasmasVivos)$
+        \\
+        \State // Hago que el fantasma especial sea este
+        \State $res.infoFantasmaEspecial \gets itInfoActualFan$
+        \\
+        \State // Creo la infoFan con la actual
+        \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$
+        \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
+        \State $itInfoFan \gets AgregarRapido(infoFan,\ res.infoFantasmas)$
+        \\
+        \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
+        \State $AgregarRapido(itInfoFan,\ res.infoFantasmasVivos)$
         \medskip
-        \Statex \underline{Complejidad:} $\Theta(1)$
+        \Statex \underline{Complejidad:} $\Theta(?)$
         \end{algorithmic}
   \end{algorithm}
   \end{Algoritmos}
