@@ -243,9 +243,9 @@
   \begin{Representacion}
     
     \Titulo{Representación del diccionario}
-    \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
+    \begin{Estructura}{diccTrie$(string, \alpha)$}[estr]
 
-      \begin{Tupla}[dic]%
+      \begin{Tupla}[estr]%
         \tupItemF{raiz}{puntero(nodo)}%
       \end{Tupla}
 
@@ -268,7 +268,7 @@
   \end{Representacion}
   \begin{Algoritmos}
 
-    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : dic}
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : estr}
       \begin{algorithmic}[1]
            \State // Le asigna un nuevo nodo a la raiz
            \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
@@ -279,7 +279,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$})$\to$ $res$ : $\alpha$}
+    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{estr}, \In{k}{$string$})$\to$ $res$ : $\alpha$}
       \begin{algorithmic}[1]
         \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
@@ -296,7 +296,7 @@
     \end{algorithm}
 
 
-    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}) $\to$ $res$ : bool}
+    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{estr}, \In{k}{$string$}) $\to$ $res$ : bool}
       \begin{algorithmic}[1]
            \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
@@ -315,7 +315,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$})}
+    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{estr}, \In{k}{$string$}, \In{s}{$\alpha$})}
       \begin{algorithmic}[1]
           \State $Nodo \ actual \gets d.raiz$
           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
