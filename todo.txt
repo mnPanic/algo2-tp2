@@ -2,9 +2,35 @@ Trie
     - Hacer que sea *solución y que devuelva una ref.
     - Hacer que nuevoNodo sea iNuevoNodo
     - Abs y rep
+    - Hacer que definir devuelva una referencia al significado
+        (chequear aspectos de aliasing)
 
 General
     - Agregar "typedef" al principio para
         Jugador
         Fantasma
         Evento
+        Pos 
+        Dir
+    - Chequear las cosas que van por ref y copia
+
+Juego
+    Separar inicializaci?n de fantasmas y jugadores a funciones privadas aparte
+    iNuevaInfoPJ
+
+TAD
+    Precondicion en iniciar -> evt fantasma no vacio
+
+Accion
+    Agregar las cosas de Evento
+        Inverso
+            Con una secuencia de eventos, devuelve
+            eventos
+            5 nada
+            inverso(eventos)
+        
+        En rep/abs de Juego
+            Existe un n tq la long de los eventos es n * 2 + 5 => 
+                los primeros n son los ultimos (n+5 a long - 1) invertidos.
+                entre n y n+5 son "nada".
+        

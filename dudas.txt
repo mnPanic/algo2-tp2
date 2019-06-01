@@ -1,8 +1,5 @@
-Vector
-    Complejidad de AgregarAtras
+localizarJugadores
+    Cambiamos la aridad, todo ok?
 
-Puntero
-    Se puede devolver un puntero no modificable?
-    contexto: JugadoresVivos
-
-Predicados auxiliares para las pre y pos?
+Trie
+    Devolver puntero o ref al sig al definir?
