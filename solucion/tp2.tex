@@ -357,29 +357,31 @@
 
   \begin{Interfaz}
     \textbf{generos}: \TipoVariable{juego}.
+
     \textbf{se explica con}: \tadNombre{Juego}.
 
     \Titulo{Operaciones básicas de Juego}
     
     % Generadores
-    \InterfazFuncion{nuevoJuego}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
-    [$\neg vacio(pjs) \land (\forall e: evento) (e \in eventosFan \impluego e.pos \in posiciones(m))$]
+    \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
+    [$\neg vacio(pjs) \land (\forall e: evento) (está?(e, eventosFan) \impluego e.pos \in libres(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
-    [$\Theta(?)$]
+    [$\Theta(?)$ TODO]
     [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
 
     \InterfazFuncion{pasarTiempo}{\In{j}{juego}}{juego}%
     {$res \igobs pasar(j)$}%
     [$\Theta(?)$]
-    [actualiza sin acción de algún jugador.]
+    [ejecuta un paso de tiempo cuando ningún jugador realiza una acción.]
 
     \InterfazFuncion{ejecutarAccion}{\In{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{juego}%
     [$pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
-    {$res \igobs pasar(j)$}%
+    {$res \igobs step(j, a, pj)$}%
     [$\Theta(?)$]
     [actualiza con la acción $a$ del jugador $pj$.]
 
 
+    % Pedidas por enunciado
     \InterfazFuncion{jugadoresVivos}{\In{j}{juego}}{conj(puntero(infoPJ))}%
     {$(\forall p : puntero(infoPJ)) (p \in res \impluego\\
     \tttab (p\rightarrow id \in jugadores(j)) \yluego \\
