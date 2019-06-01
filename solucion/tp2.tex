@@ -362,18 +362,18 @@
     \Titulo{Operaciones básicas de Juego}
     
     % Generadores
-    \InterfazFuncion{nuevoJuego}{\In{m}{mapa}, \In{pjs}{conj(string)}, \In{eventosFan}{vector(evento))}}{juego}%
+    \InterfazFuncion{nuevoJuego}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
     [$\neg vacio(pjs) \land (\forall e: evento) (e \in eventosFan \impluego e.pos \in posiciones(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
     [$\Theta(?)$]
     [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
 
-    \InterfazFuncion{pasar}{\In{j}{juego}}{juego}%
+    \InterfazFuncion{pasarTiempo}{\In{j}{juego}}{juego}%
     {$res \igobs pasar(j)$}%
     [$\Theta(?)$]
     [actualiza sin acción de algún jugador.]
 
-    \InterfazFuncion{step}{\In{j}{juego}, \In{a}{accion}, \In{pj}{string}}{juego}%
+    \InterfazFuncion{ejecutarAccion}{\In{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{juego}%
     [$pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
     {$res \igobs pasar(j)$}%
     [$\Theta(?)$]
@@ -450,24 +450,24 @@
         \tupItem{disparosUltimoPaso}{conj(posicion)}\\
 
         \Comentario{Jugadores}
-        \tupItem{jugadores}{diccTrie(string, itConjLineal(infoPJ))}\\ % iterador a infoJugadores
-        \tupItem{infoJugadores}{conj(infoPJ)}\\
+        \tupItem{infoJugadores}{diccTrie(string, infoPJ)}\\
         \tupItem{infoActualJugadoresVivos}{conj(infoActualPJ)}\\
-        \tupItem{jugadoresVivos}{conj(itConjLineal(infoPJ))}\\
+        \tupItem{infoJugadoresVivos}{conj(puntero(infoPJ))}\\
 
         \Comentario{Fantasmas}
         \tupItem{infoFantasmas}{conj(infoFan)}\\
         \tupItem{infoActualFantasmasVivos}{conj(infoActualFan)}\\
-        \tupItem{fantasmasVivos}{conj(itConjLineal(infoFan))}\\
-        \tupItemF{fantasmaEspecial}{itConjLineal(infoActualFan)}
+        \tupItem{infoFantasmasVivos}{conj(itConj(infoFan))}\\
+        \tupItemF{infoFantasmaEspecial}{itConj(infoActualFan)}
       \end{Tupla}
       
       \mbox{}
 
       \begin{Tupla}[infoPJ]
         \tupItem{eventos}{vector(evento)}\\
+        \tupItem{vivo?}{bool}\\
         % Solo cuando está vivo
-        \tupItemF{infoActual}{itConjLineal(infoActualPJ)}
+        \tupItemF{infoActual}{itConj(infoActualPJ)}
       \end{Tupla}
 
       \mbox{}
@@ -481,7 +481,8 @@
       \mbox{}
 
       \begin{Tupla}[infoFan]
-        \tupItemF{eventos}{vector(evento)}        
+        \tupItem{infoActual}{itConj(infoActualFan)}\\
+        \tupItemF{eventos}{vector(evento)} 
       \end{Tupla}
 
       \mbox{}
