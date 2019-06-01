@@ -1,0 +1,10 @@
+Trie
+    - Hacer que sea *solución y que devuelva una ref.
+    - Hacer que nuevoNodo sea iNuevoNodo
+    - Abs y rep
+
+General
+    - Agregar "typedef" al principio para
+        Jugador
+        Fantasma
+        Evento
