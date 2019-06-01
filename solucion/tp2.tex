@@ -448,7 +448,7 @@
         \tupItem{mapa}{m}\\
 
         \Comentario{Disparos}
-        \tupItem{mapaDisparos}{arreglo(arreglo(nat))}\\
+        \tupItem{mapaDisparos}{arreglo(arreglo(tupla(nat, nat)))}\\
         \tupItem{disparosUltimoPaso}{conj(posicion)}\\
 
         \Comentario{Jugadores}
@@ -526,7 +526,7 @@
         \State \tab $mapa: m,$                     \Comment $\Theta(1)$
         \\
         \State \tab // Inicializo el mapa de disparos con el mismo tamaño que el mapa
-        \State \tab $mapaDisparos: arreglo\_dimensionable(arreglo\_dimensionable(nat)[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
+        \State \tab $mapaDisparos: arreglo(arreglo(tupla(nat, nat))[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
         \State \tab $disparosUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
         \\
         \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
@@ -579,6 +579,31 @@
         \Statex \underline{Complejidad:} $\Theta(?)$
         \end{algorithmic}
   \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iPasarTiempo}(\In{j}{estr})}
+    \begin{algorithmic}[1]
+      \State
+      // Aumentas paso
+      // Por cada fantasma
+      //  Si dispara
+      //    Agregar disparo
+      //      Agregas el disparo al conjunto (inteligentemente)
+      //      Agregas las pos afectadas al mapa de disparos
+      //    
+      //  Actualizo la info actual
+      // Por cada jugador
+      //  Te fijas si muere
+      //  Actualizas la info actual
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\In{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
+    \begin{algorithmic}[1]
+      \State
+    \end{algorithmic}
+  \end{algorithm}
+
+
   \end{Algoritmos}
 
 \newpage
