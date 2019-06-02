@@ -258,21 +258,25 @@
 
     \end{Estructura}
 
-    \Rep[diccTrie][d]{
-      raiz no est� contenido en ninguno de sus siguientes ni sus siguientes
+    \Rep[diccTrie][d]{\\
+      (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
+      La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
+      Todas las hojas tienen un significado distinto de NULL.)\\ \\
+      // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
     }
 
     ~
 
     \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{
-      - Para todo c string, def?(c,d) $\igobs$ estaDefinido(e) 
-      \\ \tab estaDefinido(e) $\equiv$ veo si en siguientes de e.raiz en la posicion ASCII de la primera letra de c
+      - Para todo s string, def?(s,d) $\igobs$ estaDefinido(e) 
+     \\ \\ \tab estaDefinido(e) $\equiv$ El primer caracter de s esta en siguientes de e.raiz, es decir, que existe un Nodo en la posicion correspondiente al encoding ASCII de el primer char de s $\yluego$ para todo c char en la clave s (excepto el ultimo y el primero), el char siguiente a c debe estar definido en los siguientes de c al igual que el primer caracter $\yluego$ el significado del nodo correspondiente al ultimo char es distinto de NULL.
+      \\ \\ \tab estaDefinido(e) $\equiv$ veo si en siguientes de e.raiz en la posicion ASCII de la primera letra de c
       si es distinto de NULL y hago lo mismo recursivamente con la siguiente letra y el siguiente nodo 
       desde e.raiz veo que en el vector de los siguientes de res en la 
       \\ \tab posicion del ASCII de la primera letra no sea NULL y hacer esto recursivamente en cada nodo
       \\ \tab y al llegar al nodo de la ultima letra ver que el significado no sea NULL
-      \\ - 
-      \IF vac�a?($d$.claves) THEN vac�o ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
+      \\ - }
+%      \IF vac�a?($d$.claves) THEN vac�o ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
       \\ \\
   \end{Representacion}
   \begin{Algoritmos}
@@ -316,7 +320,7 @@
            \State \tab $\textbf{end if}$
            \State $\textbf{end for}$                                    
 
-           \State $res \gets true$                                                                  \Comment $\Theta(1)$
+           \State $res \gets ((actual \DRef significado) \neq NULL)$                                                                  \Comment $\Theta(1)$
 
           \medskip
           \Statex \underline{Complejidad:} $\BigO(|k|)$
@@ -339,7 +343,7 @@
           \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
           \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
           \State // Asigno al significado del nodo el puntero creado con s.
-          \State $actual \DRef significado \gets \&sig$                                                       \Comment $\Theta(1)$
+          \State $(actual \DRef significado) \gets \&sig$                                                       \Comment $\Theta(1)$
           
           \State // Devuelvo por referencia el significado.
           \State res $\gets sig$                                                                              \Comment $\Theta(1)$
@@ -353,7 +357,7 @@
     \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Funci�n privada que crea un nuevo nodo
       \begin{algorithmic}[1]
            \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vac�os
-           \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha}$ 				\Comment $\Theta(1)$
+           \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ puntero(Nodo)}$ 				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
