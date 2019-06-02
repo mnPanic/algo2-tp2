@@ -753,7 +753,35 @@
 
   \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\In{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
     \begin{algorithmic}[1]
-      \State
+      \State // Incremento el paso
+      \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
+      \\
+      \State // Obtengo la información del PJ
+      \State $infoPJ \gets Obtener(j.infoJugadores, pj)$ \Comment $\BigO(|j|)$
+      \\
+      \State // Genero un evento con la acción
+      \State $evtPJ \gets Aplicar(a, j, iEventoActualPJ(infoPJ))$ \Comment $\Theta(1)$
+      \\
+      \State // Agrego el evento al jugador
+      \State $AgregarAtras(infoPJ.eventos, evtPJ)$  \Comment $\Theta(1)$
+      \\
+      \State // Actualizo el mapa de disparos con el jugador
+      \State $iActualizarMapaDisparosConPJ(j, evtPJ)$ \Comment $\BigO(m)$
+      \\
+      \State // Veo que fantasmas mueren
+      \State $iChequearMuerteFantasmas(j)$      \Comment $\Theta(\#fv)$
+      \\
+      \State // Si murió el fantasma especial, cambio de ronda
+      \State if..
+      \State $iNuevaRonda(j, infoPJ)$
+      \State else,
+      \State // Actualizo el mapa de disparos con los fantasmas vivos
+      \State $iActualizarMapaDisparosConFan(j)$   \Comment $\BigO(\#fv * m)$
+      \\
+      \State // Veo que jugadores mueren
+      \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
+      \medskip
+      \Statex \underline{Complejidad:} Sin cambiar de ronda $\BigO(|j| + m + \#fv + \#fv * m + \#jv) \in \BigO(|j| + \#fv * m + \#jv)$, cambiando $\BigO(?)$
     \end{algorithmic}
   \end{algorithm}
 
