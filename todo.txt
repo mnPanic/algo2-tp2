@@ -15,7 +15,6 @@ General
     - Chequear las cosas que van por ref y copia
 
 Juego
-    Separar inicializaci?n de fantasmas y jugadores a funciones privadas aparte
     iNuevaInfoPJ
 
 TAD
