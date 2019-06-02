@@ -16,12 +16,12 @@
 
 
 \hypersetup{%
- % Para que el PDF se abra a página completa.
+ % Para que el PDF se abra a pï¿½gina completa.
  pdfstartview= {FitH \hypercalcbp{\paperheight-\topmargin-1in-\headheight}},
- pdfauthor={Cátedra de Algoritmos y Estructuras de Datos II - DC - UBA},
- pdfkeywords={Módulos básicos},
- pdftitle={Módulos básicos de diseño},
- pdfsubject={Módulos básicos de diseño}
+ pdfauthor={Cï¿½tedra de Algoritmos y Estructuras de Datos II - DC - UBA},
+ pdfkeywords={Mï¿½dulos bï¿½sicos},
+ pdftitle={Mï¿½dulos bï¿½sicos de diseï¿½o},
+ pdfsubject={Mï¿½dulos bï¿½sicos de diseï¿½o}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,7 +36,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %opening
-\title{Apunte de Módulos Básicos (v.\ 0.3$\alpha$)}
+\title{Apunte de Mï¿½dulos Bï¿½sicos (v.\ 0.3$\alpha$)}
 \author{Algoritmos y Estructuras de Datos II, DC, UBA.}
 \date{\Cuatrimestre}
 
@@ -81,7 +81,7 @@
   \textbf{Pre} $\equiv$ \{#4\}\\%
   \textbf{Post} $\equiv$ \{#5\}%
   \ifx#6\empty\else\\\textbf{Complejidad:} #6\fi%
-  \ifx#7\empty\else\\\textbf{Descripción:} #7\fi%
+  \ifx#7\empty\else\\\textbf{Descripciï¿½n:} #7\fi%
   \ifx#8\empty\else\\\textbf{Aliasing:} #8\fi%
   \ifx#9\empty\else\\\textbf{Requiere:} #9\fi%
 }
@@ -94,7 +94,7 @@
 
 \newenvironment{Representacion}{%
   \vspace*{2ex}%
-  \noindent\textbf{\Large Representación}%
+  \noindent\textbf{\Large Representaciï¿½n}%
   \vspace*{2ex}%
 }{}
 
@@ -194,30 +194,30 @@
 
 \section{Diccionario Trie ($\alpha$)}
 
-  \noindent{El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.\\
-  Solo se definen e implementan las operaciones que serán utilizadas.
+  \noindent{El mï¿½dulo Diccionario Trie provee un diccionario bï¿½sico montado sobre un trie.\\
+  Solo se definen e implementan las operaciones que serï¿½n utilizadas.
 
   \begin{Interfaz}
 
-    \textbf{parámetros formales}\hangindent=2\parindent\\
-    \parbox{1.7cm}{\textbf{géneros}}$\alpha$\\
-    \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+    \textbf{parï¿½metros formales}\hangindent=2\parindent\\
+    \parbox{1.7cm}{\textbf{gï¿½neros}}$\alpha$\\
+    \parbox[t]{1.7cm}{\textbf{funciï¿½n}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
       \InterfazFuncion{Copiar}{\In{s}{$\alpha$}}{$\alpha$}
       {$res \igobs s$}
       [$\Theta(copy(s))$]
-      [función de copia de $\alpha$]
+      [funciï¿½n de copia de $\alpha$]
     }
 
     \textbf{se explica con}: \tadNombre{Diccionario$(string, \alpha)$}.
 
-    \textbf{géneros}: \TipoVariable{diccTrie$(string, \alpha)$}.
+    \textbf{gï¿½neros}: \TipoVariable{diccTrie$(string, \alpha)$}.
 
-    \Titulo{Operaciones básicas de diccionario}
+    \Titulo{Operaciones bï¿½sicas de diccionario}
 
-    \InterfazFuncion{Vacío}{}{diccTrie$(string, \alpha)$}%
+    \InterfazFuncion{Vacï¿½o}{}{diccTrie$(string, \alpha)$}%
     {$res$ $\igobs$ vacio}%
     [$\Theta(1)$]
-    [genera un diccionario vacío.]
+    [genera un diccionario vacï¿½o.]
 
     \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
     [$d \igobs d_0$]
@@ -229,20 +229,20 @@
     \InterfazFuncion{Definido?}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{bool}
     {$res$ $\igobs$ def?($d$, $k$)}
     [$\BigO(|k|)$]
-    [devuelve \texttt{true} si y sólo $k$ está definido en el diccionario.]
+    [devuelve \texttt{true} si y sï¿½lo $k$ estï¿½ definido en el diccionario.]
 
     \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\sigma$}
     [def?($d$, $k$)]
     {alias($res$ $\igobs$ obtener($d$, $k$))}
     [$\Theta(|k|)$]
     [devuelve el significado de la clave $k$ en $d$.]
-    [$res$ es modificable si y sólo si $d$ es modificable.]
+    [$res$ es modificable si y sï¿½lo si $d$ es modificable.]
 
   \end{Interfaz}
 
   \begin{Representacion}
     
-    \Titulo{Representación del diccionario}
+    \Titulo{Representaciï¿½n del diccionario}
     \begin{Estructura}{diccTrie$(string, \alpha)$}[estr]
 
       \begin{Tupla}[estr]%
@@ -252,30 +252,39 @@
       \mbox{}
 
       \begin{Tupla}[nodo]
-        \tupItem{significado}{$\alpha$}\\
+        \tupItem{significado}{puntero($\alpha$)}\\
         \tupItemF{siguientes}{arreglo(puntero(nodo))[256]}
       \end{Tupla}
 
     \end{Estructura}
 
     \Rep[diccTrie][d]{
-      raiz no está contenido en ninguno de sus siguientes ni sus siguientes
+      raiz no estï¿½ contenido en ninguno de sus siguientes ni sus siguientes
     }
 
     ~
 
-    \AbsFc[diccTrie]{diccTrie($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
+    \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{
+      - Para todo c string, def?(c,d) $\igobs$ estaDefinido(e) 
+      \\ \tab estaDefinido(e) $\equiv$ veo si en siguientes de e.raiz en la posicion ASCII de la primera letra de c
+      si es distinto de NULL y hago lo mismo recursivamente con la siguiente letra y el siguiente nodo 
+      desde e.raiz veo que en el vector de los siguientes de res en la 
+      \\ \tab posicion del ASCII de la primera letra no sea NULL y hacer esto recursivamente en cada nodo
+      \\ \tab y al llegar al nodo de la ultima letra ver que el significado no sea NULL
+      \\ - 
+      \IF vacï¿½a?($d$.claves) THEN vacï¿½o ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
+      \\ \\
   \end{Representacion}
   \begin{Algoritmos}
 
-    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : estr}
+    \begin{algorithm}[H]{\textbf{iVacï¿½a}() $\to$ $res$ : estr}
       \begin{algorithmic}[1]
            \State // Le asigna un nuevo nodo a la raiz
            \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
-          \Statex \underline{Justificación:} La complejidad de crear un nuevo nodo es $\Theta(1)$
+          \Statex \underline{Justificaciï¿½n:} La complejidad de crear un nuevo nodo es $\Theta(1)$
           \end{algorithmic}
     \end{algorithm}
 
@@ -287,11 +296,11 @@
         \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
         \State $\textbf{end for}$                                    
 
-        \State $res \gets (actual \DRef significado)$                                            \Comment $\Theta(1)$
+        \State $res \gets *(actual \DRef significado)$                                            \Comment $\Theta(1)$
 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(|k|)$
-          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad será $\Theta(|k|)$.
+          \Statex \underline{Justificaciï¿½n:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad serï¿½ $\Theta(|k|)$.
           \end{algorithmic}
     \end{algorithm}
 
@@ -311,11 +320,11 @@
 
           \medskip
           \Statex \underline{Complejidad:} $\BigO(|k|)$
-          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como máximo. Luego la complejidad será $\BigO(|k|)$.
+          \Statex \underline{Justificaciï¿½n:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como mï¿½ximo. Luego la complejidad serï¿½ $\BigO(|k|)$.
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{estr}, \In{k}{$string$}, \In{s}{$\alpha$})}
+    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{estr}, \In{k}{$string$}, \In{s}{$\alpha$}) $\to$ $res$ : $\alpha$}
       \begin{algorithmic}[1]
           \State $Nodo \ actual \gets d.raiz$
           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
@@ -326,24 +335,29 @@
           \State \tab   $actual \gets (actual \DRef siguientes [toInt(c)])$                                   \Comment $\Theta(1)$
           \State $\textbf{end for}$  
           \State
-          \State // Estoy parado en el nodo que va a tener el significado.
-          \State // Le asigno una copia del provisto.
-          \State $actual \DRef significado \gets copy(s)$                                                     \Comment $\Theta(copy(s))$
+          \State // Estoy parado en el nodo que va a tener el puntero al significado.
+          \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
+          \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
+          \State // Asigno al significado del nodo el puntero creado con s.
+          \State $actual \DRef significado \gets \&sig$                                                       \Comment $\Theta(1)$
+          
+          \State // Devuelvo por referencia el significado.
+          \State res $\gets sig$                                                                              \Comment $\Theta(1)$
 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
-          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$.
+          \Statex \underline{Justificaciï¿½n:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciaciï¿½n y comparaciï¿½n de punteros, e indexaciï¿½n en arreglos estï¿½ticos son $\Theta(1)$.
           \end{algorithmic}
     \end{algorithm}
   
-    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Función privada que crea un nuevo nodo
+    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Funciï¿½n privada que crea un nuevo nodo
       \begin{algorithmic}[1]
-           \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacíos
+           \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacï¿½os
            \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha}$ 				\Comment $\Theta(1)$
     
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
-          \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
+          \Statex \underline{Justificaciï¿½n:} El tiempo de creaciï¿½n de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
           \end{algorithmic}
     \end{algorithm}
   \end{Algoritmos}
@@ -351,20 +365,20 @@
 
 \newpage
 
-\section{Módulo Juego}
+\section{Mï¿½dulo Juego}
 
-  Aqui va la descripción
+  Aqui va la descripciï¿½n
 
   \begin{Interfaz}
     \textbf{generos}: \TipoVariable{juego}.
 
     \textbf{se explica con}: \tadNombre{Juego}.
 
-    \Titulo{Operaciones básicas de Juego}
+    \Titulo{Operaciones bï¿½sicas de Juego}
     
     % Generadores
-    \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
-    [$\neg vacio(pjs) \land (\forall e: evento) (está?(e, eventosFan) \impluego e.pos \in libres(m))$]
+    \InterfazFuncion{iniciar}{\In{m}{mapa},ï¿½\In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
+    [$\neg vacio(pjs) \land (\forall e: evento) (estï¿½?(e, eventosFan) \impluego e.pos \in libres(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
     [$\Theta(?)$ TODO]
     [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
@@ -372,13 +386,13 @@
     \InterfazFuncion{pasarTiempo}{\In{j}{juego}}{juego}%
     {$res \igobs pasar(j)$}%
     [$\Theta(?)$]
-    [ejecuta un paso de tiempo cuando ningún jugador realiza una acción.]
+    [ejecuta un paso de tiempo cuando ningï¿½n jugador realiza una acciï¿½n.]
 
     \InterfazFuncion{ejecutarAccion}{\In{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{juego}%
     [$pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
     {$res \igobs step(j, a, pj)$}%
     [$\Theta(?)$]
-    [actualiza con la acción $a$ del jugador $pj$.]
+    [actualiza con la acciï¿½n $a$ del jugador $pj$.]
 
 
     % Pedidas por enunciado
@@ -391,13 +405,13 @@
     \ttttab (e.dir \igobs dirJugador(p\rightarrow id, j))) 
     )$}%
     [$\Theta(1)$]
-    [devuelve un conjunto con punteros a la información de los personajes que están vivos.]
+    [devuelve un conjunto con punteros a la informaciï¿½n de los personajes que estï¿½n vivos.]
     [res es no modificable.]
   
     \InterfazFuncion{fantasmasVivos}{\In{j}{juego}}{conj(infoFan)}%
     {$fantasmaValido(j, res)$}%
     [$\Theta(1)$]
-    [devuelve un conjunto referencias a la información de los fantasmas que están vivos.]
+    [devuelve un conjunto referencias a la informaciï¿½n de los fantasmas que estï¿½n vivos.]
     [las referencias son no modificables.]
 
     \InterfazFuncion{fantasmaEspecial}{\In{j}{juego}}{infoFan}
@@ -410,19 +424,19 @@
     {$fantasmaValido(j, res) \yluego\\
     \ttab ((\forall f : infoFan) (f \in res \impluego disparando(f.eventos, step(j)))$}
     [$O(\#fv)$]
-    [devuelve un conjunto con punteros a la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
+    [devuelve un conjunto con punteros a la informaciï¿½n de los fantasmas que estï¿½n vivos y disparan en el ultimo paso ejecutado en el juego.]
     [res es un conjunto de referencias no modificables.]
 
     \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
     [$pj \in jugadores(j)$]
     {$res \igobs jugadorVivo(pj, j)$}
     [$O(|j|)$]
-    [devuelve si un jugador está vivo]
+    [devuelve si un jugador estï¿½ vivo]
 
     \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
     {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
     [$O(\#fv * m)$]
-    [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas en la última *ronda* (TODO: ronda o paso?).]
+    [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas en la ï¿½ltima *ronda* (TODO: ronda o paso?).]
 
 
     Predicados auxiliares:
@@ -439,7 +453,7 @@
 
   \begin{Representacion}
     
-    \Titulo{Representación de Juego}
+    \Titulo{Representaciï¿½n de Juego}
     \begin{Estructura}{juego}[estr]
       \begin{Tupla}[j]
         \Comentario{General}
@@ -468,7 +482,7 @@
       \begin{Tupla}[infoPJ]
         \tupItem{eventos}{vector(evento)}\\
         \tupItem{vivo?}{bool}\\
-        % Solo cuando está vivo
+        % Solo cuando estï¿½ vivo
         \tupItemF{infoActual}{itConj(infoActualPJ)}
       \end{Tupla}
 
@@ -507,11 +521,11 @@
 
   \begin{Algoritmos}
 
-  En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
+  En esta secciï¿½n se hace abuso de notaciï¿½n en los cï¿½lculos de ï¿½lgebra de ï¿½rdenes presentes en la justificaciones de los algoritmos. La operaciï¿½n de suma ``+'' denota secuencializaciï¿½n de operaciones con determinado orden de complejidad, y el sï¿½mbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
 
   \medskip
     
-  \Titulo{Algoritmos del módulo}
+  \Titulo{Algoritmos del mï¿½dulo}
       \medskip
     
   \begin{algorithm}[H]{\textbf{iIniciar}(\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento)}) $\to$ $res$ : estr}
@@ -525,11 +539,11 @@
         \State \tab // Seteo el mapa 
         \State \tab $mapa: m,$                     \Comment $\Theta(1)$
         \\
-        \State \tab // Inicializo el mapa de disparos con el mismo tamaño que el mapa
+        \State \tab // Inicializo el mapa de disparos con el mismo tamaï¿½o que el mapa
         \State \tab $mapaDisparos: arreglo(arreglo(tupla(nat, nat))[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
         \State \tab $disparosUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
         \\
-        \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
+        \State \tab // Inicializo estructuras de jugadores y fantasmas como vacï¿½as
         \State \tab $infoActualJugadoresVivos: Vacio(),$
         \State \tab $infoJugadoresVivos: Vacio(),$
         \State \tab $infoJugadores: Vacia(),$
@@ -539,7 +553,7 @@
         \State \tab $infoFantasmaEspecial: CrearIt(Vacio())$ % TODO
         \State $\rangle$
         \\
-        \State // Suponemos la existencia de la función
+        \State // Suponemos la existencia de la funciï¿½n
         \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ conj(jugador)\ pjs)$ 
         \\
         \State // Obtengo las posiciones y direcciones de jugadores
@@ -570,7 +584,7 @@
         \\
         \State // Creo la infoFan con la actual
         \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$
-        \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
+        \State // La agrego al conjunto de informaciï¿½n de fantasmas y me guardo su iterador
         \State $itInfoFan \gets AgregarRapido(infoFan,\ res.infoFantasmas)$
         \\
         \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
@@ -608,17 +622,17 @@
 
 \newpage
 
-\section{Módulo Mapa}
+\section{Mï¿½dulo Mapa}
 
-Aqui va la descripción
+Aqui va la descripciï¿½n
 
 \begin{Interfaz}
   
   \textbf{generos}: \TipoVariable{mapa}.
 
-  \textbf{se explica con}: \tadNombre{Habitación}.
+  \textbf{se explica con}: \tadNombre{Habitaciï¿½n}.
 
-  \Titulo{Operaciones básicas del mapa}
+  \Titulo{Operaciones bï¿½sicas del mapa}
   \InterfazFuncion{nuevoMapa}{\In{n}{nat}}{mapa}%
   {$res \igobs nuevaHab(n)$}%
   [$\Theta(n^2)$]
@@ -646,9 +660,9 @@ Aqui va la descripción
 
 \begin{Representacion}
   
-  \Titulo{Representación del mapa}
+  \Titulo{Representaciï¿½n del mapa}
 
-  El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+  El objetivo de este mï¿½dulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del ï¿½ltimo apunta al primero y el anterior del primero apunta al ï¿½ltimo.  La estructura de representaciï¿½n, su invariante de representaciï¿½n y su funciï¿½n de abstracciï¿½n son las siguientes.
 
   \begin{Estructura}{mapa}[m]
     \begin{Tupla}[m]
@@ -673,11 +687,11 @@ Aqui va la descripción
 
 \begin{Algoritmos}
 
-En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
+En esta secciï¿½n se hace abuso de notaciï¿½n en los cï¿½lculos de ï¿½lgebra de ï¿½rdenes presentes en la justificaciones de los algoritmos. La operaciï¿½n de suma ``+'' denota secuencializaciï¿½n de operaciones con determinado orden de complejidad, y el sï¿½mbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
 
 \medskip
 	
- \Titulo{Algoritmos del módulo}
+ \Titulo{Algoritmos del mï¿½dulo}
   	\medskip
   
 \begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
@@ -694,7 +708,7 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
 			\medskip
 			\Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} El acceso a una posición de un vector y su modificación es $\Theta(1)$
+      \Statex \underline{Justificaciï¿½n:} El acceso a una posiciï¿½n de un vector y su modificaciï¿½n es $\Theta(1)$
     	\end{algorithmic}
 \end{algorithm}
 
@@ -705,7 +719,7 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
 			\medskip
 			\Statex \underline{Complejidad:} $\Theta(1)$
-			\Statex \underline{Justificación:} El acceso a una posición de un vector es $\Theta(1)$
+			\Statex \underline{Justificaciï¿½n:} El acceso a una posiciï¿½n de un vector es $\Theta(1)$
     	\end{algorithmic}
 \end{algorithm}
 	
@@ -726,7 +740,7 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
       \EndWhile
       \medskip
       \Statex \underline{Complejidad:} $\Theta(n^2)$
-      \Statex \underline{Justificación:} Copiar un vector de n booleanos es $O(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $O(n^2)$
+      \Statex \underline{Justificaciï¿½n:} Copiar un vector de n booleanos es $O(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $O(n^2)$
     	\end{algorithmic}
 \end{algorithm}
 
@@ -734,47 +748,47 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
 \newpage
 
-\section{Módulo Dirección}
+\section{Mï¿½dulo Direcciï¿½n}
 
-Aqui va la descripción
+Aqui va la descripciï¿½n
 
 \begin{Interfaz}
   \textbf{generos}: \TipoVariable{dir}.
 
-  \textbf{se explica con}: \tadNombre{Dirección}.
+  \textbf{se explica con}: \tadNombre{Direcciï¿½n}.
 
-  \Titulo{Operaciones básicas de Dirección}
+  \Titulo{Operaciones bï¿½sicas de Direcciï¿½n}
 
   \InterfazFuncion{arriba}{}{dir}%
   {$res \igobs  \uparrow$}%
   [$\Theta(1)$]
-  [genera la dirección arriba.]
+  [genera la direcciï¿½n arriba.]
 
   \InterfazFuncion{abajo}{}{dir}%
   {$res \igobs  \downarrow$}%
   [$\Theta(1)$]
-  [genera la dirección abajo.]
+  [genera la direcciï¿½n abajo.]
 
   \InterfazFuncion{izquierda}{}{dir}%
   {$res \igobs  \leftarrow$}%
   [$\Theta(1)$]
-  [genera la dirección izquierda.]
+  [genera la direcciï¿½n izquierda.]
 
   \InterfazFuncion{derecha}{}{dir}%
   {$res \igobs  \rightarrow$}%
   [$\Theta(1)$]
-  [genera la dirección derecha.]
+  [genera la direcciï¿½n derecha.]
 
   \InterfazFuncion{invertir}{\Inout{d}{dir}}{}
   {$res \igobs invertir(d)$}
   [$\Theta(1)$]
-  [invierte la dirección.]
+  [invierte la direcciï¿½n.]
 
 \end{Interfaz}
 
 \begin{Representacion}
   
-  \Titulo{Representación de Dirección}
+  \Titulo{Representaciï¿½n de Direcciï¿½n}
 
   \begin{Estructura}
     {dir}[string]
@@ -800,7 +814,7 @@ Aqui va la descripción
 \bigskip
 
 \begin{Algoritmos}
-  \Titulo{Algoritmos del módulo}
+  \Titulo{Algoritmos del mï¿½dulo}
   \medskip
   
   \begin{algorithm}[H]{\textbf{iArriba}() $\to$ $res$ : dir}
@@ -857,43 +871,43 @@ Aqui va la descripción
 
 \newpage
 
-\section{Módulo Acción}
+\section{Mï¿½dulo Acciï¿½n}
 
-Aqui va la descripción
+Aqui va la descripciï¿½n
 
 \begin{Interfaz}
   \textbf{generos}: \TipoVariable{accion}.
 
-  \textbf{se explica con}: \tadNombre{Acción}.
+  \textbf{se explica con}: \tadNombre{Acciï¿½n}.
 
-  \Titulo{Operaciones básicas de Acción}
+  \Titulo{Operaciones bï¿½sicas de Acciï¿½n}
   \InterfazFuncion{mover}{\In{d}{dir}}{accion}%
   {$res \igobs mover(d)$}%
   [$\Theta(1)$]
-  [genera una acción de mover en la dirección especificada.]
+  [genera una acciï¿½n de mover en la direcciï¿½n especificada.]
   
   \InterfazFuncion{pasar}{}{accion}%
   {$res \igobs pasar$}%
   [$\Theta(1)$]
-  [genera la acción de pasar.]
+  [genera la acciï¿½n de pasar.]
 
   \InterfazFuncion{disparar}{}{accion}%
   {$res \igobs disparar$}%
   [$\Theta(1)$]
-  [genera la acción de disparar.]
+  [genera la acciï¿½n de disparar.]
 
   \InterfazFuncion{aplicar}{}{tupla()}%
   {$res \igobs disparar$}%
   [$\Theta(1)$]
-  [genera la acción de disparar.]
+  [genera la acciï¿½n de disparar.]
 
 \end{Interfaz}
 
 \begin{Representacion}
   
-  \Titulo{Representación de Acción}
+  \Titulo{Representaciï¿½n de Acciï¿½n}
 
-  El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+  El objetivo de este mï¿½dulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del ï¿½ltimo apunta al primero y el anterior del primero apunta al ï¿½ltimo.  La estructura de representaciï¿½n, su invariante de representaciï¿½n y su funciï¿½n de abstracciï¿½n son las siguientes.
 
   \begin{Estructura}{mapa}[m]
     \begin{Tupla}[m]
@@ -920,11 +934,11 @@ Aqui va la descripción
 
 \begin{Algoritmos}
 
-En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
+En esta secciï¿½n se hace abuso de notaciï¿½n en los cï¿½lculos de ï¿½lgebra de ï¿½rdenes presentes en la justificaciones de los algoritmos. La operaciï¿½n de suma ``+'' denota secuencializaciï¿½n de operaciones con determinado orden de complejidad, y el sï¿½mbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
 
 \medskip
 	
- \Titulo{Algoritmos del módulo}
+ \Titulo{Algoritmos del mï¿½dulo}
   	\medskip
   
 \begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
