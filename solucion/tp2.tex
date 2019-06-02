@@ -539,45 +539,63 @@
         \State \tab $infoFantasmaEspecial: CrearIt(Vacio())$ % TODO
         \State $\rangle$
         \\
-        \State // Suponemos la existencia de la función
-        \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ conj(jugador)\ pjs)$ 
+        \State // Inicializo los jugadores
+        \State iIniciarJugadores(res)
         \\
-        \State // Obtengo las posiciones y direcciones de jugadores
-        \State $localPJs \gets localizarJugadores(m, pjs)$ \
-        \\
-        \State // Lleno las estructuras de jugadores
-        \State $\textbf{for} \ (j,\ localizacion : \ localPJs) \ \ \textbf{do}$
-        \State \tab // Creo la infoActual y la agrego a su conjunto
-        \State \tab $infoActual \gets \tuple{identidad: j,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
-        \State \tab $itInfoActual \gets AgregarRapido(res.infoActualJugadoresVivos,\ infoActual)$
-        \\
-        \State \tab // Creo la infoPJ con la actual
-        \State \tab $info \gets iNuevaInfoPJ(j,\ localizacion,\ itInfoActual)$
-        \State \tab // La agrego al trie y me guardo el puntero a la info guardada
-        \State \tab $infoPtr \gets \& Definir(res.infoJugadores,\ j,\ info)$
-        \\
-        \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
-        \State \tab $AgregarRapido(res.infoJugadoresVivos,\ infoPtr)$
-        \State $\textbf{end for}$
-        \\
-        \State // Lleno las estructuras de fantasmas
-        \State // Creo la infoActual y la agrego a su conjunto
-        \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$
-        \State $itInfoActualFan \gets AgregarRapido(infoActualFan, res.infoActualFantasmasVivos)$
-        \\
-        \State // Hago que el fantasma especial sea este
-        \State $res.infoFantasmaEspecial \gets itInfoActualFan$
-        \\
-        \State // Creo la infoFan con la actual
-        \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$
-        \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
-        \State $itInfoFan \gets AgregarRapido(infoFan,\ res.infoFantasmas)$
-        \\
-        \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
-        \State $AgregarRapido(itInfoFan,\ res.infoFantasmasVivos)$
+        \State // Inicializo los fantasmas
+        \State iIniciarFantasmas(res)
         \medskip
         \Statex \underline{Complejidad:} $\Theta(?)$
         \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iIniciarJugadores}(\In{j}{estr})} \Comment Función privada
+    \begin{algorithmic}[1]
+      \State // Suponemos la existencia de la función
+      \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ conj(jugador)\ pjs)$ 
+      \\
+      \State // Obtengo las posiciones y direcciones de jugadores
+      \State $localPJs \gets localizarJugadores(m, pjs)$ \
+      \\
+      \State // Lleno las estructuras de jugadores
+      \State $\textbf{for} \ (j,\ localizacion : \ localPJs) \ \ \textbf{do}$
+      \State \tab // Creo la infoActual y la agrego a su conjunto
+      \State \tab $infoActual \gets \tuple{identidad: j,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
+      \State \tab $itInfoActual \gets AgregarRapido(res.infoActualJugadoresVivos,\ infoActual)$
+      \\
+      \State \tab // Creo la infoPJ con la actual
+      \State \tab $info \gets iNuevaInfoPJ(j,\ localizacion,\ itInfoActual)$
+      \State \tab // La agrego al trie y me guardo el puntero a la info guardada
+      \State \tab $infoPtr \gets \& Definir(res.infoJugadores,\ j,\ info)$
+      \\
+      \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
+      \State \tab $AgregarRapido(res.infoJugadoresVivos,\ infoPtr)$
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(?)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iIniciarFantasmas}(\In{j}{estr})} \Comment Función privada
+    \begin{algorithmic}[1]
+      \State // Lleno las estructuras de fantasmas
+      \State // Creo la infoActual y la agrego a su conjunto
+      \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$
+      \State $itInfoActualFan \gets AgregarRapido(infoActualFan, res.infoActualFantasmasVivos)$
+      \\
+      \State // Hago que el fantasma especial sea este
+      \State $res.infoFantasmaEspecial \gets itInfoActualFan$
+      \\
+      \State // Creo la infoFan con la actual
+      \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$
+      \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
+      \State $itInfoFan \gets AgregarRapido(infoFan,\ res.infoFantasmas)$
+      \\
+      \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
+      \State $AgregarRapido(itInfoFan,\ res.infoFantasmasVivos)$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(?)$
+    \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iPasarTiempo}(\In{j}{estr})}
