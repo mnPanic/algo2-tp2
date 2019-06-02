@@ -12,10 +12,14 @@ General
         Evento
         Pos 
         Dir
+        Cambiar mapa disparos para que en vez de tuple(nat nat) tenga
+            pasoDisparos
+                pasoDispFan
+                pasoDispPJ
     - Chequear las cosas que van por ref y copia
 
-Juego
-    iNuevaInfoPJ
+Mapa
+    Valida?(pos) -> bool
 
 TAD
     Precondicion en iniciar -> evt fantasma no vacio
@@ -32,4 +36,8 @@ Accion
             Existe un n tq la long de los eventos es n * 2 + 5 => 
                 los primeros n son los ultimos (n+5 a long - 1) invertidos.
                 entre n y n+5 son "nada".
+    
+    Avanzar(pos, dir) -> pos
+        Dada una posicion, la avanza en una dir sin importar si es v?lida.
+
         
