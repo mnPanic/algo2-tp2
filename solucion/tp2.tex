@@ -741,7 +741,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
 \section{Módulo Dirección}
 
-Aqui va la descripción
+El módulo Dirección provee una dirección y una función que permite invertir las mismas.
 
 \begin{Interfaz}
   \textbf{generos}: \TipoVariable{dir}.
@@ -779,6 +779,9 @@ Aqui va la descripción
 
 \begin{Representacion}
   
+  El objetivo de este módulo es implementar una dirección utilizando strings. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+
+
   \Titulo{Representación de Dirección}
 
   \begin{Estructura}
@@ -792,6 +795,7 @@ Aqui va la descripción
     d \igobs $"derecha"$
   }
   
+  \mbox{}
   \mbox{}
 
   \Abs[dir]{dir}[d]{d$_{tad}$}{(d \igobs $"arriba"$  $\land$ d$_{tad}$ \igobs $\uparrow$) $\lor$\\
