@@ -718,6 +718,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 \begin{Representacion}
   
   \Titulo{Representación del mapa}
+  \mbox{}
 
   El objetivo de este módulo es implementar una matriz de tamaño n con vectores de booleanos que indican si una posición está ocupada. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
@@ -812,7 +813,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
 \section{Módulo Dirección}
 
-Aqui va la descripción
+El módulo Dirección provee una dirección y una función que permite invertir las mismas.
 
 \begin{Interfaz}
   \textbf{generos}: \TipoVariable{dir}.
@@ -850,6 +851,8 @@ Aqui va la descripción
 
 \begin{Representacion}
   
+  El objetivo de este módulo es implementar una dirección utilizando strings. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+
   \Titulo{Representación de Dirección}
 
   \begin{Estructura}
@@ -863,6 +866,7 @@ Aqui va la descripción
     d \igobs $"derecha"$
   }
   
+  \mbox{}
   \mbox{}
 
   \Abs[dir]{dir}[d]{d$_{tad}$}{(d \igobs $"arriba"$  $\land$ d$_{tad}$ \igobs $\uparrow$) $\lor$\\
@@ -935,7 +939,7 @@ Aqui va la descripción
 
 \section{Módulo Acción}
 
-Aqui va la descripción
+El módulo Acción provee una acción y una funciones que permiten operar con acciones y eventos.
 
 \begin{Interfaz}
   \textbf{generos}: \TipoVariable{accion}.
@@ -982,8 +986,9 @@ Aqui va la descripción
 \begin{Representacion}
   
   \Titulo{Representación de Acción}
+  \mbox{}
 
-  El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+  El objetivo de este módulo es implementar una acción utilizando una tupla de string y dirección. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
   \begin{Estructura}{acción}[a]
     \begin{Tupla}[a]
@@ -1012,8 +1017,7 @@ Aqui va la descripción
 
 \begin{Algoritmos}
 
-En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
-
+ACA ACLARAR QUE NO NOS IMPORTA LA DIRECCION EN PASAR Y DISPARAR PERO NO PODEMOS DEJARLO VACÍO.
 \medskip
 	
  \Titulo{Algoritmos del módulo}
