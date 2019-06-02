@@ -882,10 +882,23 @@ Aqui va la descripción
   [$\Theta(1)$]
   [genera la acción de disparar.]
 
-  \InterfazFuncion{aplicar}{}{tupla()}%
-  {$res \igobs disparar$}%
+  \InterfazFuncion{aplicar}{\In{a}{acción}, \In{j}{juego}, \In{e}{evento}}{evento}%
+  {$res \igobs aplicar(a,\ j,\ e)$}%
   [$\Theta(1)$]
-  [genera la acción de disparar.]
+  [genera el evento a partir de la acción a realizar.]
+
+
+  \InterfazFuncion{invertir}{\In{e}{evento}}{evento}%
+  {$res \igobs invertir(e)$}%
+  [$\Theta(1)$]
+  [invierte un evento.]
+
+
+  \InterfazFuncion{inversa}{\In{es}{vector(evento)}}{vector(evento)}%
+  {$res \igobs inversa(es)$}%
+  [$\Theta(1)$]
+  [genera una secuencia que contiene a la inicial, le suma 5 pasos de espera y le agrega la secuencia original invertida.]
+
 
 \end{Interfaz}
 
@@ -895,24 +908,26 @@ Aqui va la descripción
 
   El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
-  \begin{Estructura}{mapa}[m]
-    \begin{Tupla}[m]
-      \tupItem{tamano}{nat}%
-      \tupItem{casilleros}{vec(vec(bool))}%
+  \begin{Estructura}{acción}[a]
+    \begin{Tupla}[a]
+      \tupItem{acción}{string}
+      \tupItem{dir}{dir}
     \end{Tupla}
   \end{Estructura}
 
-  \Rep[mapa][m]{
-    La longitud de m.casilleros es igual a tamano $\land$\\
-    La longitud del vector m.casilleros es igual a la de todo otro vector dentro de el) $\land$\\
-    Es conexa % Trivial
+  \Rep[acción][a]{\\
+  a.acción \igobs $"disparar"$    $\lor$\\
+  a.acción \igobs $"pasar"$     $\lor$\\
+  a.acción \igobs $"mover" \land Rep(a.dir)$
+  %%Esto es medio bizarro, no? Qué deberíamos pedirle a la dirección cuando la acción es mover?%%
   }
   
   \mbox{}
 
-  \Abs[mapa]{hab}[m]{h}{$m.tamano$ $\igobs$ $tam(h)$ $\yluego$\\
-    ($\forall t$: tuple(nat,nat))($0 \leq$ $\Pi_1(t)$, $\Pi_2(t) < m.tamano - 1$ $\impluego$\\
-    libre(m, t) $\igobs$ $m.casilleros[\Pi_1(t)][\Pi_2(t)]$)}
+  \Abs[acción]{acción}[a]{a$_{tad}$}{(a.acción \igobs $"disparar"$  $\land$ a$_{tad}$ \igobs $esDisparar(a_{tad}))$ $\lor$\\
+  (a.acción \igobs $"pasar"$  $\land$ a$_{tad}$ \igobs $esPasar(a_{tad}))$ $\lor$\\
+  (a.acción \igobs $"mover"$  $\land$ a$_{tad}$ \igobs $esMover(a_{tad}))$ $\yluego$ a.dir \igobs $direccion(a_{tad}))$
+  }
 
 \end{Representacion}
 
