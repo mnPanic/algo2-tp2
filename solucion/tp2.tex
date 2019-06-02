@@ -564,7 +564,7 @@
       \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$
       \\
       \State \tab // Creo la infoPJ con la actual
-      \State \tab $info \gets iNuevaInfoPJ(j,\ localizacion,\ itInfoActual)$
+      \State \tab $info \gets iNuevaInfoPJ(localizacion,\ itInfoActual)$
       \State \tab // La agrego al trie y me guardo el puntero a la info guardada
       \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ j,\ info)$
       \\
@@ -573,6 +573,30 @@
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(?)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iNuevaInfoPJ}(\In{localizacion}{tupla(pos, dir), \In{itInfoActual}{itConj(infoActualPJ)}}) $\to res:$ infoPJ} \Comment Función privada
+    \begin{algorithmic}[1]
+      \State // Creo el evento
+      \State $evento \gets \langle$                 \Comment $\Theta(1)$
+      \State \tab $pos: localizacion.pos,$
+      \State \tab $dir: localizacion.dir,$
+      \State \tab $disparo?: false$
+      \State $\rangle$
+      \\
+      \State // Creo una lista con él
+      \State $evts \gets Vacia()$                   \Comment $\Theta(1)$
+      \State $AgregarAtras(evts, evento)$           \Comment $\Theta(1)$
+      \\
+      \State // Armo la infoPJ
+      \State $res \gets \langle$                    \Comment $\Theta(1)$
+      \State \tab $eventos: evts$
+      \State \tab $vivo?: true$
+      \State \tab $infoActual: itInfoActual$
+      \State $\rangle$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
