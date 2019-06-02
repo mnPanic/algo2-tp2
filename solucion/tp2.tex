@@ -681,7 +681,7 @@
 
 \section{Módulo Mapa}
 
-Aqui va la descripción
+El módulo Mapa provee una habitación en la que se puede ocupar y consultar por una posición en $\Theta(1)$. 
 
 \begin{Interfaz}
   
@@ -693,25 +693,25 @@ Aqui va la descripción
   \InterfazFuncion{nuevoMapa}{\In{n}{nat}}{mapa}%
   {$res \igobs nuevaHab(n)$}%
   [$\Theta(n^2)$]
-  [genera un mapa de tamano n x n.]
+  [genera un mapa de tamaño n x n.]
 
   \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{c}{$tupla(int, int)$}}{}%
   [$m \igobs m_0$ $\land$ $c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]
   %lo de m = m0 es igualdad observacional, no?
   {$m$ $\igobs$ $ocupar(c,m_0)$}%
   [$\Theta(1)$]
-  [ocupa una posicion del mapa siempre y cuando este no deje de ser conexo.]
+  [ocupa una posición del mapa siempre y cuando éste no deje de ser conexo.]
 
   \InterfazFuncion{tam}{\In{m}{mapa}}{nat}%
   {$res$ $\igobs$ $tam(m)$}%
   [$\Theta(1)$]
-  [devuelve el tamano del mapa.]
+  [devuelve el tamaño del mapa.]
     
   \InterfazFuncion{libre}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{bool}%
   [$c \in casilleros(m)$]%
   {$res$ $\igobs$ $libre(c, m)$}
   [$\Theta(1)$]
-  [devuelve si un elemento esta ocupado.]
+  [devuelve si una posición está ocupada.]
 
 \end{Interfaz}
 
@@ -719,24 +719,24 @@ Aqui va la descripción
   
   \Titulo{Representación del mapa}
 
-  El objetivo de este módulo es implementar una lista doblemente enlazada con punteros al principio y al fin.  Para simplificar un poco el manejo de la estructura, vamos a reemplazarla por una lista circular, donde el siguiente del último apunta al primero y el anterior del primero apunta al último.  La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
+  El objetivo de este módulo es implementar una matriz de tamaño n con vectores de booleanos que indican si una posición está ocupada. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
-  \begin{Estructura}{mapa}[m]
-    \begin{Tupla}[m]
+  \begin{Estructura}{mapa}[map]
+    \begin{Tupla}[map]
       \tupItem{tamano}{nat}%
       \tupItem{casilleros}{vec(vec(bool))}%
     \end{Tupla}
   \end{Estructura}
 
-  \Rep[mapa][m]{
-    La longitud de m.casilleros es igual a tamano $\land$\\
+  \Rep[mapa][map]{
+    La longitud de map.casilleros es igual a tamano $\land$\\
     La longitud del vector m.casilleros es igual a la de todo otro vector dentro de el) $\land$\\
-    Es conexa % Trivial
+    Toda posición libre debe ser alcanzable por todo el resto de las posiciones libres a través de un camino de posiciones libres (conexo).
   }\mbox{}
 
-  \Abs[mapa]{hab}[m]{h}{$m.tamano$ $\igobs$ $tam(h)$ $\yluego$\\
-    ($\forall t$: tuple(nat,nat))($0 \leq$ $\Pi_1(t)$, $\Pi_2(t) < m.tamano - 1$ $\impluego$\\
-    libre(m, t) $\igobs$ $m.casilleros[\Pi_1(t)][\Pi_2(t)]$)}
+  \Abs[mapa]{hab}[map]{h}{$m.tamano$ $\igobs$ $tam(h)$ $\yluego$\\
+    ($\forall t$: tupla(nat,nat))($0 \leq$ $\Pi_1(t)$, $\Pi_2(t) < map.tamano - 1$ $\impluego$\\
+    libre(h, t) $\igobs$ $map.casilleros[\Pi_1(t)][\Pi_2(t)]$)}
 
 \end{Representacion}
 
@@ -744,14 +744,13 @@ Aqui va la descripción
 
 \begin{Algoritmos}
 
-En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
-
+  %%Si quieren agregar algún abstract antes de los algoritmos, ponganlo aquí%%
 \medskip
 	
  \Titulo{Algoritmos del módulo}
   	\medskip
   
-\begin{algorithm}[H]{\textbf{iTam}(\In{m}{mapa}) $\to$ $res$ : nat}
+\begin{algorithm}[H]{\textbf{iTam}(\In{m}{map}) $\to$ $res$ : nat}
     	\begin{algorithmic}[1]
        \State $res \gets m.tamano$ \Comment $\Theta(1)$
 			\medskip
@@ -759,9 +758,9 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
     	\end{algorithmic}
 \end{algorithm}
 
-\begin{algorithm}[H]{\textbf{iOcupar}(\Inout{m}{mapa}, \In{c}{tupla(int, int)})}
+\begin{algorithm}[H]{\textbf{iOcupar}(\Inout{m}{map}, \In{p}{pos})}
   \begin{algorithmic}[1]
-			 \State $m[\Pi_1(c)][\Pi_2(c)] \gets true$ 				\Comment $\Theta(1)$
+			 \State $m[\Pi_1(p)][\Pi_2(p)] \gets true$ 				\Comment $\Theta(1)$
 
 			\medskip
 			\Statex \underline{Complejidad:} $\Theta(1)$
@@ -770,9 +769,9 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 \end{algorithm}
 
 
-\begin{algorithm}[H]{\textbf{iLibre}(\In{m}{mapa}, \In{c}{tupla(int, int)}) $\to$ $res$ : bool}
+\begin{algorithm}[H]{\textbf{iLibre}(\In{m}{map}, \In{p}{pos}) $\to$ $res$ : bool}
 	\begin{algorithmic}[1]
-			 \State $res \gets \neg \ m[\Pi_1(c)][\Pi_2(c)]$	\Comment $\Theta(1)$
+			 \State $res \gets \neg \ m[\Pi_1(p)][\Pi_2(p)]$	\Comment $\Theta(1)$
 
 			\medskip
 			\Statex \underline{Complejidad:} $\Theta(1)$
@@ -781,23 +780,29 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 \end{algorithm}
 	
 
-\begin{algorithm}[H]{\textbf{iNuevoMapa}(\In{n}{nat}) $\to$ $res$ : $mapa$}
+\begin{algorithm}[H]{\textbf{iNuevoMapa}(\In{n}{nat}) $\to$ $res$ : $map$}
   \begin{algorithmic}[1]
+    \State // Inicializo el tamaño, el vector y el mapa.
+      \State $res \gets \tuple{tamano: n,\ casilleros: Vacia()}$ \Comment $\Theta(1)$
       \State $m.tamano \gets n$                   \Comment $\Theta(1)$
       \State $v \gets Vacia()$	                  \Comment $\Theta(1)$
+      \\
+      \State // Genero un vector de booleanos en falso con n posiciones.
       \State $i \gets 0$                          \Comment $\Theta(1)$
-      \While{$i < n$}                             \Comment $O(n)$
-        \State $v.AgregarAtras(false)$
+      \While{$i < n$}                             \Comment $\BigO(n^2)$
+        \State $v.AgregarAtras(false)$            \Comment $\BigO(n)$
         \State $i \gets i + 1$
       \EndWhile
+      \\
+      \State // Genero la matriz de n x n posiciones haciendo n copias del vector de booleanos antes creado.
       \State $i \gets 0$
-      \While{$i < n$}                             \Comment $O(n^2)$
-        \State $res.AgregarAtras(v.Copiar())$     \Comment $O(n)$
-        \State $i \gets i + 1$                    \Comment $O(1)$
+      \While{$i < n$}                             \Comment $\BigO(n^2)$
+        \State $res.AgregarAtras(v.Copiar())$     \Comment $\BigO(n)$
+        \State $i \gets i + 1$                    \Comment $\Theta(1)$
       \EndWhile
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(n^2)$
-      \Statex \underline{Justificación:} Copiar un vector de n booleanos es $O(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $O(n^2)$
+      \Statex \underline{Complejidad:} $\BigO(n^2)$
+      \Statex \underline{Justificación:} Copiar un vector de n booleanos es $\BigO(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $\BigO(n^2)$, puesto que AgregarAtrás es $\BigO(n)$ y copiarlo es $\BigO(n)$ por lo antes visto. Luego la complejidad de la operación de la línea 10 es $\BigO(n)$ y, por lo tanto, todo el while es $\BigO(n^2)$.
     	\end{algorithmic}
 \end{algorithm}
 
@@ -1016,6 +1021,7 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
     
   \begin{algorithm}[H]{\textbf{iPasar}() $\to$ $res$ : acción}
         \begin{algorithmic}[1]
+        \State // $""$ es el constructor por defecto del tipo que sea dirección en su Representación Interna"
         \State $res \gets \tuple{accion: "pasar",\ dir:  ""}$      \Comment $\Theta(1)$
         \medskip
         \Statex \underline{Complejidad:} $\Theta(1)$
@@ -1024,6 +1030,7 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
   \begin{algorithm}[H]{\textbf{iDisparar}() $\to$ $res$ : acción}
         \begin{algorithmic}[1]
+        \State // $""$ es el constructor por defecto del tipo que sea dirección en su Representación Interna"
         \State $res \gets \tuple{accion: "disparar",\ dir:  ""}$      \Comment $\Theta(1)$
         \medskip
         \Statex \underline{Complejidad:} $\Theta(1)$
@@ -1072,7 +1079,6 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
         \begin{algorithmic}[1]
           \State $\textbf{if} \ (a.accion = disparar) $        \Comment $\Theta(1)$
           \State \tab   $\textbf{then} \ res \gets \tuple{pos: e.pos,\ dir: e.dir,\ disparo?: true}$       \Comment $\Theta(1)$
-        %  \State \tab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
           \State $\textbf{end if}$
           \\
 
@@ -1083,25 +1089,25 @@ En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes 
 
           \State $\textbf{if} \ (a.accion = mover) \ \textbf{then}$        \Comment $\Theta(1)$
           
-          \State \tab $\textbf{if} \ (a.dir = "arriba" \land \ \Pi_1(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)+1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
+          \State \tab $\textbf{if} \ (a.dir = Arriba() \land \ \Pi_1(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)+1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
           \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos)+1, \Pi_2(e.pos)},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
           \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
           \State \tab $\textbf{end if}$
 
 
-          \State \tab $\textbf{if} \ (a.dir = "abajo" \land \ \Pi_1(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)-1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
+          \State \tab $\textbf{if} \ (a.dir = Abajo() \land \ \Pi_1(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)-1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
           \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos)-1, \Pi_2(e.pos)},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
           \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
           \State \tab $\textbf{end if}$
 
 
-          \State \tab $\textbf{if} \ (a.dir = "derecha" \land \ \Pi_2(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)+1}\ )$        \Comment $\Theta(1)$
+          \State \tab $\textbf{if} \ (a.dir = Derecha() \land \ \Pi_2(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)+1}\ )$        \Comment $\Theta(1)$
           \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)+1},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
           \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
           \State \tab $\textbf{end if}$
 
 
-          \State \tab $\textbf{if} \ (a.dir = "izquierda" \land \ \Pi_2(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)-1}\ )$        \Comment $\Theta(1)$
+          \State \tab $\textbf{if} \ (a.dir = Izquierda() \land \ \Pi_2(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)-1}\ )$        \Comment $\Theta(1)$
           \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)-1},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
           \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
           \State \tab $\textbf{end if}$
