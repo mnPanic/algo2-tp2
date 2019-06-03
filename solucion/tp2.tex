@@ -246,7 +246,8 @@
     \begin{Estructura}{diccTrie$(string, \alpha)$}[estr]
 
       \begin{Tupla}[estr]%
-        \tupItemF{raiz}{puntero(nodo)}%
+        \tupItemF{raiz}{puntero(nodo)},\\
+        \tupItemF{claves}{conj(string)}
       \end{Tupla}
 
       \mbox{}
@@ -258,15 +259,37 @@
 
     \end{Estructura}
 
-    \Rep[diccTrie][d]{
-      raiz no está contenido en ninguno de sus siguientes ni sus siguientes
+    \Rep[diccTrie][d]{\\
+      (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
+      La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
+      Todas las hojas tienen un significado distinto de NULL.\\
+      Un s string pertenece a d.claves si y solo si se puede seguir un camino de nodos en el diccionario con los caracteres de s (en orden) llegando finalemente al ultimo nodo (correspondiente a la ultima letra) teniendo este significado distinto de NULL) \\ \\
+      // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
     }
 
     ~
 
-    \AbsFc[diccTrie]{diccTrie($string$, $\alpha$)}[d]{\IF vacía?($d$.claves) THEN vacío ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
-  \end{Representacion}
-  \begin{Algoritmos}
+    \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{ \\
+    (\paratodo s : string)(def?(s,d) $\igobs$ estaDefinido(e.raiz, s)) $\land$ \\
+    (\paratodo s : string)(def?(s,d) $\impluego$ obtener(s, d) $\igobs$ significado(e.raiz, s)) $\land$ \\
+    claves(d) $\igobs$ e.claves}\\ 
+  
+  estaDefinido(r, s) $\equiv$ 
+  \textbf{if} vacia?(s) \\
+  \ttab \textbf{then} r $\DRef$ significado $\neq$ NULL \\ 
+  \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estaDefinido(r.siguientes[int(prim(s))], fin(s)) 
+  \textbf{fi} \\
+
+  significado(r,s)  $\equiv$ 
+  \textbf{if} vacia?(s) \\
+  \ttab \textbf{then} r $\DRef$ significado \\ 
+  \ttab \textbf{else} significado(r.siguientes[int(prim(s))], fin(s)) 
+  \textbf{fi} \\
+
+\end{Representacion}
+
+
+\begin{Algoritmos}
 
     \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : estr}
       \begin{algorithmic}[1]
@@ -287,7 +310,7 @@
         \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
         \State $\textbf{end for}$                                    
 
-        \State $res \gets (actual \DRef significado)$                                            \Comment $\Theta(1)$
+        \State $res \gets *(actual \DRef significado)$                                          \Comment $\Theta(1)$
 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(|k|)$
@@ -298,16 +321,16 @@
 
     \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{estr}, \In{k}{$string$}) $\to$ $res$ : bool}
       \begin{algorithmic}[1]
-           \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
-           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-           \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $        \Comment $\Theta(1)$
-           \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
-           \State \ttab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
-           \State \tab $\textbf{end if}$
-           \State $\textbf{end for}$                                    
+        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+        \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $        \Comment $\Theta(1)$
+        \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
+        \State \ttab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
+        \State \tab $\textbf{end if}$
+        \State $\textbf{end for}$                                    
 
-           \State $res \gets true$                                                                  \Comment $\Theta(1)$
+        \State $res \gets ((actual \DRef significado) \neq NULL)$                                                                  \Comment $\Theta(1)$
 
           \medskip
           \Statex \underline{Complejidad:} $\BigO(|k|)$
@@ -326,9 +349,16 @@
           \State \tab   $actual \gets (actual \DRef siguientes [toInt(c)])$                                   \Comment $\Theta(1)$
           \State $\textbf{end for}$  
           \State
-          \State // Estoy parado en el nodo que va a tener el significado.
-          \State // Le asigno una copia del provisto.
-          \State $actual \DRef significado \gets copy(s)$                                                     \Comment $\Theta(copy(s))$
+          \State // Estoy parado en el nodo que va a tener el puntero al significado.
+          \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
+          \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
+          \State // Asigno al significado del nodo el puntero creado con s.
+          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
+          \State // Agrego la nueva clave al conjunto de claves 
+          \State // Como precondicion, se que no existe asi que la agrego rapido
+          \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
+          \State // Devuelvo por referencia el significado.
+          \State res $\gets sig$
 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
@@ -338,9 +368,9 @@
   
     \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Función privada que crea un nuevo nodo
       \begin{algorithmic}[1]
-           \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacíos
-           \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ \alpha}$ 				\Comment $\Theta(1)$
-    
+        \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacios
+        \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ puntero(Nodo)}$ 				\Comment $\Theta(1)$
+ 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(1)$
           \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
@@ -348,6 +378,14 @@
     \end{algorithm}
   \end{Algoritmos}
 
+  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{estr})$\to$ $res$ : conj(string)}
+    \begin{algorithmic}[1]
+      \State $res \gets e.claves$                                            \Comment $\Theta(1)$
+
+        \medskip
+        \Statex \underline{Complejidad:} $\Theta(1)$
+        \end{algorithmic}
+  \end{algorithm}
 
 \newpage
 
