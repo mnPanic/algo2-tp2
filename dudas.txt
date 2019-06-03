@@ -1,5 +1,9 @@
 localizarJugadores
     Cambiamos la aridad, todo ok?
 
-Trie
-    Devolver puntero o ref al sig al definir?
+Servicios Usados: Qué onda con esto?
+Chequear legibilidad de Rep y Abs
+
+Es lo mismo devolver un iterador al conjunto que el conjunto por referencia (es decir, si ambas son válidas)? (No tiene nada de la estructura interan el conj)
+
+Son disparos de último paso, no de última ronda, no?
