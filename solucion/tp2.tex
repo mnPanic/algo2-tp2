@@ -483,8 +483,10 @@
       \mbox{}
 
       \begin{Tupla}[infoFan]
-        \tupItem{infoActual}{itConj(infoActualFan)}\\
-        \tupItemF{eventos}{vector(evento)} 
+        \tupItem{eventos}{vector(evento)}\\
+        \tupItem{vivo?}{bool}\\
+        % Solo cuando está vivo
+        \tupItemF{infoActual}{itConj(infoActualFan)}
       \end{Tupla}
 
       \mbox{}
