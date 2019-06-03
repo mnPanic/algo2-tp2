@@ -236,7 +236,7 @@
     {alias($res$ $\igobs$ obtener($d$, $k$))}
     [$\Theta(|k|)$]
     [devuelve el significado de la clave $k$ en $d$.]
-    [$res$ es modificable si y s�lo si $d$ es modificable.]
+    [$res$ es modificable si y gus�lo si $d$ es modificable.]
 
   \end{Interfaz}
 
@@ -246,7 +246,8 @@
     \begin{Estructura}{diccTrie$(string, \alpha)$}[estr]
 
       \begin{Tupla}[estr]%
-        \tupItemF{raiz}{puntero(nodo)}%
+        \tupItemF{raiz}{puntero(nodo)},\\
+        \tupItemF{claves}{conj(string)}
       \end{Tupla}
 
       \mbox{}
@@ -261,23 +262,30 @@
     \Rep[diccTrie][d]{\\
       (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
       La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
-      Todas las hojas tienen un significado distinto de NULL.)\\ \\
+      Todas las hojas tienen un significado distinto de NULL.\\
+      Un s string pertenece a d.claves si y solo si se puede seguir un camino de nodos en el diccionario con los caracteres de s (en orden) llegando finalemente al ultimo nodo (correspondiente a la ultima letra) teniendo este significado distinto de NULL) \\ \\
       // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
     }
 
     ~
 
-    \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{
-      - Para todo s string, def?(s,d) $\igobs$ estaDefinido(e) 
-     \\ \\ \tab estaDefinido(e) $\equiv$ El primer caracter de s esta en siguientes de e.raiz, es decir, que existe un Nodo en la posicion correspondiente al encoding ASCII de el primer char de s $\yluego$ para todo c char en la clave s (excepto el ultimo y el primero), el char siguiente a c debe estar definido en los siguientes de c al igual que el primer caracter $\yluego$ el significado del nodo correspondiente al ultimo char es distinto de NULL.
-      \\ \\ \tab estaDefinido(e) $\equiv$ veo si en siguientes de e.raiz en la posicion ASCII de la primera letra de c
-      si es distinto de NULL y hago lo mismo recursivamente con la siguiente letra y el siguiente nodo 
-      desde e.raiz veo que en el vector de los siguientes de res en la 
-      \\ \tab posicion del ASCII de la primera letra no sea NULL y hacer esto recursivamente en cada nodo
-      \\ \tab y al llegar al nodo de la ultima letra ver que el significado no sea NULL
-      \\ - }
-%      \IF vac�a?($d$.claves) THEN vac�o ELSE definir(prim($d$).claves, prim($d$).significado, Abs(fin($d$))) FI}
-      \\ \\
+    \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{ \\
+      (\paratodo s : string)(def?(s,d) $\igobs$ estaDefinido(e.raiz, s)) $\land$ \\
+      (\paratodo s : string)(def?(s,d) $\impluego$ obtener(s, d) $\igobs$ significado(e.raiz, s)) $\land$ \\
+      claves(d) $\igobs$ e.claves}\\ 
+    
+    estaDefinido(r, s) $\equiv$ 
+    \textbf{if} vacia?(s) \\
+    \ttab \textbf{then} r $\DRef$ significado $\neq$ NULL \\ 
+    \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estaDefinido(r.siguientes[int(prim(s))], fin(s)) 
+    \textbf{fi} \\
+
+    significado(r,s)  $\equiv$ 
+    \textbf{if} vacia?(s) \\
+    \ttab \textbf{then} r $\DRef$ significado \\ 
+    \ttab \textbf{else} significado(r.siguientes[int(prim(s))], fin(s)) 
+    \textbf{fi} \\
+
   \end{Representacion}
   \begin{Algoritmos}
 
@@ -343,8 +351,10 @@
           \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
           \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
           \State // Asigno al significado del nodo el puntero creado con s.
-          \State $(actual \DRef significado) \gets \&sig$                                                       \Comment $\Theta(1)$
-          
+          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
+          \State // Agrego la nueva clave al conjunto de claves 
+          \State // Como precondicion, se que no existe asi que la agrego rapido
+          \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
           \State // Devuelvo por referencia el significado.
           \State res $\gets sig$                                                                              \Comment $\Theta(1)$
 
@@ -365,6 +375,15 @@
           \end{algorithmic}
     \end{algorithm}
   \end{Algoritmos}
+
+  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{estr})$\to$ $res$ : conj(string)}
+    \begin{algorithmic}[1]
+      \State $res \gets e.claves$                                            \Comment $\Theta(1)$
+
+        \medskip
+        \Statex \underline{Complejidad:} $\Theta(1)$
+        \end{algorithmic}
+  \end{algorithm}
 
 
 \newpage
