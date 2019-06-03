@@ -449,7 +449,7 @@
 
         \Comentario{Disparos}
         \tupItem{mapaDisparos}{arreglo(arreglo(tupla(nat, nat)))}\\
-        \tupItem{disparosUltimoPaso}{conj(posicion)}\\
+        \tupItem{disparosFanUltimoPaso}{conj(posicion)}\\
 
         \Comentario{Jugadores}
         \tupItem{infoJugadores}{diccTrie(string, infoPJ)}\\
@@ -650,7 +650,7 @@
       \\
       \State \tab // Si dispara, agrego su disparo a los del paso
       \State \tab $\textbf{if} \ (eventoActual.dispara?) $       
-      \State \tab  $\textbf{then}\ iAgregarDisparoFan(j,\ eventoActual.pos,\ eventoActual.dir)$ \Comment $\BigO(m)$
+      \State \tab  $\textbf{then}\ iAgregarDisparo(j,\ eventoActual.pos,\ eventoActual.dir,\ true)$ \Comment $\BigO(m)$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
       \medskip
@@ -731,26 +731,34 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iAgregarDisparoFan}(\Inout{j}{estr}, \In{pos}{pos}, \In{dir}{dir})} \Comment Funcion privada
+  \begin{algorithm}[H]{\textbf{iAgregarDisparo}(\Inout{j}{estr}, \In{pos}{pos}, \In{dir}{dir}, \In{esFan}{bool})} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State // Parado desde $pos$ en $mapaDisparos$, recorro hacia $dir$ 
-      \State // hasta que me choco con un obstaculo o la pared.
-      \\
       \State // Copio pos para no modificar el original
       \State $posCopy \gets copy(pos)$  \Comment $\Theta(1)$
       \\
+      \State // Parado desde $posCopy$ en $mapaDisparos$, recorro hacia $dir$ 
+      \State // hasta que me choco con un obstaculo o la pared.
       \While{Valida?(j.mapa, posCopy) \yluego\ Libre(j.mapa, posCopy)} \Comment $\BigO(Tam(j.mapa))$
-        \State // Si no pasé ya por está posición con otro fantasma
-        \State // (i.e si en el mapa de disparos no está ya este paso)
-        \State $\textbf{if}\ mapaDisparos[pos.x][pos.y].pasoDispFan \neq j.paso$ \Comment $\Theta(1)$
-        \State $\textbf{then}$
-        \State \tab // Agrego la posición al conjunto de disparos y seteo el paso al actual 
-        \State \tab $AgregarRapido(j.disparosUltimoPaso,\ posCopy)$ \Comment $\Theta(1)$
-        \State \tab $mapaDisparos[posCopy.x][posCopy.y].pasoDispFan \gets j.paso$ \Comment $\Theta(1)$
+        \State // Me guardo una referencia al pasoDisp correcto
+        \State $\textbf{if}\ esFan$
+        \State $\textbf{then}\ pasoDisp \gets mapaDisparos[pos.x][pos.y].pasoDispFan$ \Comment $\Theta(1)$
+        \State $\textbf{else}\ pasoDisp \gets mapaDisparos[pos.x][pos.y].pasoDispPJ$  \Comment $\Theta(1)$
+        \State $\textbf{end if}$
+        \\ 
+        \State // Si no pasé ya por está posición con otro
+        \State // (i.e si en el mapa de disparos no está ya el paso actual)
+        \State $\textbf{if}\ pasoDisp \neq j.paso\ \textbf{then}$ 
+        \State \tab // Le pongo el paso actual al paso en el que hubo un disparo
+        \State \tab $pasoDisp \gets j.paso$ \Comment $\Theta(1)$
+        \\
+        \State \tab // Si es un fantasma, agrego la posición al conjunto de disparos de fantasmas
+        \State \tab $\textbf{if}\ esFan$
+        \State \tab $\textbf{then}\ AgregarRapido(j.disparosFanUltimoPaso,\ posCopy)$ \Comment $\Theta(1)$
+        \State \tab $\textbf{end if}$
         \State $\textbf{end if}$
         \\
         \State // Avanzo la posición en esa dirección
-        \State $pos \gets Avanzar(posCopy, dir)$          \Comment $\Theta(1)$
+        \State $pos \gets Avanzar(posCopy,\ dir)$          \Comment $\Theta(1)$
       \EndWhile 
       \medskip
       \Statex \underline{Complejidad:} $\BigO(m)$
