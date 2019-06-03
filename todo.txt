@@ -21,11 +21,15 @@ General
                 pasoDispPJ
     - Chequear las cosas que van por ref y copia
     - Agregar justificaciones de complejidades
+    - Chequear las cosas por ref y por copias (Recordar que:
+        Con la notación de módulos de la materia: apilar(in/out pila : Pila, in x : Elemento)
+        Con notación de C++: void Pila::apilar(const Elemento& x))
 
 Juego
     - Hacer que eventos del PJ sea una lista enlazada para que agregar sea O(1)
     - EjecutarAccion
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio
+    - Pre y Post condiciones de funciones auxiliares (IMPORTANTE ESTO NO LO VIMOS PERO ESTÁ EN EL TP)
 
     - Arreglar interfaz
     - Agregar todas las operaciones que piden
