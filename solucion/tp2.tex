@@ -627,8 +627,9 @@
       \State // Incremento el paso
       \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
       \\
-      \State // Actualizo el mapa de disparos con los fantasmas vivos
-      \State $iActualizarMapaDisparosConFan(j)$   \Comment $\BigO(\#fv * m)$
+      \State // Actualizo las acciones de los fantasmas,
+      \State // actualizando el mapa de disparos si disparan.
+      \State $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
       \\
       \State // Veo que jugadores mueren
       \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
@@ -637,23 +638,42 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iActualizarMapaDisparosConFan}(\Inout{j}{estr})}
+  \begin{algorithm}[H]{\textbf{iActualizarFantasmas}(\Inout{j}{estr})}
     \begin{algorithmic}[1]
       \State // Recorro los fantasmas vivos
       \State $\textbf{for} \ (itInfoFan :\ j.infoFantasmasVivos) \ \ \textbf{do}$ \Comment $\Theta(\#fv)$
       \State \tab // Obtengo la información del fantasma
       \State \tab $infoFan \gets Siguiente(itInfoFan)$      \Comment $\Theta(1)$
       \\
-      \State \tab // Obtengo el evento actual
-      \State \tab $eventoActual \gets iEventoActualFan(infoFan, j.paso)$ \Comment $\Theta(1)$
+      \State \tab // Actualizo su información actual, obteniendo obtengo el evento actual
+      \State \tab $eventoActual \gets iActualizarFan(infoFan,\ j.paso)$   \Comment $\Theta(1)$
       \\
       \State \tab // Si dispara, agrego su disparo a los del paso
       \State \tab $\textbf{if} \ (eventoActual.dispara?) $       
-      \State \tab  $\textbf{then}\ iAgregarDisparoFan(j,\ infoActual.pos,\ infoActual.dir)$ \Comment $\BigO(m)$
+      \State \tab  $\textbf{then}\ iAgregarDisparoFan(j,\ eventoActual.pos,\ eventoActual.dir)$ \Comment $\BigO(m)$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(\#fv * m)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iActualizarFan}(\In{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Obtengo el evento actual
+      \State $eventoActual \gets iEventoActualFan(infoFan, paso)$       \Comment $\Theta(1)$
+      \\
+      \State // Obtengo el iterador a la info actual
+      \State $itInfoActual \gets info.infoActual$                       \Comment $\Theta(1)$
+      \\
+      \State // La actualizo con el $eventoActual$
+      \State $Siguiente(itInfoActual).posicion \gets eventoActual.pos$  \Comment $\Theta(1)$
+      \State $Siguiente(itInfoActual).direccion \gets eventoActual.dir$ \Comment $\Theta(1)$
+      \\
+      \State // Devuelvo el evento actual
+      \State $res \gets eventoActual$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
