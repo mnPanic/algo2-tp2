@@ -9,3 +9,7 @@ Es lo mismo devolver un iterador al conjunto que el conjunto por referencia (es 
 Son disparos de último paso, no de última ronda, no?
 
 Cuando algo me entra por parámetro y lo quiero guardar, tengo que asignarle un espacio en memoria? O ya considero que está ahí y puedo tomarle la referencia? (Diccionario)
+
+TAD:
+
+Podemos dejar en claro que devolvemos algo por referencia haciendo "iFunción(parámetros) -> res: &estr" en vez de dejar un comentario?
