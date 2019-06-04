@@ -542,7 +542,7 @@
         \State $\rangle$
         \\
         \State // Inicializo los jugadores
-        \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*DEFINIR + locJugadores)$
+        \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*|k| + locJugadores)$
         \\
         \State // Inicializo los fantasmas
         \State $iIniciarFantasmas(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
@@ -561,7 +561,7 @@
       \State $localPJs \gets localizarJugadores(m,\ pjs)$ \                                                               \Comment $\Theta(locJugadores)$
       \\
       \State // Lleno las estructuras de jugadores
-      \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$                                            \Comment $\Theta(\#pjs*DEFINIR)$
+      \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$                                            \Comment $\Theta(\#pjs*(|k|+copy(info)))$
       \State \tab // Creo la infoActual y la agrego a su conjunto
       \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$     \Comment $\Theta(1)$
       \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$                             \Comment $\Theta(copy(infoActual))$
@@ -569,14 +569,14 @@
       \State \tab // Creo la infoPJ con la actual
       \State \tab $info \gets iNuevaInfoPJ(localizacion,\ itInfoActual)$                                                  \Comment $\Theta(1)$
       \State \tab // La agrego al trie y me guardo el puntero a la info guardada
-      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$                                                 \Comment $\Theta(DEFINIR)$
+      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$                                                 \Comment $\Theta(|pj|+copy(info))$
       \\
       \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
       \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$                                                         \Comment $\Theta(copy(infoActual))$
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(?)$
-      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Definir es $\Theta(DEFINIR)$. Luego, definir \#pjs es $\Theta(\#pjs*DEFINIR)$. Finalmente, la complejidad de todo el algoritmo es $\Theta(\#pjs*DEFINIR + locJugadores)$.
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Definir es $\Theta(|pj|)$ ya que copiar la tupla de info es $\Theta(1)$. Luego, definir \#pjs es $\Theta(\#pjs*|pj|)$. Finalmente, la complejidad de todo el algoritmo es $\Theta(\#pjs*|k| + locJugadores)$.
     \end{algorithmic}
   \end{algorithm}
 
@@ -965,7 +965,7 @@
       \State \tab // Reinicio los eventos
       \State \tab // Agrego un primer evento con la localización obtenida
       \State \tab // Lo seteo como vivo
-      \\
+      \\g
       \State \tab // Creo una info actual
       \State \tab // La agrego a $infoActualJugadoresVivos$ y me guardo itInfoActual
       \State \tab // Le seteo infoActual a infoPJ con el iterador
