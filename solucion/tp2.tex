@@ -720,6 +720,7 @@
       \EndWhile
       \medskip
       \Statex \underline{Complejidad:} $\Theta(\#jv)$
+      \Statex \underline{Justificación:} Crear punteros, iteradores y tuplas es $\Theta(1)$.
       \State 
     \end{algorithmic}
   \end{algorithm}
@@ -735,7 +736,7 @@
       \State $res \gets afectado?$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
-    \end{algorithmic}
+   \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iMuerePJ}(\Inout{j}{estr}, \Inout{itPJVivos}{itConj(puntero(infoPJ))})} \Comment Funcion privada
@@ -753,6 +754,7 @@
       \State $EliminarSiguiente(itPJVivos)$                     \Comment $\Theta(1)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Las operaciones del iterador son $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -778,7 +780,7 @@
         \\
         \State \tab // Si es un fantasma, agrego la posición al conjunto de disparos de fantasmas
         \State \tab $\textbf{if}\ esFan$
-        \State \tab $\textbf{then}\ AgregarRapido(j.disparosFanUltimoPaso,\ posCopy)$ \Comment $\Theta(1)$
+        \State \tab $\textbf{then}\ AgregarRapido(j.disparosFanUltimoPaso,\ posCopy)$ \Comment $\Theta(copy(posCopy))$
         \State \tab $\textbf{end if}$
         \State $\textbf{end if}$
         \\
@@ -787,23 +789,27 @@
       \EndWhile 
       \medskip
       \Statex \underline{Complejidad:} $\BigO(m)$
+      \Statex \underline{Justificación:} Copiar naturales, indexar y tomar referencia son $\Theta(1)$. Luego, como hacemos operaciones que son $\Theta(1)$ y lo hacemos a lo sumo Tam(j.mapa) veces, tenemos $\BigO(Tam(j.mapa))$.
+
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iEventoActualFan}(\In{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State $idx \gets mod(j.paso, Longitud(info.eventos))$
-      \State $res \gets info.eventos[idx]$
-      \medskip
+      \State $idx \gets mod(j.paso, Longitud(info.eventos))$ \Comment $\Theta(1)$
+      \State $res \gets info.eventos[idx]$          \Comment $\Theta(1)$
+            \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} La operacions matemáticas y la indexación en un vector es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iEventoActualPJ}(\In{info}{infoPJ}) $\to res:$ evento} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State $res \gets Ultimo(info.eventos)$
+      \State $res \gets Ultimo(info.eventos)$     \Comment $\Theta(1)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} La operación Último sobre una lista es $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
