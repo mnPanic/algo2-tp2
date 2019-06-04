@@ -1,12 +1,5 @@
 Trie
-    Pasar en limpio:
-        - Hacer que sea *solución y que devuelva una ref.
-        - Hacer que nuevoNodo sea iNuevoNodo
-        - Abs y rep
-        - Hacer que definir devuelva una referencia al significado
-            (chequear aspectos de aliasing)
-    Agregar un conjunto de claves para devolver
-        AGREGAR AL REP
+    - Chequear Aliasing y Complejidades.
 
 General
     - Agregar "typedef" al principio para
@@ -28,30 +21,26 @@ General
     - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
 
 Juego
-    - Hacer que eventos del PJ sea una lista enlazada para que agregar sea O(1)
     - EjecutarAccion
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio
-    - Pre y Post condiciones de funciones auxiliares (IMPORTANTE ESTO NO LO VIMOS PERO ESTÁ EN EL TP)
+    - Pre y Post condiciones de funciones auxiliares
 
     - Arreglar interfaz
-    - Agregar todas las operaciones que piden
-    - Agregar observadores
+        - Agregar todas las operaciones que piden
+        - Agregar observadores
 
     - Rep y abs
+            Recordar:
+            Existe un n tq la long de los eventos es n * 2 + 5 => 
+            los primeros n son los ultimos (n+5 a long - 1) invertidos.
+            entre n y n+5 son "nada".
 
 Mapa
     Valida?(m, pos) -> bool
 
-Accion
-    Agregar las cosas de Evento
-        
-        En rep/abs de Juego
-            Existe un n tq la long de los eventos es n * 2 + 5 => 
-            los primeros n son los ultimos (n+5 a long - 1) invertidos.
-            entre n y n+5 son "nada".
-    
+Accion        
     Avanzar(pos, dir) -> pos
         Dada una posicion, la avanza en una dir sin importar si es v?lida.
-    
+  
     Con Avanzar refactorizar Aplicar
         
