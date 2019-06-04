@@ -401,39 +401,6 @@
     \Titulo{Operaciones básicas de Juego}
     
     % Generadores
-    \InterfazFuncion{infoActualPjVivos}{\In{j}{Juego}}{conj(Tupla(jugador, pos, dir))}%
-    {res $\igobs$ infoActualPjVivos(j)}%
-    [$\BigO(1)$]
-    [conocer la identidad, posicion y direccion actual de los jugadores vivos]
-    
-    \InterfazFuncion{infoActualFanVivos}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
-    {res $\igobs$ infoActualFanVivos(j)}%
-    [$\BigO(1)$]
-    [conocer la posicion y direccion actual de los fantasmas vivos]
-
-    \InterfazFuncion{infoActualFanEspecial}{\In{j}{Juego}}{Tupla(pos, dir)}%
-    {res $\igobs$ infoActualFanEspecial(j)}%
-    [$\BigO(1)$]
-    [conocer la posicion y direccion actual del fantasma especial]
-
-    \InterfazFuncion{infoActualFanVivosQueDisp}{\In{j}{Juego}}{Tupla(pos, dir)}%
-    {res $\igobs$ infoActualFanVivosQueDisp(j)}%
-    [$\BigO(\#fv)$]
-    [conocer la posicion y direccion actual de los fantasmas vivos que disparan en el paso actual]
-
-    \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
-    [$pj \in jugadores(j)$]
-    {$res \igobs jugadorVivo(pj, j)$}
-    [$O(|j|)$]
-    [devuelve si un jugador está vivo]
-
-    \InterfazFuncion{actualizarConAccionDePj}{\In{pj}{string}, /In{a}{acc}, \Inout{j}{juego}}{}
-    [$j \igobs j_0$]
-    {$j \igobs step(j_0, a, pj)$}
-    [$O(|j|)$]
-    [devuelve si un jugador está vivo]
-
-    % Generadores
     \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
     [$\neg vacio(pjs) \land (\forall e: evento) (está?(e, eventosFan) \impluego e.pos \in libres(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
@@ -445,49 +412,81 @@
     [$\Theta(?)$]
     [ejecuta un paso de tiempo cuando ningún jugador realiza una acción.]
 
-    \InterfazFuncion{ejecutarAccion}{\In{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{juego}%
-    [$pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
-    {$res \igobs step(j, a, pj)$}%
-    [$\Theta(?)$]
-    [actualiza con la acción $a$ del jugador $pj$.]
+    \InterfazFuncion{infoActualPjVivos}{\In{j}{Juego}}{conj(Tupla(jugador, pos, dir))}%
+    {res $\igobs$ infoActualPjVivos(j)}%
+    [$\BigO(1)$]
+    [devuelve un conjunto referencias a identidad, posicion y direccion actual de los jugadores vivos.]
+    [las referencias son no modificables.]
 
-
-    % Pedidas por enunciado
-    \InterfazFuncion{jugadoresVivos}{\In{j}{juego}}{conj(puntero(infoPJ))}%
-    {$(\forall p : puntero(infoPJ)) (p \in res \impluego\\
-    \tttab (p\rightarrow id \in jugadores(j)) \yluego \\
-    \tttab (p\rightarrow vivo? \land jugadorVivo(p\rightarrow id, j)) \land \\
-    \tttab ((\forall e : evento) (e \in p\rightarrow eventos \impluego \\
-    \ttttab (e.pos \igobs posJugador(p\rightarrow id, j)) \land \\
-    \ttttab (e.dir \igobs dirJugador(p\rightarrow id, j))) 
-    )$}%
-    [$\Theta(1)$]
-    [devuelve un conjunto con punteros a la información de los personajes que están vivos.]
-    [res es no modificable.]
-  
-    \InterfazFuncion{fantasmasVivos}{\In{j}{juego}}{conj(infoFan)}%
-    {$fantasmaValido(j, res)$}%
-    [$\Theta(1)$]
+    \InterfazFuncion{infoActualFanVivos}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
+    {res $\igobs$ infoActualFanVivos(j)}%
+    [$\BigO(1)$]
     [devuelve un conjunto referencias a la información de los fantasmas que están vivos.]
     [las referencias son no modificables.]
 
-    \InterfazFuncion{fantasmaEspecial}{\In{j}{juego}}{infoFan}
-    {$res \igobs fantasmaEspecial(j)$}
-    [$\Theta(1)$]
-    [devuelve el fantasma especial.]
+    \InterfazFuncion{infoActualFanEspecial}{\In{j}{Juego}}{Tupla(pos, dir)}%
+    {res $\igobs$ infoActualFanEspecial(j)}%
+    [$\BigO(1)$]
+    [devuelve la posicion y direccion del fantasma especial.]
     [res es una referencia no modificable.]
 
-    \InterfazFuncion{fantasmasVivosQueDisparan}{\In{j}{juego}}{conj(infoFan)}
-    {$fantasmaValido(j, res) \yluego\\
-    \ttab ((\forall f : infoFan) (f \in res \impluego disparando(f.eventos, step(j)))$}
-    [$O(\#fv)$]
-    [devuelve un conjunto con punteros a la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
+    \InterfazFuncion{infoActualFanVivosQueDisp}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
+    {res $\igobs$ infoActualFanVivosQueDisp(j)}%
+    [$\BigO(\#infoActualFanVivos(j))$]
+    [devuelve un conjunto con la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
     [res es un conjunto de referencias no modificables.]
+
+    \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
+    [$pj \in jugadores(j)$]
+    {$res \igobs jugadorVivo(pj, j)$}
+    [$\BigO(|pj|)$]
+    [devuelve si un jugador está vivo]
+
+    \InterfazFuncion{ejecutarAccion}{\Inout{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{}%
+    [$j \igobs j_0 \yluego pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
+    {$j \igobs step(j_0, a, pj)$}%
+    [$\BigO(|pj| + \#infoActualFanVivos(j) * tam(habitacion(j)) + \#infoActualPjVivos(j))$]
+    [actualiza con la acción $a$ del jugador $pj$.]
+
+    \InterfazFuncion{ejecutarSinAccion}{\Inout{j}{juego}}{}%REVISAR
+    {$j \igobs pasar(j_0)$}%
+    [$\BigO(\#infoActualFanVivos(j) * tam(habitacion(j)) + \#infoActualPjVivos(j))$]
+    [actualiza sin acción de jugador.]
 
     \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
     {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
-    [$O(\#fv * m)$]
-    [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas en la última *ronda* (TODO: ronda o paso?).]
+    [$O(\#infoActualFanVivos(j) * tam(habitacion(j)))$]
+    [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas enl último paso.]
+
+    \InterfazFuncion{habitacion}{\In{j}{juego}}{mapa}%
+    {$res \igobs habitacion(j)$}%
+    [$\Theta(1)$]
+    [devuelve la habitacion del juego]
+
+    \InterfazFuncion{fantasmas}{\In{j}{juego}}{conj(fantasma)}%
+    {$res \igobs fantasmas(j)$}%
+    [$\Theta(\#fantasmas(j))$]
+    [devuelve por referencia un conjunto de todos los fantasmas del juego]
+    [res es no modificable]
+
+    \InterfazFuncion{fantasmaEspecial}{\In{j}{juego}}{fantasma}%
+    {$res \igobs fantasmaEspecial(j)$}%
+    [$\Theta(1)$]
+    [devuelve por referencia un conjunto de todos los fantasmas del juego]
+    [res es no modificable]
+
+    \InterfazFuncion{jugadores}{\In{j}{juego}}{conj(jugadores)}%
+    {$res \igobs jugadores(j)$}%
+    [$\Theta(\#jugadores(j))$]
+    [devuelve por referencia un conjunto de todos los jugadores del juego]
+    [res es no modificable]
+
+    \InterfazFuncion{acciones}{\In{pj}{jugador}, \In{j}{juego}}{secu(evt)}%
+    {$res \igobs acciones(pj, j)$}%
+    [$\Theta(|pj|)$]
+    [devuelve por referencia un conjunto de todos los jugadores del juego]
+    [res es no modificable]
+  
 
     \Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
 
