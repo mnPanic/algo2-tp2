@@ -554,21 +554,21 @@
   \begin{algorithm}[H]{\textbf{iIniciarJugadores}(\In{j}{estr}, \In{m}{mapa}, \In{pjs}{conj(jugador)})} \Comment Función privada
     \begin{algorithmic}[1]
       \State // Suponemos la existencia de la función
-      \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ conj(jugador)\ pjs)$ 
+      \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ pjs)$ 
       \\
       \State // Obtengo las posiciones y direcciones de jugadores
       \State $localPJs \gets localizarJugadores(m,\ pjs)$ \
       \\
       \State // Lleno las estructuras de jugadores
-      \State $\textbf{for} \ (j,\ localizacion : \ localPJs) \ \ \textbf{do}$
+      \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$
       \State \tab // Creo la infoActual y la agrego a su conjunto
-      \State \tab $infoActual \gets \tuple{identidad: j,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
+      \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
       \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$
       \\
       \State \tab // Creo la infoPJ con la actual
       \State \tab $info \gets iNuevaInfoPJ(localizacion,\ itInfoActual)$
       \State \tab // La agrego al trie y me guardo el puntero a la info guardada
-      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ j,\ info)$
+      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$
       \\
       \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
       \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$
