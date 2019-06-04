@@ -941,7 +941,7 @@
       \State // Reinicio el mapa de disparos y los disparos de los fantasmas
       \\
       \State //// Reinicio Fantasmas
-      \State // Creo un nuevo fantasma (secu de eventos) con las acciones del PJ que mató al fantasma especial
+      \State // Creo un nuevo fantasma (secu de eventos) conviertiendo la lista enlazada de acciones del PJ que mató al fantasma especial en un vector.
       \State // Hago que ese fantasma sea el nuevo especial
       \\
       \State // Recorro $infoFantasmas$, por cada fantasma
@@ -958,6 +958,9 @@
       \State //// Reinicio Jugadores
       \State // Obtengo sus localizaciones
       \State // Por cada clave y valor de las localizaciones,
+      %%%%Che, con Gasti observamos que cuando obtenes el significado del Trie no te devuelve una referneica modifciable.
+      %%%% O bien lo ponemos en los aspectos de aliasing que es una referencia modificable, o podés volver a definir los elementos
+      %%%% sobreeescribiendo los que estaban (con definir) como hacías cuando iniciabas el juego con iIniciarJugadores.
       \State \tab // Obtengo $infoPJ$ del trie
       \State \tab // Reinicio los eventos
       \State \tab // Agrego un primer evento con la localización obtenida
