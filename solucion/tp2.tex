@@ -466,7 +466,7 @@
       \mbox{}
 
       \begin{Tupla}[infoPJ]
-        \tupItem{eventos}{vector(evento)}\\
+        \tupItem{eventos}{lista(evento)}\\
         \tupItem{vivo?}{bool}\\
         % Solo cuando está vivo
         \tupItemF{infoActual}{itConj(infoActualPJ)}
@@ -525,56 +525,58 @@
         \State \tab $ronda : 0,$                     \Comment $\Theta(1)$
         \\
         \State \tab // Seteo el mapa 
-        \State \tab $mapa: m,$                     \Comment $\Theta(1)$
+        \State \tab $mapa: m,$                     \Comment $\Theta(copy(m))$
         \\
         \State \tab // Inicializo el mapa de disparos con el mismo tamaño que el mapa
         \State \tab $mapaDisparos: arreglo(arreglo(tupla(nat, nat))[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
         \State \tab $disparosFanUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
         \\
         \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
-        \State \tab $infoActualJugadoresVivos: Vacio(),$
-        \State \tab $infoJugadoresVivos: Vacio(),$
-        \State \tab $infoJugadores: Vacia(),$
-        \State \tab $infoFantasmas: Vacio(),$
-        \State \tab $infoActualFantasmasVivos: Vacio(),$
-        \State \tab $infoFantasmasVivos: Vacia(),$
-        \State \tab $infoFantasmaEspecial: CrearIt(Vacio())$ % TODO
+        \State \tab $infoActualJugadoresVivos: Vacio(),$  \Comment $\Theta(1)$
+        \State \tab $infoJugadoresVivos: Vacio(),$ \Comment $\Theta(1)$
+        \State \tab $infoJugadores: Vacia(),$ \Comment $\Theta(1)$
+        \State \tab $infoFantasmas: Vacio(),$ \Comment $\Theta(1)$
+        \State \tab $infoActualFantasmasVivos: Vacio(),$ \Comment $\Theta(1)$
+        \State \tab $infoFantasmasVivos: Vacia(),$ \Comment $\Theta(1)$
+        \State \tab $infoFantasmaEspecial: CrearIt(Vacio())$ \Comment $\Theta(1)$
         \State $\rangle$
         \\
         \State // Inicializo los jugadores
-        \State $iIniciarJugadores(res,\ m,\ pjs)$
+        \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*DEFINIR + locJugadores)$
         \\
         \State // Inicializo los fantasmas
-        \State $iIniciarFantasmas(res,\ eventosFan)$
+        \State $iIniciarFantasmas(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
         \medskip
         \Statex \underline{Complejidad:} $\Theta(?)$
+        \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
         \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iIniciarJugadores}(\In{j}{estr}, \In{m}{mapa}, \In{pjs}{conj(jugador)})} \Comment Función privada
+  \begin{algorithm}[H]{\textbf{iIniciarJugadores}(\Inout{j}{estr}, \In{m}{mapa}, \In{pjs}{conj(jugador)})} \Comment Función privada
     \begin{algorithmic}[1]
       \State // Suponemos la existencia de la función
       \State // $dict(jugador,\ tupla(pos, dir))\ localizarJugadores(m,\ pjs)$ 
       \\
       \State // Obtengo las posiciones y direcciones de jugadores
-      \State $localPJs \gets localizarJugadores(m,\ pjs)$ \
+      \State $localPJs \gets localizarJugadores(m,\ pjs)$ \                                                               \Comment $\Theta(locJugadores)$
       \\
       \State // Lleno las estructuras de jugadores
-      \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$
+      \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$                                            \Comment $\Theta(\#pjs*DEFINIR)$
       \State \tab // Creo la infoActual y la agrego a su conjunto
-      \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$
-      \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$
+      \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$     \Comment $\Theta(1)$
+      \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$                             \Comment $\Theta(copy(infoActual))$
       \\
       \State \tab // Creo la infoPJ con la actual
-      \State \tab $info \gets iNuevaInfoPJ(localizacion,\ itInfoActual)$
+      \State \tab $info \gets iNuevaInfoPJ(localizacion,\ itInfoActual)$                                                  \Comment $\Theta(1)$
       \State \tab // La agrego al trie y me guardo el puntero a la info guardada
-      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$
+      \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$                                                 \Comment $\Theta(DEFINIR)$
       \\
       \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
-      \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$
+      \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$                                                         \Comment $\Theta(copy(infoActual))$
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(?)$
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Definir es $\Theta(DEFINIR)$. Luego, definir \#pjs es $\Theta(\#pjs*DEFINIR)$. Finalmente, la complejidad de todo el algoritmo es $\Theta(\#pjs*DEFINIR + locJugadores)$.
     \end{algorithmic}
   \end{algorithm}
 
@@ -589,7 +591,7 @@
       \\
       \State // Creo una lista con él
       \State $evts \gets Vacia()$                   \Comment $\Theta(1)$
-      \State $AgregarAtras(evts, evento)$           \Comment $\Theta(1)$
+      \State $AgregarAtras(evts, evento)$           \Comment $\Theta(copy(evento))$
       \\
       \State // Armo la infoPJ
       \State $res \gets \langle$                    \Comment $\Theta(1)$
@@ -599,28 +601,30 @@
       \State $\rangle$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iIniciarFantasmas}(\In{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
+  \begin{algorithm}[H]{\textbf{iIniciarFantasmas}(\Inout{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
     \begin{algorithmic}[1]
       \State // Lleno las estructuras de fantasmas
       \State // Creo la infoActual y la agrego a su conjunto
-      \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$
-      \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$
+      \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$ \Comment $\Theta(1)$
+      \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$ \Comment $\Theta(copy(infoActual))$
       \\
       \State // Hago que el fantasma especial sea este
-      \State $j.infoFantasmaEspecial \gets itInfoActualFan$
+      \State $j.infoFantasmaEspecial \gets itInfoActualFan$ \Comment $\Theta(1)$
       \\
       \State // Creo la infoFan con la actual
-      \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$
+      \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$ \Comment $\Theta(1)$
       \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
-      \State $itInfoFan \gets AgregarRapido(infoFan,\ j.infoFantasmas)$
+      \State $itInfoFan \gets AgregarRapido(infoFan,\ j.infoFantasmas)$ \Comment $\Theta(copy(infoFan))$
       \\
       \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
-      \State $AgregarRapido(itInfoFan,\ j.infoFantasmasVivos)$
+      \State $AgregarRapido(itInfoFan,\ j.infoFantasmasVivos)$ \Comment $\Theta(copy(itInfoFan))$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(?)$
+      \Statex \underline{Complejidad:} $\Theta(long(eventosFan))$
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Copiar infoActual implica copiar un vector de eventos, que es $\Theta(long(eventosFan)*copy(evento)) = \Theta(long(eventosFan))$     
     \end{algorithmic}
   \end{algorithm}
 
@@ -663,7 +667,7 @@
       \State \tab // Obtengo la información del fantasma
       \State \tab $infoFan \gets Siguiente(itInfoFan)$      \Comment $\Theta(1)$
       \\
-      \State \tab // Actualizo su información actual, obteniendo obtengo el evento actual
+      \State \tab // Actualizo su información actual, obteniendo el evento actual
       \State \tab $eventoActual \gets iActualizarFan(infoFan,\ j.paso)$   \Comment $\Theta(1)$
       \\
       \State \tab // Si dispara, agrego su disparo a los del paso
@@ -673,10 +677,12 @@
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(\#fv * m)$
+      \Statex \underline{Justificación:} Tomar referencia del elemento al que apunta un iterador y copiar un evento es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iActualizarFan}(\In{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
+
+  \begin{algorithm}[H]{\textbf{iActualizarFan}(\Inout{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
     \begin{algorithmic}[1]
       \State // Obtengo el evento actual
       \State $eventoActual \gets iEventoActualFan(infoFan, paso)$       \Comment $\Theta(1)$
@@ -692,6 +698,7 @@
       \State $res \gets eventoActual$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Actualizar el iterador y generar el eventoActual es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
