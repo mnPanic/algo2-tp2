@@ -529,7 +529,7 @@
         \\
         \State \tab // Inicializo el mapa de disparos con el mismo tamaño que el mapa
         \State \tab $mapaDisparos: arreglo(arreglo(tupla(nat, nat))[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
-        \State \tab $disparosUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
+        \State \tab $disparosFanUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
         \\
         \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
         \State \tab $infoActualJugadoresVivos: Vacio(),$
@@ -629,6 +629,9 @@
       \State // Incremento el paso
       \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
       \\
+      \State // Reinicio los disparos de fantasmas
+      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
+      \\
       \State // Actualizo las acciones de los fantasmas,
       \State // actualizando el mapa de disparos si disparan.
       \State $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
@@ -636,7 +639,20 @@
       \State // Veo que jugadores mueren
       \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(\#fv * m + \#jv)$
+      \Statex \underline{Complejidad:} $\BigO(2(\#fv * m) + \#jv) \in \BigO(\#fv * m + \#jv)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarDisparosFan}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Vacío la lista de disparos del ultimo paso
+      \State // Al asignarle vacío, se libera la memoria que ocupaba anteriormente.
+      \State $j.disparosFanUltimoPaso \gets Vacio()$            \Comment $\Theta(Tam(j.disparosFanUltimoPaso))$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#fv * m)$
+      \Statex \underline{Justificación:} Vaciar un arreglo de longitud n es $\Theta(n)$. 
+      Este arreglo en particular siempre tendrá longitud $\Theta(\#fv * m)$, ya que se llena con los disparos de los fantasmas que estén vivos en ese paso.
+      Depende de que tan fino uno hile con el manejo de memoria, podría llegar a tomarse como $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
@@ -785,7 +801,7 @@
   \end{algorithm}
 
 
-  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\In{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
+  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\Inout{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
     \begin{algorithmic}[1]
       \State // Incremento el paso
       \State $j.paso \gets j.paso + 1$                            \Comment $\Theta(1)$
@@ -794,6 +810,9 @@
       \State // y me guardo una referencia a su info modificada
       \State $infoPJ \gets iActualizarPJ(pj,\ a)$                       \Comment $\BigO(|j|)$
       \State $evtPJ \gets iEventoActualPJ(infoPJ)$                      \Comment $\Theta(1)$
+      \\
+      \State // Reinicio los disparos de fantasmas
+      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
       \\
       \State // Modifico el mapa de disparos (solo si dispara)
       \State $iActualizarMapaDisparosConPJ(j,\ evtPJ)$             \Comment $\BigO(m)$
