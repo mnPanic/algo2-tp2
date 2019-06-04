@@ -402,25 +402,36 @@
     
     % Generadores
     \InterfazFuncion{infoActualPjVivos}{\In{j}{Juego}}{conj(Tupla(jugador, pos, dir))}%
-    {(\paratodo \ t  Tupla(jugador, pos, dir))((($\Pi_1(t) \in$ jugadores(j) 
-    $\yluego$ jugadorVivo($\Pi_1(t)$, j)) $\yluego \Pi_2(t) \igobs$ posJugador($\Pi_1(t)$, j) $\land$ $\Pi_3(t) \igobs$ dirJugador($\Pi_1(t)$, j))
-    $\impluego t \in$ res)}%
-    [$\Theta(1)$]
+    {res $\igobs$ infoActualPjVivos(j)}%
+    [$\BigO(1)$]
     [conocer la identidad, posicion y direccion actual de los jugadores vivos]
     
     \InterfazFuncion{infoActualFanVivos}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
-    {(\paratodo \ f fantasma)(f $\in$ fantasmas(j) $\yluego$ fantasmaVivo(f, j)
-    $\impluego$ ($\exists$ \ t Tupla(pos, dir))($\Pi_1(ult(f)) \igobs Pi_1(t) \land $ $\Pi_2(ult(f)) \igobs \Pi_2(t) \yluego$
-    t $\in$ res $\land$ noTieneRepetidos(res) ))}%
-    [$\Theta(1)$]
+    {res $\igobs$ infoActualFanVivos(j)}%
+    [$\BigO(1)$]
     [conocer la posicion y direccion actual de los fantasmas vivos]
 
     \InterfazFuncion{infoActualFanEspecial}{\In{j}{Juego}}{Tupla(pos, dir)}%
-    {($\exists$ \ f fantasma)(f $\in$ fantasmas(j) $\yluego$ fantasmaVivo(f, j)
-    $\impluego$ ($\exists$ \ t Tupla(pos, dir))($Pi_1(ult(f)) \igobs Pi_1(t) \land $ $Pi_2(ult(f)) \igobs Pi_2(t) \yluego$
-    t $\igobs$ res))}%
-    [$\Theta(1)$]
-    [conocer la posicion y direccion actual de los fantasmas vivos]
+    {res $\igobs$ infoActualFanEspecial(j)}%
+    [$\BigO(1)$]
+    [conocer la posicion y direccion actual del fantasma especial]
+
+    \InterfazFuncion{infoActualFanVivosQueDisp}{\In{j}{Juego}}{Tupla(pos, dir)}%
+    {res $\igobs$ infoActualFanVivosQueDisp(j)}%
+    [$\BigO(\#fv)$]
+    [conocer la posicion y direccion actual de los fantasmas vivos que disparan en el paso actual]
+
+    \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
+    [$pj \in jugadores(j)$]
+    {$res \igobs jugadorVivo(pj, j)$}
+    [$O(|j|)$]
+    [devuelve si un jugador está vivo]
+
+    \InterfazFuncion{actualizarConAccionDePj}{\In{pj}{string}, /In{a}{acc}, \Inout{j}{juego}}{}
+    [$j \igobs j_0$]
+    {$j \igobs step(j_0, a, pj)$}
+    [$O(|j|)$]
+    [devuelve si un jugador está vivo]
 
     % Generadores
     \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
@@ -473,12 +484,6 @@
     [devuelve un conjunto con punteros a la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
     [res es un conjunto de referencias no modificables.]
 
-    \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
-    [$pj \in jugadores(j)$]
-    {$res \igobs jugadorVivo(pj, j)$}
-    [$O(|j|)$]
-    [devuelve si un jugador está vivo]
-
     \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
     {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
     [$O(\#fv * m)$]
@@ -491,11 +496,13 @@
       \tadExtiende{\tadNombre{Conjunto($\alpha$)}}
     
       \tadTitulo{otras operaciones}
-      \tadOperacion{infoActualPjVivos}{Juego}{conj(Tupla(jugador, posicion, direccion)}{}
-      \tadOperacion{infoActualPjVivosAux}{Juego, conj(jugador)}{conj(Tupla(jugador, posicion, direccion)}{}
-      \tadOperacion{infoActualFanVivos}{Juego}{conj(Tupla(posicion, direccion)}{}
+      \tadOperacion{infoActualPjVivos}{Juego}{conj(Tupla(jugador, posicion, direccion))}{}
+      \tadOperacion{infoActualPjVivosAux}{Juego, conj(jugador)}{conj(Tupla(jugador, posicion, direccion))}{}
+      \tadOperacion{infoActualFanVivos}{Juego}{conj(Tupla(posicion, direccion))}{}
       \tadOperacion{infoActualFanVivosAux}{Juego, conj(fantasma)}{conj(Tupla(posicion, direccion)}{}
       \tadOperacion{infoActualFanEspecial}{Juego}{Tupla(posicion, direccion)}{}
+      \tadOperacion{infoActualFanVivosQueDisp}{Juego}{conj(Tupla(posicion, direccion))}{}
+      \tadOperacion{infoActualFanVivosQueDisAux}{Juego, conj(fantasmas)}{conj(Tupla(posicion, direccion))}{}
       \tadAxiomas
       \tadAxioma{infoActualPjVivos($j$)}{infoActualPjVivosAux(j, jugadores(j)}
       \tadAxioma{infoActualPjVivosAux($j, js$)}{\IF jugadorVivo(dameuno(js), j) THEN Ag($\tuple{posJugador(dameuno(js), j), dirJugador(dameuno(js)},\ j)$, \\infoActualPjVivosAux(j, sinuno(js))) 
@@ -505,9 +512,12 @@
       \tadAxioma{infoActualFanVivosAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) THEN Ag($\tuple{posFantasma(dameuno(fs), j), dirFantasma(dameuno(fs)},\ j)$, \\infoActualFanVivosAux(j, sinuno(fs))) 
       ELSE infoActualFanVivosAux(j, sinuno(fs)) 
       FI}
-      \tadAxioma{infoActualFanEspecial($j$)}{$\tuple(posFantasma(fantasmaEspecial(j)), dirFantasma(fantasmaEspecial(j)))$}
-      
-      \tadAxioma{secuAConj($s$)}{\IF vacia?($s$) THEN $\emptyset$ ELSE Ag(prim($s$), secuAConj(fin($s$))) FI}
+      \tadAxioma{infoActualFanEspecial($j$)}{$\tuple{posFantasma(fantasmaEspecial(j), j), \ dirFantasma(fantasmaEspecial(j), j)}$}
+      \tadAxioma{infoActualFanVivosQueDisp($j$)}{infoActualFanVivosAux(j, infoActualFanVivosQueDisAux(j, fantasmas(j)))}
+      \tadAxioma{infoActualFanVivosQueDispAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) $\land$ $\Pi_3(ult(dameuno(fs))$  
+      THEN Ag(dameuno(fs), infoActualFanVivosQueDispAux(j, sinuno(fs)))
+      ELSE infoActualFanVivosQueDispAux(j, sinuno(fs)) FI}
+
     \end{tad}
 
     Predicados auxiliares:
