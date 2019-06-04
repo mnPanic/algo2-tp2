@@ -922,6 +922,39 @@
 
   \begin{algorithm}[H]{\textbf{iNuevaRonda}(\In{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
     \begin{algorithmic}[1]
+      \State // Incremento la ronda
+      \State // Reinicio el paso
+      \\
+      \State // Reinicio el mapa de disparos y los disparos de los fantasmas
+      \\
+      \State //// Reinicio Fantasmas
+      \State // Creo un nuevo fantasma (secu de eventos) con las acciones del PJ que mató al fantasma especial
+      \State // Hago que ese fantasma sea el nuevo especial
+      \\
+      \State // Recorro $infoFantasmas$, por cada fantasma
+      \State \tab // Obtengo $infoFan$
+      \State \tab // Lo seteo como vivo
+      \\
+      \State \tab // Creo su $infoActual$ y la agrego a $infoActualFantasmasVivos$, guardandome su iterador
+      \State \tab // Se que $infoActual$ será eventualmente consistente al realizarse un paso
+      \\
+      \State \tab // Le seteo el iterador a $infoFan$
+      \\
+      \State \tab // Agrego un iterador a su info a $infoFantasmasVivos$
+      \\
+      \State //// Reinicio Jugadores
+      \State // Obtengo sus localizaciones
+      \State // Por cada clave y valor de las localizaciones,
+      \State \tab // Obtengo $infoPJ$ del trie
+      \State \tab // Reinicio los eventos
+      \State \tab // Agrego un primer evento con la localización obtenida
+      \State \tab // Lo seteo como vivo
+      \\
+      \State \tab // Creo una info actual
+      \State \tab // La agrego a $infoActualJugadoresVivos$ y me guardo itInfoActual
+      \State \tab // Le seteo infoActual a infoPJ con el iterador
+      \\
+      \State \tab // Agrego un puntero a la infoPJ a $infoJugadoresVivos$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(??)$
     \end{algorithmic}
