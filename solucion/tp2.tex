@@ -1329,14 +1329,12 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
   [$\Theta(1)$]
   [genera el evento a partir de la acción a realizar.]
 
-
   \InterfazFuncion{invertir}{\In{e}{evento}}{evento}%
   {$res \igobs invertir(e)$}%
   [$\Theta(1)$]
   [invierte un evento.]
 
-
-  \InterfazFuncion{inversa}{\Inout{es}{vector(evento)}}{}%
+  \InterfazFuncion{inversa}{\In{es}{vector(evento)}}{vector(evento)}%
   {$res \igobs inversa(es)$}%
   [$\Theta(long(es)^2)$]
   [genera una secuencia que contiene a la inicial, le suma 5 pasos de espera y le agrega la secuencia original invertida.]
@@ -1416,27 +1414,32 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
     \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic})
   \end{algorithm}
-
-
-  \begin{algorithm}[H]{\textbf{iInversa}(\Inout{es}{vector(evento)})}
+  
+  
+  \begin{algorithm}[H]{\textbf{iInversa}(\In{es}{vector(evento)}) $\to res:$ vector(evento)}
     \begin{algorithmic}[1]
       \State // El resultado deseado es el siguiente
-      \State // es + nada + nada + nada + nada + nada + inversa(es)
       \\
-      \State // Me guardo la long original ya que lo voy a modificar por referencia
-      \State $longOriginal \gets Longitud(es)$                                                              \Comment $\Theta(1)$
+      \State // Copio el vector de entrada    
+      \State $esCopy \gets copy(es)$          \Comment $\Theta(long(es))$
+      \\
+      \State // Me guardo la longitud original
+      \State $longOriginal \gets Longitud(es)$
       \\
       \State // Creo un evento que sea pasar y lo agrego 5 veces
-      \State $eventoPasar \gets \tuple{pos: Ultimo(es).pos,\ dir: Ultimo(es).dir,\ disparo?: false} $       \Comment $\Theta(1)$
-      \State $\textbf{for} \ (i = 0,\ ... \ , 4) \ \ \textbf{do}$                                           \Comment $\BigO(long(es)*5)$
-      \State \tab $AgregarAtras(es,\ eventoPasar)$                                                          \Comment $\BigO(long(es))$
+      \State $eventoPasar \gets \tuple{pos: Ultimo(esCopy).pos,\ dir: Ultimo(esCopy).dir,\ disparo?: false} $   \Comment $\Theta(1)$
+      \State $\textbf{for} \ (i = 0,\ ... \ , 4) \ \ \textbf{do}$                                               \Comment $\BigO(long(es)*5)$
+      \State \tab $AgregarAtras(esCopy,\ eventoPasar)$                                                          \Comment $\BigO(long(es))$
       \State $\textbf{end for}$
       \\
       \State // Recorro los eventos de la secuencia original de atrás para adelante,
       \State // invirtiendolos y agregándolos al final
       \State $\textbf{for} \ (i = longOriginal - 1,\ ... \ , 0) \ \ \textbf{do}$                            \Comment $\BigO(long(es)^2)$
-      \State \tab $AgregarAtras(es,\ invertir(es[i]))$                                                      \Comment $\BigO(long(es))$
+      \State \tab $AgregarAtras(esCopy,\ invertir(esCopy[i]))$                                              \Comment $\BigO(long(es))$
       \State $\textbf{end for}$
+      \\
+      \State // Devuelvo los eventos
+      \State $res \gets esCopy$
       \medskip
     \Statex \underline{Complejidad:} $\BigO(long(es)^2)$
     \Statex \underline{Justificación:} Crear una tupla y acceder al vector es $\Theta(1)$. $\BigO(long(es)*5)$ + $\BigO(long(es)^2)$ = $\BigO(long(es)^2)$.
