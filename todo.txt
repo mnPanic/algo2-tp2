@@ -22,7 +22,7 @@ General
 
 Juego
     - EjecutarAccion
-    - (TAD) Precondicion en iniciar -> evt fantasma no vacio
+    - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
     - Pre y Post condiciones de funciones auxiliares
 
     - Arreglar interfaz
