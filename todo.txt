@@ -18,13 +18,8 @@ General
     - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
 
 Juego
-    - EjecutarAccion
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
     - Pre y Post condiciones de funciones auxiliares
-
-    - Arreglar interfaz
-        - Agregar todas las operaciones que piden
-        - Agregar observadores
 
     - Rep y abs
             Recordar:
