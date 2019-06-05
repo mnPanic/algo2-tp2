@@ -545,17 +545,6 @@
       ELSE infoActualFanVivosQueDispAux(j, sinuno(fs)) FI}
 
     \end{tad}
-
-    Predicados auxiliares:
-
-    fantasmaValido(j, fs):\\
-    $\tab (\forall f : infoFan) (f \in res \impluego\\
-    \ttab (f.eventos \in fantasmas(j)) \yluego \\
-    \ttab (fantasmaVivo(f.eventos, j)) \land \\
-    \ttab ((\forall e : evento) (e \in f.eventos \impluego \\
-    \tttab (e.pos \igobs posFantasma(f.eventos, j)) \land \\
-    \tttab (e.dir \igobs dirFantasma(f.eventos, j))))$
-
   \end{Interfaz}
 
   \begin{Representacion}
