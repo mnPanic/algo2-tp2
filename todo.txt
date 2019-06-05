@@ -10,10 +10,6 @@ General
                 pasoDispFan
                 pasoDispPJ
     - Chequear las cosas que van por ref y copia
-    - Agregar justificaciones de complejidades
-    - Chequear las cosas por ref y por copias (Recordar que:
-        Con la notación de módulos de la materia: apilar(in/out pila : Pila, in x : Elemento)
-        Con notación de C++: void Pila::apilar(const Elemento& x))
     - Chequear cuando eliminamos punteros que estemos liberando la memoria.
     - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
 
