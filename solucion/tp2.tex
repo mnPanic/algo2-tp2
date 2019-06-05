@@ -582,8 +582,8 @@
         \State // Inicializo los jugadores
         \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*|pj| + locJugadores)$
         \\
-        \State // Inicializo los fantasmas
-        \State $iIniciarFantasmas(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
+        \State // Creo el nuevo fantasma
+        \State $iNuevoFan(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
         \medskip
         \Statex \underline{Complejidad:} $\Theta(?)$
         \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
@@ -643,9 +643,8 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iIniciarFantasmas}(\Inout{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
+  \begin{algorithm}[H]{\textbf{iNuevoFan}(\Inout{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
     \begin{algorithmic}[1]
-      \State // Lleno las estructuras de fantasmas
       \State // Creo la infoActual y la agrego a su conjunto
       \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$ \Comment $\Theta(1)$
       \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$ \Comment $\Theta(copy(infoActual))$
