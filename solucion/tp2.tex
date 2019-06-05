@@ -402,15 +402,10 @@
     
     % Generadores
     \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
-    [$\neg vacio(pjs) \land (\forall e: evento) (está?(e, eventosFan) \impluego e.pos \in libres(m))$]
+    [$\neg vacio(pjs) \land (\forall e: evento) (esta?(e,\ eventosFan) \impluego e.pos \in libres(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
     [$\Theta(?)$ TODO]
     [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
-
-    \InterfazFuncion{pasarTiempo}{\In{j}{juego}}{juego}%
-    {$res \igobs pasar(j)$}%
-    [$\Theta(?)$]
-    [ejecuta un paso de tiempo cuando ningún jugador realiza una acción.]
 
     \InterfazFuncion{infoActualPjVivos}{\In{j}{Juego}}{conj(Tupla(jugador, pos, dir))}%
     {res $\igobs$ infoActualPjVivos(j)}%
@@ -419,20 +414,20 @@
     [las referencias son no modificables.]
 
     \InterfazFuncion{infoActualFanVivos}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
-    {res $\igobs$ infoActualFanVivos(j)}%
+    {$res \igobs infoActualFanVivos(j)$}%
     [$\BigO(1)$]
     [devuelve un conjunto referencias a la información de los fantasmas que están vivos.]
     [las referencias son no modificables.]
 
     \InterfazFuncion{infoActualFanEspecial}{\In{j}{Juego}}{Tupla(pos, dir)}%
-    {res $\igobs$ infoActualFanEspecial(j)}%
+    {$res \igobs infoActualFanEspecial(j)$}%
     [$\BigO(1)$]
     [devuelve la posicion y direccion del fantasma especial.]
     [res es una referencia no modificable.]
 
     \InterfazFuncion{infoActualFanVivosQueDisp}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
-    {res $\igobs$ infoActualFanVivosQueDisp(j)}%
-    [$\BigO(\#infoActualFanVivos(j))$]
+    {$res \igobs infoActualFanVivosQueDisp(j)$}%
+    [$\BigO(\#fv)$]
     [devuelve un conjunto con la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
     [res es un conjunto de referencias no modificables.]
 
@@ -445,17 +440,17 @@
     \InterfazFuncion{ejecutarAccion}{\Inout{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{}%
     [$j \igobs j_0 \yluego pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
     {$j \igobs step(j_0, a, pj)$}%
-    [$\BigO(|pj| + \#infoActualFanVivos(j) * tam(habitacion(j)) + \#infoActualPjVivos(j))$]
+    [$\BigO(|j| + \#fv * m + \#jv)$]
     [actualiza con la acción $a$ del jugador $pj$.]
 
-    \InterfazFuncion{ejecutarSinAccion}{\Inout{j}{juego}}{}%REVISAR
+    \InterfazFuncion{pasarTiempo}{\Inout{j}{juego}}{}%
     {$j \igobs pasar(j_0)$}%
-    [$\BigO(\#infoActualFanVivos(j) * tam(habitacion(j)) + \#infoActualPjVivos(j))$]
+    [$\BigO(\#fv * m + \#jv)$]
     [actualiza sin acción de jugador.]
 
     \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
     {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
-    [$O(\#infoActualFanVivos(j) * tam(habitacion(j)))$]
+    [$O(\#fv * m)$]
     [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas enl último paso.]
 
     \InterfazFuncion{habitacion}{\In{j}{juego}}{mapa}%
@@ -483,7 +478,7 @@
 
     \InterfazFuncion{acciones}{\In{pj}{jugador}, \In{j}{juego}}{secu(evt)}%
     {$res \igobs acciones(pj, j)$}%
-    [$\Theta(|pj|)$]
+    [$\Theta(|j|)$]
     [devuelve por referencia un conjunto de todos los jugadores del juego]
     [res es no modificable]
   
@@ -711,6 +706,14 @@
       \\
       \State // Agrego al conjunto de fantasmas vivos el interador a la info del Fan
       \State $AgregarRapido(itInfoFan,\ j.infoFantasmasVivos)$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(?)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iInfoActualPjVivos}(\In{j}{estr}) $\to res:$ conj(infoActualPJ)} \Comment Función privada
+    \begin{algorithmic}[1]
+      \State $res \gets j.infoActualJugadoresVivos$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(?)$
     \end{algorithmic}
