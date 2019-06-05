@@ -37,6 +37,7 @@ Juego
 
 Mapa
     Valida?(m, pos) -> bool
+    Copia(m)-> m
 
 Accion        
     Avanzar(pos, dir) -> pos
