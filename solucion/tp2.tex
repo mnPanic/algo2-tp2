@@ -324,7 +324,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
+    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : conj(string)}
       \begin{algorithmic}[1]
         \State $res \gets e.claves$                                            \Comment $\Theta(1)$
   
@@ -372,7 +372,7 @@
          
        \\ \State // Si el significado no está definido, agrego la nueva clave al conjunto de claves 
           \State $\textbf{if} \ (actual \DRef significado \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
-          \State // Como precondicion, se que no existe asi que la agrego rapido
+          \State // Como precondición se que no existe así que la agrego rápido
           \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
           \State $\textbf{end if}$
 
@@ -601,10 +601,14 @@
 
     \end{Estructura}
 
-    \Rep[mapa][m]{}
+    \Rep[estr][e]{}
     
     \mbox{}
-    \Abs[mapa]{hab}[m]{h}{}
+    \Abs[estr]{Juego}[e]{j}{$e.mapa \igobs habitacion(j)$ $\land$ \\
+    $claves(e.infoJugadores) \igobs jugadores(j)$ $\yluego$ \\
+    $(\forall \ pj: jugador)(pj \in jugadores(j) \impluego acciones(pj,\ j) \igobs obtener(pj, e.infoJugadores).eventos)$ $\land$ \\
+    $fantasmas(j) \igobs infoFantasmas.eventos$ $\land$ \\
+    $(\exists \ if: infoFan)(if \in e.infoFantasmas$ $\land$ $if.infoActual \igobs e.infoFantasmaEspecial \yluego if.eventos \igobs fantasmaEspecial(j))$}
 
   \end{Representacion}
 
