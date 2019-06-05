@@ -324,6 +324,17 @@
           \end{algorithmic}
     \end{algorithm}
 
+    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
+      \begin{algorithmic}[1]
+        \State $res \gets e.claves$                                            \Comment $\Theta(1)$
+  
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(1)$
+          \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
+          \end{algorithmic}
+    \end{algorithm}
+  
+
 
     \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dic}, \In{k}{$string$}) $\to$ $res$ : bool}
       \begin{algorithmic}[1]
@@ -389,16 +400,6 @@
           \end{algorithmic}
     \end{algorithm}
   \end{Algoritmos}
-
-  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
-    \begin{algorithmic}[1]
-      \State $res \gets e.claves$                                            \Comment $\Theta(1)$
-
-        \medskip
-        \Statex \underline{Complejidad:} $\Theta(1)$
-        \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
-        \end{algorithmic}
-  \end{algorithm}
 
 \newpage
 
@@ -1222,8 +1223,8 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
   [$\Theta(n^2)$]
   [genera un mapa de tamaño n x n.]
 
-  \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{c}{$tupla(int, int)$}}{}%
-  [$m \igobs m_0$ $\land$ $c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]
+  \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{p}{pos}}{}%
+  [$m \igobs m_0$ $\land$ $p \in casilleros(m)$ $\yluego$ $libre(m, p)$ $\land$ $alcanzan(libres(m)-p,\ libres(m)-p,\ m)$]
   %lo de m = m0 es igualdad observacional, no?
   {$m$ $\igobs$ $ocupar(c,m_0)$}%
   [$\Theta(1)$]
@@ -1234,13 +1235,25 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
   [$\Theta(1)$]
   [devuelve el tamaño del mapa.]
     
-  \InterfazFuncion{libre}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{bool}%
-  [$c \in casilleros(m)$]%
-  {$res$ $\igobs$ $libre(c, m)$}
+  \InterfazFuncion{libre}{\In{m}{mapa}, \In{p}{pos}}{bool}%
+  [$p \in casilleros(m)$]%
+  {$res$ $\igobs$ $libre(p, m)$}
   [$\Theta(1)$]
   [devuelve si una posición está ocupada.]
 
+  \InterfazFuncion{Valida?}{\In{m}{mapa}, \In{p}{pos}}{bool}%
+  {$res$ $\igobs$ $0 \leq \Pi_1(pos) < tam(m) \land\ 0 \leq \Pi_1(pos) < tam(m)$}
+  [$\Theta(1)$]
+  [devuelve si una posición es válida en el mapa.]
+
+  \InterfazFuncion{Copiar}{\In{m}{mapa}}{mapa}%
+  {$res$ $\igobs$ $m$}
+  [$\Theta(????)$]
+  [devuelve si una posición está ocupada.]
+  [se devuelve una copia del elemento ingresado por referencia.]
+
 \end{Interfaz}
+\mbox{}
 
 \begin{Representacion}
   
@@ -1330,6 +1343,24 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
       \Statex \underline{Complejidad:} $\BigO(n^2)$
       \Statex \underline{Justificación:} Copiar un vector de n booleanos es $\BigO(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $\BigO(n^2)$, puesto que AgregarAtrás es $\BigO(n)$ y copiarlo es $\BigO(n)$ por lo antes visto. Luego la complejidad de la operación de la línea 10 es $\BigO(n)$ y, por lo tanto, todo el while es $\BigO(n^2)$.
     	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]{\textbf{iValida?}(\In{m}{map} \In{p}{pos}) $\to$ $res$ : nat}
+  \begin{algorithmic}[1]
+   \State $res \gets 0 \leq pos.x, \ pos.y < m.tamano$ \Comment $\Theta(1)$
+  \medskip
+  \Statex \underline{Complejidad:} $\Theta(1)$
+  \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]{\textbf{iCopiar}(\In{m}{map}) $\to$ $res$ : map}
+  \begin{algorithmic}[1]
+   \State $res \gets \tuple{tamano: m.tamano,\ casilleros: Copiar(m.casilleros)}$ \Comment $\Theta(m.tamano^2)$
+  \medskip
+  \Statex \underline{Complejidad:} $\Theta(1)$
+  \Statex \underline{Justificación:} Copiar un vector es $\displaystyle\Theta\left(\sum_{i=1}^{\ell}copy({v[i]})\right)$, donde $\ell$ $=$ long($v$). Luego, copiar un vector de vectores de booleanos de tamano n es $\Theta(m.tamano^2)$.
+  \end{algorithmic}
 \end{algorithm}
 
 \end{Algoritmos}
