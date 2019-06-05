@@ -617,12 +617,10 @@
       $\#e.infoFantasmas = ronda + 1$ $\land$ \\
       Los tamaños de e.mapa y e.mapaDisparos son \textbf{exactamente} iguales. $\land$ \\
       $\neg(\exists p: pos)$(Es válida y está ocupada en e.mapa y tiene disparos en e.mapaDisparos) $\land$ \\
-      $(\forall\ p: pos)(p \in e.disparosFanUltimoPaso \impluego$ son válidas y no están ocupadas en e.mapa) $\land$ \\
-      No existen disparos de jugadores o fantasmas en e.mapaDisparos tal que alrededor de ese disparo no haya otros disparos o estén libres en e.mapa las celdas a su alrededor $\land$ \\ \\
-      Una posición en e.mapaDisparos tiene un disparo de un personaje $\iff$ un personaje disparó en el paso que figura en la posición y no hubo disparos posteriores a ese paso efectuados por personajes. $\land$ \\ \\
-      Una posición en e.mapaDisparos tiene un disparo de un fantasma $\iff$ un fantasma disparó en el paso que figura en la posición y no hubo disparos posteriores a ese paso efectuados por fantasmas. $\land$ \\ \\
-      Los disparos son efectuados en línea recta desde la posición consecutiva a del evento, en la dirección del evento, hasta una posición ocupada o inválida. $\land$ \\ //Pueden sobreescribrise al efectuar un disparo en un paso posterior. \\ \\
-      Una infoPJ  se corresponde con su infoActual $\iff$ (está vivo $\land$  la posición y la dirección son iguales a las de su último evento efectuado $\land$ su identidad es la clave que obtiene dicha infoPJ en e.infoJugadores) $\land$ \\
+      Una posición en e.mapaDisparos tiene un disparo de un personaje en un paso en particular $\iff$ un personaje disparó ese paso y no hubo disparos posteriores a ese paso efectuados por personajes. $\land$ \\ \\
+      Una posición en e.mapaDisparos tiene un disparo de un fantasma en un paso en particular $\iff$ un fantasma disparó ese paso y no hubo disparos posteriores a ese paso efectuados por fantasmas. $\land$ \\ \\
+      Si un personaje o fantasma dispara desde una $pos$ hacia una $dir$, en el mapa disparos debe haber una linea recta desde esa pos hacia esa dir hasta el fin del mapa o una posicion ocupada con valores mayores o iguales al paso en el que se efectuó $\land$\\ \\
+      Una infoPJ  se corresponde con su infoActual $\iff$ (está vivo $\land$  la posición y la dirección son iguales a las de su último evento $\land$ su identidad es la clave que obtiene dicha infoPJ en e.infoJugadores) $\land$ \\
       $(\forall\ iapj: infoActualPJ)(iapj \in e.infoActualJugadoresVivos \iff$ su correspondiente infoPJ está vivo) $\land$ \\
       $(\forall\ ip: puntero(infoPJ))(ip \in e.infoJugadoresVivos \iff ip \DRef vivo?)$ $\land$ \\
       \#e.infoActualJugadoresVivos = \#e.infoJugadoresVivos $\land$ \\ \\
@@ -639,14 +637,12 @@
     $claves(e.infoJugadores) \igobs jugadores(j)$ $\yluego$ \\
     $(\forall \ pj: jugador)(pj \in jugadores(j) \impluego acciones(pj,\ j) \igobs obtener(pj, e.infoJugadores).eventos)$ $\land$ \\
     $fantasmas(j) \igobs tomarSubsec(infoFantasmas.eventos,\ 0,\ long(fantasmas(j)))$ $\land$ \\
-    $(\exists \ if: infoFan)(if \in e.infoFantasmas$ $\land$ $if.infoActual \igobs e.infoFantasmaEspecial \yluego if.eventos \igobs fantasmaEspecial(j))$}
+    $(\exists \ if: infoFan)(if \in e.infoFantasmas$ $\land$ $if.infoActual \igobs e.infoFantasmaEspecial \yluego\\ if.eventos \igobs fantasmaEspecial(j))$}
   \end{Representacion}
 
   \bigskip
 
   \begin{Algoritmos}
-
-  En esta sección se hace abuso de notación en los cálculos de álgebra de órdenes presentes en la justificaciones de los algoritmos. La operación de suma ``+'' denota secuencialización de operaciones con determinado orden de complejidad, y el símbolo de igualdad ``='' denota la pertenencia al orden de complejidad resultante.
 
   \medskip
     
