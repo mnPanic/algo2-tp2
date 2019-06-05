@@ -547,7 +547,7 @@
         \Comentario{General}
         \tupItem{paso}{nat}\\
         \tupItem{ronda}{nat}\\
-        \tupItem{mapa}{m}\\
+        \tupItem{mapa}{Mapa}\\
 
         \Comentario{Disparos}
         \tupItem{mapaDisparos}{arreglo(arreglo(tupla(nat, nat)))}\\
@@ -1001,7 +1001,7 @@
     \begin{algorithmic}[1]
       \State $res \gets j.disparosFanUltimoPaso$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(?)$
+      \Statex \underline{Complejidad:} $\Theta(1)$ EXPLICAR QUE ESTO LO RELLENAMOS ANTES Y QUE COMO ES PARTE DE LA ESTRUCTURA ES TETA DE 1
     \end{algorithmic}
   \end{algorithm}
 
@@ -1027,7 +1027,7 @@
   \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \tab $\textbf{if} \ (infoFan.infoActual == j.infoFantasmaEspecial))$ 
+      \State \tab $\textbf{if} \ (siguiente(infoFan.infoActual) == siguiente(j.infoFantasmaEspecial))$ 
       \State \ttab $\textbf{then} \ res \gets infoFan.eventos$ \Comment $\Theta(copy(infoFan.eventos))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
