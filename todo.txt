@@ -5,7 +5,7 @@ General
         Evento
         Pos 
         Dir
-        Cambiar mapa disparos para que en vez de tuple(nat nat) tenga
+        Cambiar mapa diparos para que en vez de tuple(nat nat) tenga
             pasoDisparos
                 pasoDispFan
                 pasoDispPJ
@@ -17,9 +17,4 @@ Juego
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
     - Pre y Post condiciones de funciones auxiliares
     - Convertir lista de eventos de pj a vector de fantasmas.
-
-    - Rep
-            Recordar:
-            Existe un n tq la long de los eventos es n * 2 + 5 => 
-            los primeros n son los ultimos (n+5 a long - 1) invertidos.
-            entre n y n+5 son "nada".
+    - Agregar que al ejecutar un "pasar" a todos los jugadores se les agrega "pasar".

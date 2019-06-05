@@ -601,15 +601,38 @@
 
     \end{Estructura}
 
-    \Rep[estr][e]{}
-    
+    \Rep[estr][e]{\\
+      $(\forall\ t: tupla)(t \in e.mapaDisparos \impluego \Pi_1(p),\ \Pi_2(p) \leq e.paso)$ $\land$\\
+      $(\forall\ p: pos)(p \in e.disparosFanUltimoPaso \iff mapaDisp[pos.x][pos.y].pasoDispFan = paso)$ $\land$ \\ \\
+      $(\forall\ ip: infoPJ)(ip \in valores(e.infoJugadores) \impluego (long(ip.eventos) \leq paso \land (ip.vivo? \impluego long(ip.eventos = paso) \land (ip.vivo? \iff$ no estuvo en las posiciones afectadas por los disparos de los fantasmas en los pasos anteriores.) $\land$ todas las posiciones de los eventos son posiciones libres en e.mapa $\land$ no hay saltos de posiciones entre 2 eventos consecutivos.$\land$  el cambio de posición entre un evento de if.eventos y su consecutivo debe ser el correspondiente al cambio de dirección entre ellos, considerando también la libertad de la posición en e.mapa)) $\land$\\ \\
+      $(\forall\ if: infoFan)(if \in e.infoFantasmas \impluego (e.vivo? \iff$ no estuvo en las pos afectadas por los disparos de los jugadorse en los pasos anteriores.) $\land$ todas las posiciones de if.eventos son posiciones libres en e.mapa $\land$ no hay saltos de posiciones entre 2 eventos consecutivos en if.eventos $\land$ el cambio de posición entre un evento de if.eventos y su consecutivo debe ser el correspondiente al cambio de dirección entre ellos, considerando también la libertad de la posición en e.mapa) $\land$ \\ \\
+      $(\forall\ iaf: infoActualFan)(iaf \in e.infoActualFantasmasVivos \impluego$  la posición y dirección son las del evento correspondiente a la posición de la secuencia definida por paso mód long(eventos del fantasma)) $\land$ \\ \\
+      $\#e.infoFantasmas = ronda + 1$ $\land$ \\
+      Los tamaños de e.mapa y e.mapaDisparos son \textbf{exactamente} iguales. $\land$ \\
+      $\neg(\exists p: pos)$(Es válida y está ocupada en e.mapa y tiene disparos en e.mapaDisparos) $\land$ \\
+      $(\forall\ p: pos)(p \in e.disparosFanUltimoPaso \impluego$ son válidas y no están ocupadas en e.mapa) $\land$ \\
+      No existen disparos de jugadores o fantasmas en e.mapaDisparos tal que alrededor de ese disparo no haya otros disparos o estén libres en e.mapa las celdas a su alrededor $\land$ \\ \\
+      Una posición en e.mapaDisparos tiene un disparo de un personaje $\iff$ un personaje disparó en el paso que figura en la posición y no hubo disparos posteriores a ese paso efectuados por personajes. $\land$ \\ \\
+      Una posición en e.mapaDisparos tiene un disparo de un fantasma $\iff$ un fantasma disparó en el paso que figura en la posición y no hubo disparos posteriores a ese paso efectuados por fantasmas. $\land$ \\ \\
+      Los disparos son efectuados en línea recta desde la posición consecutiva a del evento, en la dirección del evento, hasta una posición ocupada o inválida. $\land$ \\ //Pueden sobreescribrise al efectuar un disparo en un paso posterior. \\ \\
+      Una infoPJ  se corresponde con su infoActual $\iff$ (está vivo $\land$  la posición y la dirección son iguales a las de su último evento efectuado $\land$ su identidad es la clave que obtiene dicha infoPJ en e.infoJugadores) $\land$ \\
+      $(\forall\ iapj: infoActualPJ)(iapj \in e.infoActualJugadoresVivos \iff$ su correspondiente infoPJ está vivo) $\land$ \\
+      $(\forall\ ip: puntero(infoPJ))(ip \in e.infoJugadoresVivos \iff ip \DRef vivo?)$ $\land$ \\
+      \#e.infoActualJugadoresVivos = \#e.infoJugadoresVivos $\land$ \\ \\
+      $(\forall\ if: infoFan)(if \in e.infoFantasmas \impluego (\exists\ n:nat)(long(if.eventos) = n*2+5$ $\yluego$ (los últimos n eventos de if.eventos son los primeros n invertidos $\land$ los eventos entre n y n+5 son pasar))) $\land$ \\
+      Una infoFan  se corresponde con su infoActual $\iff$ (está vivo $\land$  la posición y la dirección son iguales a las de su último evento efectuado) $\land$ \\
+      $(\forall\ iaf: infoActualFan)(iaf \in e.infoActualFanVivos \iff$ su correspondiente infoFan está vivo) $\land$ \\
+      $(\forall\ if: infoFan))(if \in e.infoFantasmasVivos \iff if.vivo?)$ $\land$ \\
+      \#e.infoActualFantasmasVivos = \#e.infoFantasmasVivos $\land$ \\
+      El fantasma especial siempre está vivo.
+      }
+    \newpage
     \mbox{}
     \Abs[estr]{Juego}[e]{j}{$e.mapa \igobs habitacion(j)$ $\land$ \\
     $claves(e.infoJugadores) \igobs jugadores(j)$ $\yluego$ \\
     $(\forall \ pj: jugador)(pj \in jugadores(j) \impluego acciones(pj,\ j) \igobs obtener(pj, e.infoJugadores).eventos)$ $\land$ \\
-    $fantasmas(j) \igobs infoFantasmas.eventos$ $\land$ \\
+    $fantasmas(j) \igobs tomarSubsec(infoFantasmas.eventos,\ 0,\ long(fantasmas(j)))$ $\land$ \\
     $(\exists \ if: infoFan)(if \in e.infoFantasmas$ $\land$ $if.infoActual \igobs e.infoFantasmaEspecial \yluego if.eventos \igobs fantasmaEspecial(j))$}
-
   \end{Representacion}
 
   \bigskip
@@ -638,7 +661,7 @@
         \State \tab $mapaDisparos: arreglo(arreglo(tupla(nat, nat))[Tam(m)])[Tam(m)],$ \Comment $\Theta(Tam(m)^2)$
         \State \tab $disparosFanUltimoPaso: Vacio(),$ \Comment $\Theta(1)$
         \\
-        \State \tab // Inicializo estructuras de jugadores y fantasmas como vacías
+        \State \tab /a/ Inicializo estructuras de jugadores y fantasmas como vacías
         \State \tab $infoActualJugadoresVivos: Vacio(),$  \Comment $\Theta(1)$
         \State \tab $infoJugadoresVivos: Vacio(),$ \Comment $\Theta(1)$
         \State \tab $infoJugadores: Vacia(),$ \Comment $\Theta(1)$
