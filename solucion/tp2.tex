@@ -1000,7 +1000,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(secu(eventos))}
+  \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(lista(evento))}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
       \State \ttab $\textbf{then} \ AgregarRapido(res, infoFan.eventos)$                             \Comment $\Theta(infoFan.eventos)$ 
@@ -1011,7 +1011,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ secu(eventos)}
+  \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
       \State \tab $\textbf{if} \ (infoFan.infoActual == j.infoFantasmaEspecial))$ 
@@ -1028,6 +1028,14 @@
       \State $res \gets iClaves(j.infoJugadores)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iAcciones}(\In{pj}{string}, \In{j}{estr}) $\to res:$ lista(evento)}
+    \begin{algorithmic}[1]
+      \State $res \gets iSignificado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
     \end{algorithmic}
   \end{algorithm}
 
