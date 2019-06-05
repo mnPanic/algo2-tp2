@@ -654,7 +654,7 @@
       \State $j.infoFantasmaEspecial \gets itInfoActualFan$ \Comment $\Theta(1)$
       \\
       \State // Creo la infoFan con la actual
-      \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$ \Comment $\Theta(1)$
+      \State $infoFan \gets \tuple{eventos: eventosFan,\ vivo?: true,\ infoActual: itInfoActualFan}$ \Comment $\Theta(1)$
       \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
       \State $itInfoFan \gets AgregarRapido(infoFan,\ j.infoFantasmas)$ \Comment $\Theta(copy(infoFan))$
       \\
