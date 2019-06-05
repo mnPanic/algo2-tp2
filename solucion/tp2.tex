@@ -717,11 +717,35 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualPjVivos}(\In{j}{estr}) $\to res:$ conj(infoActualPJ)} \Comment Función privada
+  \begin{algorithm}[H]{\textbf{iInfoActualPjVivos}(\In{j}{estr}) $\to res:$ conj(infoActualPJ)}
     \begin{algorithmic}[1]
       \State $res \gets j.infoActualJugadoresVivos$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(?)$
+      \Statex \underline{Complejidad:} $\BigO(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iInfoActualFanVivos}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
+    \begin{algorithmic}[1]
+      \State $res \gets j.infoActualFantasmasVivos$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFanEspecial}
+    \begin{algorithmic}[1]
+      \State $res \gets siguiente(j.infoFantasmaEspecial)$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ infoActualFanEspecial}
+    \begin{algorithmic}[1]
+      \State $res \gets siguiente(j.infoFantasmaEspecial)$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(1)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -757,7 +781,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iActualizarFantasmas}(\Inout{j}{estr})}
+  \begin{algorithm}[H]{\textbf{iActualizarFantasmas}(\Inout{j}{estr})} \Comment Función privada
     \begin{algorithmic}[1]
       \State // Recorro los fantasmas vivos
       \State $\textbf{for} \ (itInfoFan :\ j.infoFantasmasVivos) \ \ \textbf{do}$ \Comment $\Theta(\#fv)$
