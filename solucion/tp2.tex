@@ -324,6 +324,17 @@
           \end{algorithmic}
     \end{algorithm}
 
+    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
+      \begin{algorithmic}[1]
+        \State $res \gets e.claves$                                            \Comment $\Theta(1)$
+  
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(1)$
+          \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
+          \end{algorithmic}
+    \end{algorithm}
+  
+
 
     \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dic}, \In{k}{$string$}) $\to$ $res$ : bool}
       \begin{algorithmic}[1]
@@ -389,16 +400,6 @@
           \end{algorithmic}
     \end{algorithm}
   \end{Algoritmos}
-
-  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
-    \begin{algorithmic}[1]
-      \State $res \gets e.claves$                                            \Comment $\Theta(1)$
-
-        \medskip
-        \Statex \underline{Complejidad:} $\Theta(1)$
-        \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
-        \end{algorithmic}
-  \end{algorithm}
 
 \newpage
 
@@ -1222,8 +1223,8 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
   [$\Theta(n^2)$]
   [genera un mapa de tamaño n x n.]
 
-  \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{c}{$tupla(int, int)$}}{}%
-  [$m \igobs m_0$ $\land$ $c \in casilleros(m)$ $\yluego$ $libre(m, c)$ $\land$ $alcanzan(libres(m)-c, libres(m)-c, m)$]
+  \InterfazFuncion{ocupar}{\Inout{m}{mapa}, \In{p}{pos}}{}%
+  [$m \igobs m_0$ $\land$ $p \in casilleros(m)$ $\yluego$ $libre(m, p)$ $\land$ $alcanzan(libres(m)-p,\ libres(m)-p,\ m)$]
   %lo de m = m0 es igualdad observacional, no?
   {$m$ $\igobs$ $ocupar(c,m_0)$}%
   [$\Theta(1)$]
@@ -1234,13 +1235,25 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
   [$\Theta(1)$]
   [devuelve el tamaño del mapa.]
     
-  \InterfazFuncion{libre}{\In{m}{mapa}, \In{c}{$tupla(int, int)$}}{bool}%
-  [$c \in casilleros(m)$]%
-  {$res$ $\igobs$ $libre(c, m)$}
+  \InterfazFuncion{libre}{\In{m}{mapa}, \In{p}{pos}}{bool}%
+  [$p \in casilleros(m)$]%
+  {$res$ $\igobs$ $libre(p, m)$}
   [$\Theta(1)$]
   [devuelve si una posición está ocupada.]
 
+  \InterfazFuncion{Valida?}{\In{m}{mapa}, \In{p}{pos}}{bool}%
+  {$res$ $\igobs$ $0 \leq \Pi_1(pos) < tam(m) \land\ 0 \leq \Pi_1(pos) < tam(m)$}
+  [$\Theta(1)$]
+  [devuelve si una posición es válida en el mapa.]
+
+  \InterfazFuncion{Copiar}{\In{m}{mapa}}{mapa}%
+  {$res$ $\igobs$ $m$}
+  [$\Theta(????)$]
+  [devuelve si una posición está ocupada.]
+  [se devuelve una copia del elemento ingresado por referencia.]
+
 \end{Interfaz}
+\mbox{}
 
 \begin{Representacion}
   
@@ -1330,6 +1343,24 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
       \Statex \underline{Complejidad:} $\BigO(n^2)$
       \Statex \underline{Justificación:} Copiar un vector de n booleanos es $\BigO(n * copy(bool))$ y copiar un bool es $\Theta(1)$. Luego, agregar n veces la copia del vector es $\BigO(n^2)$, puesto que AgregarAtrás es $\BigO(n)$ y copiarlo es $\BigO(n)$ por lo antes visto. Luego la complejidad de la operación de la línea 10 es $\BigO(n)$ y, por lo tanto, todo el while es $\BigO(n^2)$.
     	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]{\textbf{iValida?}(\In{m}{map} \In{p}{pos}) $\to$ $res$ : nat}
+  \begin{algorithmic}[1]
+   \State $res \gets 0 \leq pos.x, \ pos.y < m.tamano$ \Comment $\Theta(1)$
+  \medskip
+  \Statex \underline{Complejidad:} $\Theta(1)$
+  \end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[H]{\textbf{iCopiar}(\In{m}{map}) $\to$ $res$ : map}
+  \begin{algorithmic}[1]
+   \State $res \gets \tuple{tamano: m.tamano,\ casilleros: Copiar(m.casilleros)}$ \Comment $\Theta(m.tamano^2)$
+  \medskip
+  \Statex \underline{Complejidad:} $\Theta(1)$
+  \Statex \underline{Justificación:} Copiar un vector es $\displaystyle\Theta\left(\sum_{i=1}^{\ell}copy({v[i]})\right)$, donde $\ell$ $=$ long($v$). Luego, copiar un vector de vectores de booleanos de tamano n es $\Theta(m.tamano^2)$.
+  \end{algorithmic}
 \end{algorithm}
 
 \end{Algoritmos}
@@ -1473,40 +1504,60 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
 
   \Titulo{Operaciones básicas de Acción}
 
-  \InterfazFuncion{mover}{\In{d}{dir}}{accion}%
+  \InterfazFuncion{Mover}{\In{d}{dir}}{accion}%
   {$res \igobs mover(d)$}%
   [$\Theta(1)$]
   [genera una acción de mover en la dirección especificada.]
   
-  \InterfazFuncion{pasar}{}{accion}%
+  \InterfazFuncion{Pasar}{}{accion}%
   {$res \igobs pasar$}%
   [$\Theta(1)$]
   [genera la acción de pasar.]
 
-  \InterfazFuncion{disparar}{}{accion}%
+  \InterfazFuncion{Disparar}{}{accion}%
   {$res \igobs disparar$}%
   [$\Theta(1)$]
   [genera la acción de disparar.]
 
-  \InterfazFuncion{aplicar}{\In{a}{acción}, \In{j}{juego}, \In{e}{evento}}{evento}%
+  \InterfazFuncion{Aplicar}{\In{a}{acción}, \In{j}{juego}, \In{e}{evento}}{evento}%
   {$res \igobs aplicar(a,\ j,\ e)$}%
   [$\Theta(1)$]
   [genera el evento a partir de la acción a realizar.]
 
 
-  \InterfazFuncion{invertir}{\In{e}{evento}}{evento}%
+  \InterfazFuncion{Invertir}{\In{e}{evento}}{evento}%
   {$res \igobs invertir(e)$}%
   [$\Theta(1)$]
   [invierte un evento.]
 
 
-  \InterfazFuncion{inversa}{\Inout{es}{vector(evento)}}{}%
-  {$res \igobs inversa(es)$}%
+  \InterfazFuncion{Inversa}{\Inout{es}{vector(evento)}}{}%
+  {$res \igobs inversaReal(es)$}%
   [$\Theta(1)$]
   [genera una secuencia que contiene a la inicial, le suma 5 pasos de espera y le agrega la secuencia original invertida.]
 
+  \InterfazFuncion{Avanzar}{\In{p}{pos}, \In{d}{dir}}{pos}%
+  {$d \igobs \ \uparrow \land \ res \igobs \tuple{\Pi_1(pos)+1,\Pi_2(pos)}\ \lor \\
+  d \igobs \ \downarrow \land \ res \igobs \tuple{\Pi_1(pos)-1,\Pi_2(pos)}\ \lor \\
+  d \igobs \ \leftarrow \land \ res \igobs \tuple{\Pi_1(pos),\Pi_2(pos)-1}\ \lor \\
+  d \igobs \ \rightarrow \land \ res \igobs \tuple{\Pi_1(pos)+1,\Pi_2(pos)+1}$}%
+  [$\Theta(1)$]
+  [devuelve la posición correspondiente a moverse en la dirección indicada.]
 
 \end{Interfaz}
+
+\Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
+    \begin{tad}{Acción Extendida($\alpha$)}
+      \parskip=0pt
+      \tadExtiende{\tadNombre{Acción}}
+    
+      \tadTitulo{otras operaciones}
+      \tadOperacion{inversaReal}{secu(evento)}{secu(evento)}{}
+      \tadOperacion{pasar}{evento}{evento}{}
+       \tadAxiomas
+      \tadAxioma{inversasReal(es)}{$ es\ \& (pasar(ult(es)) \bullet pasar(ult(es)) \bullet pasar(ult(es)) \bullet pasar(ult(es)) \bullet pasar(ult(es)) \ \bullet <> \ \& \ inversa(es)$}
+      \tadAxioma{pasar(evt)}{$\tuple{\Pi_1(evt),\ \Pi_2(evt),\ false}$}
+    \end{tad}
 
 \begin{Representacion}
   
@@ -1581,6 +1632,21 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
     \end{algorithmic})
   \end{algorithm}
 
+  \begin{algorithm}[H]{\textbf{iAvanzar}(\In{p}{pos}, \In{d}{dir}) $\to$ $res$ : pos}
+    \begin{algorithmic}[1]
+      \State $switch(d)$         \Comment $\Theta(1)$
+      \State $case\ Arriba():$
+      \State $\tab res \gets \tuple{pos.x + 1,\ pos.y}$
+      \State $case\ Abajo():$
+      \State $\tab res \gets \tuple{pos.x - 1,\ pos.y}$
+      \State $case\ Izquieda():$
+      \State $\tab res \gets \tuple{pos.x,\ pos.y - 1}$
+      \State $case\ Derecha():$
+      \State $\tab res \gets \tuple{pos.x,\ pos.y + 1}$
+      \medskip
+    \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic})
+  \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iInversa}(\Inout{es}{vector(evento)})}
     \begin{algorithmic}[1]
@@ -1621,30 +1687,12 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
           \\
 
           \State $\textbf{if} \ (a.accion = mover) \ \textbf{then}$        \Comment $\Theta(1)$
-          
-          \State \tab $\textbf{if} \ (a.dir = Arriba() \land \ \Pi_1(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)+1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
-          \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos)+1, \Pi_2(e.pos)},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
+          \State \tab $prox \gets Avanzar(e.pos,\ a.dir)$
+
+          \State \tab $\textbf{if} \ (Valida?(j.mapa,\ prox)\ \yluego$ $Libre(j.mapa,\ prox))$        \Comment $\Theta(1)$
+          \State \ttab   $\textbf{then} \ res \gets \tuple{pos: prox,\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
           \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
           \State \tab $\textbf{end if}$
-
-
-          \State \tab $\textbf{if} \ (a.dir = Abajo() \land \ \Pi_1(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos)-1, \Pi_2(e.pos)}\ )$        \Comment $\Theta(1)$
-          \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos)-1, \Pi_2(e.pos)},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
-          \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
-          \State \tab $\textbf{end if}$
-
-
-          \State \tab $\textbf{if} \ (a.dir = Derecha() \land \ \Pi_2(e.pos)+1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)+1}\ )$        \Comment $\Theta(1)$
-          \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)+1},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
-          \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
-          \State \tab $\textbf{end if}$
-
-
-          \State \tab $\textbf{if} \ (a.dir = Izquierda() \land \ \Pi_2(e.pos)-1 < Tam(j.mapa)\ \yluego$ \\ \tab $Libre(j.mapa,\ \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)-1}\ )$        \Comment $\Theta(1)$
-          \State \ttab   $\textbf{then} \ res \gets \tuple{pos: \tuple{ \Pi_1(e.pos), \Pi_2(e.pos)-1},\ dir: a.dir,\ disparo?: false}$       \Comment $\Theta(1)$
-          \State \ttab  $\textbf{else} \ res \gets \tuple{pos: e.pos,\ dir: a.dir,\ disparo?: false}$ 
-          \State \tab $\textbf{end if}$
-
           \State $\textbf{end if}$
           
           \medskip
