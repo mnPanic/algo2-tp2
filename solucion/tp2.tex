@@ -769,7 +769,7 @@
 
   \begin{algorithm}[H]{\textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
     \begin{algorithmic}[1]
-      \State $res \gets iSignificado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
+      \State $res \gets Significado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(|pj|)$
     \end{algorithmic}
@@ -1038,7 +1038,7 @@
 
   \begin{algorithm}[H]{\textbf{iJugadores}(\In{j}{estr}) $\to res:$ conj(string)}
     \begin{algorithmic}[1]
-      \State $res \gets iClaves(j.infoJugadores)$
+      \State $res \gets Claves(j.infoJugadores)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
@@ -1046,7 +1046,7 @@
 
   \begin{algorithm}[H]{\textbf{iAcciones}(\In{pj}{string}, \In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
-      \State $res \gets iSignificado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
+      \State $res \gets Significado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
     \end{algorithmic}
@@ -1180,7 +1180,7 @@
   \begin{algorithm}[H]{\textbf{iActualizarPJ}(\In{pj}{jugador}, \In{a}{accion}) $\to res:$ infoPJ} \Comment Funcion privada
     \begin{algorithmic}[1]
       \State // Busco la información del PJ
-      \State $infoPJ \gets Obtener(j.infoJugadores,\ pj)$          \Comment $\BigO(|j|)$
+      \State $infoPJ \gets Significado(j.infoJugadores,\ pj)$          \Comment $\BigO(|j|)$
       \\
       \State // Genero un evento con la acción y el evento anterior (el actual)
       \State $evtPJ \gets Aplicar(a,\ j,\ iEventoActualPJ(infoPJ))$ \Comment $\Theta(1)$
