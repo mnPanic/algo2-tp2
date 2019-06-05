@@ -620,6 +620,20 @@
 
   \begin{algorithm}[H]{\textbf{iNuevaInfoPJ}(\In{localizacion}{tupla(pos, dir), \In{itInfoActual}{itConj(infoActualPJ)}}) $\to res:$ infoPJ} \Comment Función privada
     \begin{algorithmic}[1]
+      \State // Armo la infoPJ
+      \State $res \gets \langle$                    \Comment $\Theta(1)$
+      \State \tab $eventos: iCrearEventosConLocalizacion(localizacion)$
+      \State \tab $vivo?: true$
+      \State \tab $infoActual: itInfoActual$
+      \State $\rangle$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iCrearEventosConLocalizacion}(\In{localizacion}{tupla(pos, dir))} $\to res:$ lista(evento)} \Comment Función privada
+    \begin{algorithmic}[1]
       \State // Creo el evento
       \State $evento \gets \langle$                 \Comment $\Theta(1)$
       \State \tab $pos: localizacion.pos,$
