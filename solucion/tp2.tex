@@ -501,9 +501,8 @@
 
     \begin{tad}{Juego Extendido($\alpha$)}
       \parskip=0pt
-      \tadExtiende{\tadNombre{Conjunto($\alpha$)}}
     
-      \tadTitulo{otras operaciones}
+      \tadOtrasOperaciones
       \tadOperacion{infoActualPjVivos}{Juego}{conj(Tupla(jugador, posicion, direccion))}{}
       \tadOperacion{infoActualPjVivosAux}{Juego, conj(jugador)}{conj(Tupla(jugador, posicion, direccion))}{}
       \tadOperacion{infoActualFanVivos}{Juego}{conj(Tupla(posicion, direccion))}{}
@@ -511,13 +510,14 @@
       \tadOperacion{infoActualFanEspecial}{Juego}{Tupla(posicion, direccion)}{}
       \tadOperacion{infoActualFanVivosQueDisp}{Juego}{conj(Tupla(posicion, direccion))}{}
       \tadOperacion{infoActualFanVivosQueDisAux}{Juego, conj(fantasmas)}{conj(Tupla(posicion, direccion))}{}
+      
       \tadAxiomas
-      \tadAxioma{infoActualPjVivos($j$)}{infoActualPjVivosAux(j, jugadores(j)}
-      \tadAxioma{infoActualPjVivosAux($j, js$)}{\IF jugadorVivo(dameuno(js), j) THEN Ag($\tuple{posJugador(dameuno(js), j), dirJugador(dameuno(js)},\ j)$, \\infoActualPjVivosAux(j, sinuno(js))) 
+      \tadAxioma{infoActualPjVivos($j$)}{infoActualPjVivosAux(j, jugadores(j))}
+      \tadAxioma{infoActualPjVivosAux($j, js$)}{\IF jugadorVivo(dameuno(js), j) THEN Ag($\tuple{posJugador(dameuno(js), j), dirJugador(dameuno(js),\ j)}$, \\infoActualPjVivosAux(j, sinuno(js))) 
       ELSE infoActualPjVivosAux(j, sinuno(js)) 
       FI}
       \tadAxioma{infoActualFanVivos($j$)}{infoActualPjVivosAux(j, jugadores(j)}
-      \tadAxioma{infoActualFanVivosAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) THEN Ag($\tuple{posFantasma(dameuno(fs), j), dirFantasma(dameuno(fs)},\ j)$, \\infoActualFanVivosAux(j, sinuno(fs))) 
+      \tadAxioma{infoActualFanVivosAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) THEN Ag($\tuple{posFantasma(dameuno(fs), j), dirFantasma(dameuno(fs),\ j)}$, \\infoActualFanVivosAux(j, sinuno(fs))) 
       ELSE infoActualFanVivosAux(j, sinuno(fs)) 
       FI}
       \tadAxioma{infoActualFanEspecial($j$)}{$\tuple{posFantasma(fantasmaEspecial(j), j), \ dirFantasma(fantasmaEspecial(j), j)}$}
@@ -548,7 +548,7 @@
         \Comentario{General}
         \tupItem{paso}{nat}\\
         \tupItem{ronda}{nat}\\
-        \tupItem{mapa}{m}\\
+        \tupItem{mapa}{Mapa}\\
 
         \Comentario{Disparos}
         \tupItem{mapaDisparos}{arreglo(arreglo(tupla(nat, nat)))}\\
@@ -763,7 +763,7 @@
     \begin{algorithmic}[1]
       \State // Recorro los fantasmas vivos y agrego a res los que estan vivos y disparando
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\BigO(\#fv)$
-      \State \tab $\textbf{if} \ (infoFan.vivo? \land \Pi_3(infoFan.eventos[mod(j.paso, Longitud(infoFan.eventos))]))$ 
+      \State \tab $\textbf{if} \ (infoFan.vivo? \land \Pi_3(iEventoActualFan(infoFan, j.paso)))$ 
       \State \ttab $\textbf{then} \ AgregarRapido(res, siguiente(infoFan.infoActual))$ \Comment $\Theta(copy(a))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
@@ -774,7 +774,7 @@
 
   \begin{algorithm}[H]{\textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
     \begin{algorithmic}[1]
-      \State $res \gets iSignificado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
+      \State $res \gets Significado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(|pj|)$
     \end{algorithmic}
@@ -1006,7 +1006,7 @@
     \begin{algorithmic}[1]
       \State $res \gets j.disparosFanUltimoPaso$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(?)$
+      \Statex \underline{Complejidad:} $\Theta(1)$ EXPLICAR QUE ESTO LO RELLENAMOS ANTES Y QUE COMO ES PARTE DE LA ESTRUCTURA ES TETA DE 1
     \end{algorithmic}
   \end{algorithm}
 
@@ -1021,7 +1021,7 @@
   \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(lista(evento))}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \ttab $\textbf{then} \ AgregarRapido(res, infoFan.eventos)$                             \Comment $\Theta(infoFan.eventos)$ 
+      \State \tab  AgregarRapido(res, infoFan.eventos)                             \Comment $\Theta(infoFan.eventos)$ 
       \State $\textbf{end for}$
       \State $res \gets j.infoFantasma$
       \medskip
@@ -1032,7 +1032,7 @@
   \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \tab $\textbf{if} \ (infoFan.infoActual == j.infoFantasmaEspecial))$ 
+      \State \tab $\textbf{if} \ (siguiente(infoFan.infoActual) == siguiente(j.infoFantasmaEspecial))$ 
       \State \ttab $\textbf{then} \ res \gets infoFan.eventos$ \Comment $\Theta(copy(infoFan.eventos))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
@@ -1043,7 +1043,7 @@
 
   \begin{algorithm}[H]{\textbf{iJugadores}(\In{j}{estr}) $\to res:$ conj(string)}
     \begin{algorithmic}[1]
-      \State $res \gets iClaves(j.infoJugadores)$
+      \State $res \gets Claves(j.infoJugadores)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
@@ -1051,7 +1051,7 @@
 
   \begin{algorithm}[H]{\textbf{iAcciones}(\In{pj}{string}, \In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
-      \State $res \gets iSignificado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
+      \State $res \gets Significado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
     \end{algorithmic}
@@ -1185,7 +1185,7 @@
   \begin{algorithm}[H]{\textbf{iActualizarPJ}(\In{pj}{jugador}, \In{a}{accion}) $\to res:$ infoPJ} \Comment Funcion privada
     \begin{algorithmic}[1]
       \State // Busco la información del PJ
-      \State $infoPJ \gets Obtener(j.infoJugadores,\ pj)$          \Comment $\BigO(|j|)$
+      \State $infoPJ \gets Significado(j.infoJugadores,\ pj)$          \Comment $\BigO(|j|)$
       \\
       \State // Genero un evento con la acción y el evento anterior (el actual)
       \State $evtPJ \gets Aplicar(a,\ j,\ iEventoActualPJ(infoPJ))$ \Comment $\Theta(1)$

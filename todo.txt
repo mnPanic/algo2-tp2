@@ -26,4 +26,3 @@ Juego
             Existe un n tq la long de los eventos es n * 2 + 5 => 
             los primeros n son los ultimos (n+5 a long - 1) invertidos.
             entre n y n+5 son "nada".
-        
