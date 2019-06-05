@@ -826,10 +826,37 @@
       \\
       \State // Veo que jugadores mueren
       \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
+      \\
+      \State // Agrego los 'pasar' faltantes
+      \State $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(2(\#fv * m) + \#jv) \in \BigO(\#fv * m + \#jv)$
     \end{algorithmic}
   \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iAgregarPasarFaltantes}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Recorro a todos los jugadores vivos, y le agrego un pasar a los jugadores que no se movieron
+      \For{ptrInfoPJ : j.infoJugadoresVivos}  \Comment $\Theta(\#jv)$
+        \State // Si su lista de acciones no es de la misma longitud que el paso actual + 1,
+        \State // entonces es necesario agregarle una acción pasar
+        \State $\textbf{if}\ Longitud(infoPJ.eventos) \neq j.paso + 1\ \textbf{then}$
+        \State \tab // Genero el evento pasar
+        \State \tab $eventoPasar \gets \langle$ \Comment $\Theta(1)$
+        \State \ttab  $pos: Ultimo(infoPJ.eventos).pos,$
+        \State \ttab  $dir: Ultimo(infoPJ.eventos).dir,$   
+        \State \ttab  $disparo?: false$
+        \State \tab $\rangle$
+        \State \tab // Lo agrego al final
+        \State \tab $AgregarAtras(infoPJ.eventos, eventoPasar)$ \Comment $\Theta(copy(eventoPasar))$
+        \State $\textbf{end if}$
+      \EndFor
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#jv)$
+      \Statex \underline{Justificacion:} Copiar un evento es $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
 
   \begin{algorithm}[H]{\textbf{iReiniciarDisparosFan}(\Inout{j}{estr})} \Comment Funcion privada
     \begin{algorithmic}[1]
@@ -1028,6 +1055,9 @@
       \\
       \State \tab // Veo que jugadores mueren
       \State \tab $iChequearMuerteJugadores(j)$                        \Comment $\Theta(\#jv)$
+      \\
+      \State \tab // Agrego los 'pasar' faltantes
+      \State \tab $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
       \State $\textbf{end if}$
       \medskip
       \Statex \underline{Complejidad:} Sin cambiar de ronda $\BigO(|j| + m + \#fv + \#fv * m + \#jv) \in \BigO(|j| + \#fv * m + \#jv)$, cambiando $\BigO(?)$
