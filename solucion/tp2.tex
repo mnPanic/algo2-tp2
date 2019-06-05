@@ -324,7 +324,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
+    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : conj(string)}
       \begin{algorithmic}[1]
         \State $res \gets e.claves$                                            \Comment $\Theta(1)$
   
@@ -372,7 +372,7 @@
          
        \\ \State // Si el significado no está definido, agrego la nueva clave al conjunto de claves 
           \State $\textbf{if} \ (actual \DRef significado \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
-          \State // Como precondicion, se que no existe asi que la agrego rapido
+          \State // Como precondición se que no existe así que la agrego rápido
           \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
           \State $\textbf{end if}$
 
@@ -601,10 +601,14 @@
 
     \end{Estructura}
 
-    \Rep[mapa][m]{}
+    \Rep[estr][e]{}
     
     \mbox{}
-    \Abs[mapa]{hab}[m]{h}{}
+    \Abs[estr]{Juego}[e]{j}{$e.mapa \igobs habitacion(j)$ $\land$ \\
+    $claves(e.infoJugadores) \igobs jugadores(j)$ $\yluego$ \\
+    $(\forall \ pj: jugador)(pj \in jugadores(j) \impluego acciones(pj,\ j) \igobs obtener(pj, e.infoJugadores).eventos)$ $\land$ \\
+    $fantasmas(j) \igobs infoFantasmas.eventos$ $\land$ \\
+    $(\exists \ if: infoFan)(if \in e.infoFantasmas$ $\land$ $if.infoActual \igobs e.infoFantasmaEspecial \yluego if.eventos \igobs fantasmaEspecial(j))$}
 
   \end{Representacion}
 
@@ -645,10 +649,10 @@
         \State $\rangle$
         \\
         \State // Inicializo los jugadores
-        \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*|k| + locJugadores)$
+        \State $iIniciarJugadores(res,\ m,\ pjs)$ \Comment $\Theta(\#pjs*|pj| + locJugadores)$
         \\
-        \State // Inicializo los fantasmas
-        \State $iIniciarFantasmas(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
+        \State // Creo el nuevo fantasma
+        \State $iNuevoFanEspecial(res,\ eventosFan)$ \Comment $\Theta(long(eventosFan))$
         \medskip
         \Statex \underline{Complejidad:} $\Theta(?)$
         \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
@@ -685,6 +689,20 @@
 
   \begin{algorithm}[H]{\textbf{iNuevaInfoPJ}(\In{localizacion}{tupla(pos, dir), \In{itInfoActual}{itConj(infoActualPJ)}}) $\to res:$ infoPJ} \Comment Función privada
     \begin{algorithmic}[1]
+      \State // Armo la infoPJ
+      \State $res \gets \langle$                    \Comment $\Theta(1)$
+      \State \tab $eventos: iCrearEventosConLocalizacion(localizacion)$
+      \State \tab $vivo?: true$
+      \State \tab $infoActual: itInfoActual$
+      \State $\rangle$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iCrearEventosConLocalizacion}(\In{localizacion}{tupla(pos, dir))} $\to res:$ lista(evento)} \Comment Función privada
+    \begin{algorithmic}[1]
       \State // Creo el evento
       \State $evento \gets \langle$                 \Comment $\Theta(1)$
       \State \tab $pos: localizacion.pos,$
@@ -696,21 +714,16 @@
       \State $evts \gets Vacia()$                   \Comment $\Theta(1)$
       \State $AgregarAtras(evts, evento)$           \Comment $\Theta(copy(evento))$
       \\
-      \State // Armo la infoPJ
-      \State $res \gets \langle$                    \Comment $\Theta(1)$
-      \State \tab $eventos: evts$
-      \State \tab $vivo?: true$
-      \State \tab $infoActual: itInfoActual$
-      \State $\rangle$
+      \State // La devuelvo
+      \State $res \gets evts$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$.
+      \Statex \underline{Justificación:} Copiar y generar tuplas, listas y eventos es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iIniciarFantasmas}(\Inout{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
+  \begin{algorithm}[H]{\textbf{iNuevoFanEspecial}(\Inout{j}{estr}, \In{eventosFan}{vector(evento)})} \Comment Función privada
     \begin{algorithmic}[1]
-      \State // Lleno las estructuras de fantasmas
       \State // Creo la infoActual y la agrego a su conjunto
       \State $infoActualFan \gets \tuple{posicion: eventosFan[0].pos,\ direccion: eventosFan[0].dir}$ \Comment $\Theta(1)$
       \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$ \Comment $\Theta(copy(infoActual))$
@@ -719,7 +732,7 @@
       \State $j.infoFantasmaEspecial \gets itInfoActualFan$ \Comment $\Theta(1)$
       \\
       \State // Creo la infoFan con la actual
-      \State $infoFan \gets \tuple{infoActual: itInfoActualFan,\ eventos: eventosFan}$ \Comment $\Theta(1)$
+      \State $infoFan \gets \tuple{eventos: eventosFan,\ vivo?: true,\ infoActual: itInfoActualFan}$ \Comment $\Theta(1)$
       \State // La agrego al conjunto de información de fantasmas y me guardo su iterador
       \State $itInfoFan \gets AgregarRapido(infoFan,\ j.infoFantasmas)$ \Comment $\Theta(copy(infoFan))$
       \\
@@ -1135,46 +1148,112 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iNuevaRonda}(\In{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
+  \begin{algorithm}[H]{\textbf{iNuevaRonda}(\Inout{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
     \begin{algorithmic}[1]
       \State // Incremento la ronda
+      \State $j.ronda \gets j.ronda + 1$  \Comment $\Theta(1)$
+      \\
       \State // Reinicio el paso
+      \State $j.paso \gets 0$             \Comment $\Theta(1)$
       \\
       \State // Reinicio el mapa de disparos y los disparos de los fantasmas
+      \State $iReiniciarMapaDisparos(j)$  \Comment $\Theta(m^2)$
+      \State $iReiniciarDisparosFan(j)$   \Comment $\BigO(\#fv * m)$
       \\
-      \State //// Reinicio Fantasmas
-      \State // Creo un nuevo fantasma (secu de eventos) conviertiendo la lista enlazada de acciones del PJ que mató al fantasma especial en un vector.
-      \State // Hago que ese fantasma sea el nuevo especial
+      \State // Reinicio los fantasmas
+      \State $iReiniciarFantasmas(j, pjMatoFanEspecial)$  \Comment $\Theta(\#fv + long(pjMatoFanEspecial.eventos))$
       \\
-      \State // Recorro $infoFantasmas$, por cada fantasma
-      \State \tab // Obtengo $infoFan$
-      \State \tab // Lo seteo como vivo
+      \State // Reinicio los jugadores
+      \State $iReiniciarJugadores(j)$ \Comment $\BigO(locJugadores + \sum{long(eventos\ pjs)})$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(m^2 + \#fv + \sum{long(eventos\ pjs)}))$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarMapaDisparos}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Recorro todas las posiciones y las pongo en 0
+      \State $\textbf{for}\ i \gets 0 ... Tam(j.mapaDisparos)$        \Comment $\Theta(m^2)$
+      \State \tab $\textbf{for}\ j \gets 0 ... Tam(j.mapaDisparos)$   \Comment $\Theta(m)$
+      \State \ttab $j.mapaDisparos[i][j].pasoDispFan \gets 0$         \Comment $\Theta(1)$
+      \State \ttab $j.mapaDisparos[i][j].pasoDispPJ \gets 0$          \Comment $\Theta(1)$
+      \State \tab $\textbf{end for}$
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(m^2)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarFantasmas}(\Inout{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Vacío la información de los fantasmas vivos, liberando la memoria que ocupaba.
+      \State $infoFantasmasVivos \gets Vacio()$         \Comment $\Theta(\#fv)$
+      \State $infoActualFantasmasVivos \gets Vacio()$   \Comment $\Theta(\#fv)$
       \\
-      \State \tab // Creo su $infoActual$ y la agrego a $infoActualFantasmasVivos$, guardandome su iterador
-      \State \tab // Se que $infoActual$ será eventualmente consistente al realizarse un paso
+      \State // Recorro $infoFantasmas$ con un iterador
+      \State $itInfoFan \gets CrearIt(j.infoFantasmas)$ \Comment $\Theta(1)$
+      \While{HaySiguiente(itInfoFan)}
+        \State // Obtengo su info
+        \State $info \gets Siguiente(itInfoFan)$ \Comment $\Theta(1)$
+        \\
+        \State // Lo seteo como vivo
+        \State $info.vivo? \gets true$  \Comment $\Theta(1)$
+        \\
+        \State // Creo su $infoActual$ y la agrego a $infoActualFantasmasVivos$, guardandome su iterador
+        \State $infoActualFan \gets \tuple{posicion: info.eventos[0].pos,\ direccion: info.eventos[0].dir}$ \Comment $\Theta(1)$
+        \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$             \Comment $\Theta(1)$
+        \\
+        \State // Le seteo el iterador a la info actual
+        \State $info.infoActual \gets itInfoActualFan$                \Comment $\Theta(1)$
+        \\
+        \State // Agrego un iterador a su info a $infoFantasmasVivos$ 
+        \State $AgregarRapido(itInfoFan, j.infoFantasmasVivos)$       \Comment $\Theta(copy(itInfoFan)))$
+      \EndWhile
       \\
-      \State \tab // Le seteo el iterador a $infoFan$
+      \State // Creo un nuevo fantasma (secu de eventos) conviertiendo la lista enlazada de 
+      \State // acciones del PJ que mató al fantasma especial en un vector.
+      \State $nuevosEventosFan \gets Inversa(pjMatoFanEspecial.eventos)$
       \\
-      \State \tab // Agrego un iterador a su info a $infoFantasmasVivos$
-      \\
-      \State //// Reinicio Jugadores
+      \State // Lo agrego a las estructuras
+      \State $iNuevoFanEspecial(j, nuevosEventosFan)$ \Comment $\Theta(long(nuevosEventosFan))$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#fv + long(pjMatoFanEspecial.eventos))$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarJugadores}(\Inout{j}{estr}} \Comment Funcion privada
+    \begin{algorithmic}[1]
       \State // Obtengo sus localizaciones
+      \State $localPJs \gets localizarJugadores(j.mapa, Claves(j.infoJugadores))$ \Comment $\Theta(locJugadores)$
+      \\
       \State // Por cada clave y valor de las localizaciones,
-      %%%%Che, con Gasti observamos que cuando obtenes el significado del Trie no te devuelve una referneica modifciable.
-      %%%% O bien lo ponemos en los aspectos de aliasing que es una referencia modificable, o podés volver a definir los elementos
-      %%%% sobreeescribiendo los que estaban (con definir) como hacías cuando iniciabas el juego con iIniciarJugadores.
-      \State \tab // Obtengo $infoPJ$ del trie
-      \State \tab // Reinicio los eventos
-      \State \tab // Agrego un primer evento con la localización obtenida
+      \State $\textbf{for}\ pj, localizacion : localPJs\ \textbf{do}$
+      \State \tab // Obtengo $infoPJ$ del trie por referencia modificable
+      \State \tab $infoPJ \gets Significado(j.infoJugadores, pj)$
+      \\
+      \State \tab // Vacío los eventos, así liberando la memoria que ocupaban
+      \State \tab $infoPJ.eventos \gets Vacia()$    \Comment $\Theta(\#infoPJ.eventos)$
+      \\
+      \State \tab // Creo una lista de eventos con la localización y se la seteo
+      \State \tab $infoPJ.eventos \gets iCrearEventosConLocalizacion(localizacion)$ \Comment $\Theta(1)$
+      \\
       \State \tab // Lo seteo como vivo
-      \\g
+      \State \tab $infoPJ.vivo? \gets true$ \Comment $\Theta(1)$
+      \\
       \State \tab // Creo una info actual
+      \State \tab $infoActualPJ \gets \tuple{identidad: pj, posicion: localizacion.pos, direccion: localizacion.dir}$ \Comment $\Theta(1)$
+      \\
       \State \tab // La agrego a $infoActualJugadoresVivos$ y me guardo itInfoActual
+      \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos, infoActualPJ)$  \Comment $\Theta(1)$
+      \\
       \State \tab // Le seteo infoActual a infoPJ con el iterador
+      \State \tab $infoPJ.infoActual \gets itInfoActual$  \Comment $\Theta(1)$
       \\
       \State \tab // Agrego un puntero a la infoPJ a $infoJugadoresVivos$
+      \State \tab $AgregarRapido(j.infoJugadoresVivos, \&infoPJ)$ \Comment $\Theta(1)$      \medskip
+      \State $\textbf{end for}$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(??)$
+      \Statex \underline{Complejidad:} $\BigO(locJugadores + \sum{long(eventos\ pjs)})$
     \end{algorithmic}
   \end{algorithm}
 
@@ -1530,10 +1609,9 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
   [$\Theta(1)$]
   [invierte un evento.]
 
-
-  \InterfazFuncion{Inversa}{\Inout{es}{vector(evento)}}{}%
+  \InterfazFuncion{Inversa}{\Inout{es}{vector(evento)}}{vector(evento)}%
   {$res \igobs inversaReal(es)$}%
-  [$\Theta(1)$]
+  [$\Theta(long(es)^2)$]
   [genera una secuencia que contiene a la inicial, le suma 5 pasos de espera y le agrega la secuencia original invertida.]
 
   \InterfazFuncion{Avanzar}{\In{p}{pos}, \In{d}{dir}}{pos}%
@@ -1651,22 +1729,27 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
   \begin{algorithm}[H]{\textbf{iInversa}(\Inout{es}{vector(evento)})}
     \begin{algorithmic}[1]
       \State // El resultado deseado es el siguiente
-      \State // es + nada + nada + nada + nada + nada + inversa(es)
       \\
-      \State // Me guardo la long original ya que lo voy a modificar por referencia
-      \State $longOriginal \gets Longitud(es)$                                                              \Comment $\Theta(1)$
+      \State // Copio el vector de entrada    
+      \State $esCopy \gets copy(es)$          \Comment $\Theta(long(es))$
+      \\
+      \State // Me guardo la longitud original
+      \State $longOriginal \gets Longitud(es)$
       \\
       \State // Creo un evento que sea pasar y lo agrego 5 veces
-      \State $eventoPasar \gets \tuple{pos: Ultimo(es).pos,\ dir: Ultimo(es).dir,\ disparo?: false} $       \Comment $\Theta(1)$
-      \State $\textbf{for} \ (i = 0,\ ... \ , 4) \ \ \textbf{do}$                                           \Comment $\BigO(long(es)*5)$
-      \State \tab $AgregarAtras(es,\ eventoPasar)$                                                          \Comment $\BigO(long(es))$
+      \State $eventoPasar \gets \tuple{pos: Ultimo(esCopy).pos,\ dir: Ultimo(esCopy).dir,\ disparo?: false} $   \Comment $\Theta(1)$
+      \State $\textbf{for} \ (i = 0,\ ... \ , 4) \ \ \textbf{do}$                                               \Comment $\BigO(long(es)*5)$
+      \State \tab $AgregarAtras(esCopy,\ eventoPasar)$                                                          \Comment $\BigO(long(es))$
       \State $\textbf{end for}$
       \\
       \State // Recorro los eventos de la secuencia original de atrás para adelante,
       \State // invirtiendolos y agregándolos al final
       \State $\textbf{for} \ (i = longOriginal - 1,\ ... \ , 0) \ \ \textbf{do}$                            \Comment $\BigO(long(es)^2)$
-      \State \tab $AgregarAtras(es,\ invertir(es[i]))$                                                      \Comment $\BigO(long(es))$
+      \State \tab $AgregarAtras(esCopy,\ invertir(esCopy[i]))$                                              \Comment $\BigO(long(es))$
       \State $\textbf{end for}$
+      \\
+      \State // Devuelvo los eventos
+      \State $res \gets esCopy$
       \medskip
     \Statex \underline{Complejidad:} $\BigO(long(es)^2)$
     \Statex \underline{Justificación:} Crear una tupla y acceder al vector es $\Theta(1)$. $\BigO(long(es)*5)$ + $\BigO(long(es)^2)$ = $\BigO(long(es)^2)$.

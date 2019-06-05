@@ -20,16 +20,10 @@ General
 Juego
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
     - Pre y Post condiciones de funciones auxiliares
+    - Convertir lista de eventos de pj a vector de fantasmas.
 
-    - Rep y abs
+    - Rep
             Recordar:
             Existe un n tq la long de los eventos es n * 2 + 5 => 
             los primeros n son los ultimos (n+5 a long - 1) invertidos.
             entre n y n+5 son "nada".
-
-Accion        
-    Avanzar(pos, dir) -> pos
-        Dada una posicion, la avanza en una dir sin importar si es v?lida.
-  
-    Con Avanzar refactorizar Aplicar
-        
