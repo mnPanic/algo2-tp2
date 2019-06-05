@@ -1,6 +1,3 @@
-Trie
-    - Chequear Aliasing y Complejidades.
-
 General
     - Agregar "typedef" al principio para
         Jugador
@@ -21,23 +18,14 @@ General
     - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
 
 Juego
-    - EjecutarAccion
     - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
     - Pre y Post condiciones de funciones auxiliares
-
-    - Arreglar interfaz
-        - Agregar todas las operaciones que piden
-        - Agregar observadores
 
     - Rep y abs
             Recordar:
             Existe un n tq la long de los eventos es n * 2 + 5 => 
             los primeros n son los ultimos (n+5 a long - 1) invertidos.
             entre n y n+5 son "nada".
-
-Mapa
-    Valida?(m, pos) -> bool
-    Copia(m)-> m
 
 Accion        
     Avanzar(pos, dir) -> pos
