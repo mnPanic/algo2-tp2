@@ -799,7 +799,7 @@
 
   \begin{algorithm}[H]{\textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFan}
     \begin{algorithmic}[1]
-      \State $res \gets siguiente(j.infoFantasmaEspecial)$
+      \State $res \gets Siguiente(j.infoFantasmaEspecial)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
@@ -1115,7 +1115,7 @@
   \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ vector(evento)}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \tab $\textbf{if} \ (siguiente(infoFan.infoActual) == siguiente(j.infoFantasmaEspecial))$ 
+      \State \tab $\textbf{if} \ (Siguiente(infoFan.infoActual) == Siguiente(j.infoFantasmaEspecial))$ 
       \State \ttab $\textbf{then} \ res \gets infoFan.eventos$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
