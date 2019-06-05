@@ -32,10 +32,6 @@ Juego
             los primeros n son los ultimos (n+5 a long - 1) invertidos.
             entre n y n+5 son "nada".
 
-Mapa
-    Valida?(m, pos) -> bool
-    Copia(m)-> m
-
 Accion        
     Avanzar(pos, dir) -> pos
         Dada una posicion, la avanza en una dir sin importar si es v?lida.
