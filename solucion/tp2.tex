@@ -219,33 +219,39 @@
     [$\Theta(1)$]
     [genera un diccionario vacío.]
 
-    \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{}
+    \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{$\alpha$}
     [$d \igobs d_0$]
     {$d$ $\igobs$ definir($d, k, s$)}
     [$\Theta(|k| + copy(s))$]
-    [define la clave $k$ $\not\in$ claves($d$) con el significado $s$ en el diccionario.]
-    [los elementos $k$ y $s$ se definen por copia.]
+    [define la clave $k$ con el significado $s$ en el diccionario.]
+    [los elemnetos $k$ y $s$ se definen por copia.]
 
     \InterfazFuncion{Definido?}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{bool}
     {$res$ $\igobs$ def?($d$, $k$)}
     [$\BigO(|k|)$]
-    [devuelve \texttt{true} si y sólo $k$ está definido en el diccionario.]
+    [devuelve \texttt{true} si $k$ está definido en el diccionario.]
 
-    \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\sigma$}
+    \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\alpha$}
     [def?($d$, $k$)]
     {alias($res$ $\igobs$ obtener($d$, $k$))}
     [$\Theta(|k|)$]
     [devuelve el significado de la clave $k$ en $d$.]
     [$res$ es modificable si y sólo si $d$ es modificable.]
 
+
+    \InterfazFuncion{Claves}{\In{d}{diccTrie($string$, $\alpha$)}}{conj(string)}
+    {$res$ $\igobs$ claves($d$)}
+    [$\Theta(1)$]
+    [devuelve las claves definidas en el diccionario]
+
   \end{Interfaz}
 
   \begin{Representacion}
     
     \Titulo{Representación del diccionario}
-    \begin{Estructura}{diccTrie$(string, \alpha)$}[estr]
+    \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
 
-      \begin{Tupla}[estr]%
+      \begin{Tupla}[dic]%
         \tupItemF{raiz}{puntero(nodo)},\\
         \tupItemF{claves}{conj(string)}
       \end{Tupla}
@@ -253,31 +259,31 @@
       \mbox{}
 
       \begin{Tupla}[nodo]
-        \tupItem{significado}{$\alpha$}\\
+        \tupItem{significado}{puntero($\alpha$)}\\
         \tupItemF{siguientes}{arreglo(puntero(nodo))[256]}
       \end{Tupla}
 
     \end{Estructura}
 
-    \Rep[diccTrie][d]{\\
+    \Rep[dic][d]{\\
       (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
       La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
-      Todas las hojas tienen un significado distinto de NULL.\\
-      Un s string pertenece a d.claves si y solo si se puede seguir un camino de nodos en el diccionario con los caracteres de s (en orden) llegando finalemente al ultimo nodo (correspondiente a la ultima letra) teniendo este significado distinto de NULL) \\ \\
+      Todas las hojas tienen un significado distinto de NULL. $\land$ \\
+      Un s string pertenece a d.claves $\iff$ estáDefinido(s, d.claves)) \\ \\
       // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
     }
 
     ~
 
-    \Abs[estr]{diccTrie($string$, $\alpha$)}[e]{d}{ \\
-    (\paratodo s : string)(def?(s,d) $\igobs$ estaDefinido(e.raiz, s)) $\land$ \\
+    \Abs[dic]{dicc($string$, $\alpha$)}[e]{d}{ \\
+    (\paratodo s : string)(def?(s,d) $\igobs$ estáDefinido(e.raiz, s)) $\land$ \\
     (\paratodo s : string)(def?(s,d) $\impluego$ obtener(s, d) $\igobs$ significado(e.raiz, s)) $\land$ \\
     claves(d) $\igobs$ e.claves}\\ 
   
-  estaDefinido(r, s) $\equiv$ 
+  estáDefinido(r, s) $\equiv$ 
   \textbf{if} vacia?(s) \\
   \ttab \textbf{then} r $\DRef$ significado $\neq$ NULL \\ 
-  \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estaDefinido(r.siguientes[int(prim(s))], fin(s)) 
+  \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estáDefinido(r.siguientes[int(prim(s))], fin(s)) 
   \textbf{fi} \\
 
   significado(r,s)  $\equiv$ 
@@ -291,7 +297,7 @@
 
 \begin{Algoritmos}
 
-    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : estr}
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : \&dic}
       \begin{algorithmic}[1]
            \State // Le asigna un nuevo nodo a la raiz
            \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
@@ -302,7 +308,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{estr}, \In{k}{$string$})$\to$ $res$ : $\alpha$}
+    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{dic}, \In{k}{$string$})$\to$ $res$ : \&$\alpha$}
       \begin{algorithmic}[1]
         \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
@@ -319,7 +325,7 @@
     \end{algorithm}
 
 
-    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{estr}, \In{k}{$string$}) $\to$ $res$ : bool}
+    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dic}, \In{k}{$string$}) $\to$ $res$ : bool}
       \begin{algorithmic}[1]
         \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
 
@@ -338,7 +344,7 @@
           \end{algorithmic}
     \end{algorithm}
 
-    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{estr}, \In{k}{$string$}, \In{s}{$\alpha$})}
+    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{dic}, \In{k}{$string$}, \In{s}{$\alpha$}) $\to$ $res$ : $\&\alpha$}
       \begin{algorithmic}[1]
           \State $Nodo \ actual \gets d.raiz$
           \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
@@ -352,12 +358,18 @@
           \State // Estoy parado en el nodo que va a tener el puntero al significado.
           \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
           \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
-          \State // Asigno al significado del nodo el puntero creado con s.
-          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
-          \State // Agrego la nueva clave al conjunto de claves 
+         
+       \\ \State // Si el significado no está definido, agrego la nueva clave al conjunto de claves 
+          \State $\textbf{if} \ (actual \DRef significado \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
           \State // Como precondicion, se que no existe asi que la agrego rapido
           \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
-          \State // Devuelvo por referencia el significado.
+          \State $\textbf{end if}$
+
+       \\ \State // Asigno al significado del nodo el puntero creado con s y libero la memoria que contenía al valor anterior.
+          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
+
+
+      \\  \State // Devuelvo por referencia el significado.
           \State res $\gets sig$
 
           \medskip
@@ -378,12 +390,13 @@
     \end{algorithm}
   \end{Algoritmos}
 
-  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{estr})$\to$ $res$ : conj(string)}
+  \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : \&conj(string)}
     \begin{algorithmic}[1]
       \State $res \gets e.claves$                                            \Comment $\Theta(1)$
 
         \medskip
         \Statex \underline{Complejidad:} $\Theta(1)$
+        \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
         \end{algorithmic}
   \end{algorithm}
 
