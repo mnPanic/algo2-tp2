@@ -448,7 +448,7 @@
     [$\BigO(\#fv * m + \#jv)$]
     [actualiza sin acción de jugador.]
 
-    \InterfazFuncion{posOcupadasPorDisparos}{\In{j}{juego}}{conj(posicion)}
+    \InterfazFuncion{posOcupadasPorDisparosFan}{\In{j}{juego}}{conj(posicion)}
     {$res \igobs alcanceDisparosFantasmas(fantasmas(j), j)$}
     [$O(\#fv * m)$]
     [devuelve un conjunto de las posiciones afectadas por disparos de fantasmas enl último paso.]
@@ -508,7 +508,7 @@
       FI}
       \tadAxioma{infoActualFanEspecial($j$)}{$\tuple{posFantasma(fantasmaEspecial(j), j), \ dirFantasma(fantasmaEspecial(j), j)}$}
       \tadAxioma{infoActualFanVivosQueDisp($j$)}{infoActualFanVivosAux(j, infoActualFanVivosQueDisAux(j, fantasmas(j)))}
-      \tadAxioma{infoActualFanVivosQueDispAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) $\land$ $\Pi_3(ult(dameuno(fs))$  
+      \tadAxioma{infoActualFanVivosQueDispAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) $\land$ disparando(dameuno(fs), step(j))  
       THEN Ag(dameuno(fs), infoActualFanVivosQueDispAux(j, sinuno(fs)))
       ELSE infoActualFanVivosQueDispAux(j, sinuno(fs)) FI}
 
@@ -733,7 +733,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFanEspecial}
+  \begin{algorithm}[H]{\textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFan}
     \begin{algorithmic}[1]
       \State $res \gets siguiente(j.infoFantasmaEspecial)$
       \medskip
@@ -741,11 +741,24 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ infoActualFanEspecial}
+  \begin{algorithm}[H]{\textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
     \begin{algorithmic}[1]
-      \State $res \gets siguiente(j.infoFantasmaEspecial)$
+      \State // Recorro los fantasmas vivos y agrego a res los que estan vivos y disparando
+      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\BigO(\#fv)$
+      \State \tab $\textbf{if} \ (infoFan.vivo? \land \Pi_3(infoFan.eventos[mod(j.paso, Longitud(infoFan.eventos))]))$ 
+      \State \ttab $\textbf{then} \ AgregarRapido(res, siguiente(infoFan.infoActual))$ \Comment $\Theta(copy(a))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
+      \State \tab $\textbf{end if}$
+      \State $\textbf{end for}$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(1)$
+      \Statex \underline{Complejidad:} $\BigO(\#fv)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
+    \begin{algorithmic}[1]
+      \State $res \gets iSignificado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(|pj|)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -971,6 +984,52 @@
     \end{algorithmic}
   \end{algorithm}
 
+  \begin{algorithm}[H]{\textbf{iPosOcupadasPorDisparosFan}(\In{j}{estr}) $\to res:$ conj(posicion)}
+    \begin{algorithmic}[1]
+      \State $res \gets j.disparosFanUltimoPaso$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(?)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iHabitacion}(\In{j}{estr}) $\to res:$ mapa}
+    \begin{algorithmic}[1]
+      \State $res \gets j.mapa$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(secu(eventos))}
+    \begin{algorithmic}[1]
+      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
+      \State \ttab $\textbf{then} \ AgregarRapido(res, infoFan.eventos)$                             \Comment $\Theta(infoFan.eventos)$ 
+      \State $\textbf{end for}$
+      \State $res \gets j.infoFantasma$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(?)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ secu(eventos)}
+    \begin{algorithmic}[1]
+      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
+      \State \tab $\textbf{if} \ (infoFan.infoActual == j.infoFantasmaEspecial))$ 
+      \State \ttab $\textbf{then} \ res \gets infoFan.eventos$ \Comment $\Theta(copy(infoFan.eventos))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
+      \State \tab $\textbf{end if}$
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#fantasmas + copy(infoFan.eventos))$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iJugadores}(\In{j}{estr}) $\to res:$ conj(string)}
+    \begin{algorithmic}[1]
+      \State $res \gets iClaves(j.infoJugadores)$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iActualizarMapaDisparosConPJ}(\Inout{j}{estr}, \In{evtPJ}{evento})} \Comment Funcion privada
     \begin{algorithmic}[1]
