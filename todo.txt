@@ -1,14 +1,4 @@
 General
-    - Agregar "typedef" al principio para
-        Jugador
-        Fantasma
-        Evento
-        Pos 
-        Dir
-        Cambiar mapa diparos para que en vez de tuple(nat nat) tenga
-            pasoDisparos
-                pasoDispFan
-                pasoDispPJ
     - Chequear las cosas que van por ref y copia
     - Chequear cuando eliminamos punteros que estemos liberando la memoria.
     - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
