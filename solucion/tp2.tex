@@ -440,27 +440,23 @@
 
     $\bullet$ \InterfazFuncion{infoActualPjVivos}{\In{j}{Juego}}{conj(Tupla(jugador, pos, dir))}%
     {res $\igobs$ infoActualPjVivos(j)}%
-    [$\BigO(1)$]
+    [$\Theta(1)$]
     [devuelve un conjunto referencias a identidad, posicion y direccion actual de los jugadores vivos.]
-    [las referencias son no modificables.]
 
     $\bullet$ \InterfazFuncion{infoActualFanVivos}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
     {$res \igobs infoActualFanVivos(j)$}%
-    [$\BigO(1)$]
+    [$\Theta(1)$]
     [devuelve un conjunto referencias a la información de los fantasmas que están vivos.]
-    [las referencias son no modificables.]
 
     $\bullet$ \InterfazFuncion{infoActualFanEspecial}{\In{j}{Juego}}{Tupla(pos, dir)}%
     {$res \igobs infoActualFanEspecial(j)$}%
-    [$\BigO(1)$]
+    [$\Theta(1)$]
     [devuelve la posicion y direccion del fantasma especial.]
-    [res es una referencia no modificable.]
 
     $\bullet$ \InterfazFuncion{infoActualFanVivosQueDisp}{\In{j}{Juego}}{conj(Tupla(pos, dir))}%
     {$res \igobs infoActualFanVivosQueDisp(j)$}%
     [$\BigO(\#fv)$]
     [devuelve un conjunto con la información de los fantasmas que están vivos y disparan en el ultimo paso ejecutado en el juego.]
-    [res es un conjunto de referencias no modificables.]
 
     $\bullet$ \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
     [$pj \in jugadores(j)$]
@@ -789,7 +785,7 @@
     \begin{algorithmic}[1]
       \State $res \gets j.infoActualJugadoresVivos$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(1)$
+      \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -797,7 +793,7 @@
     \begin{algorithmic}[1]
       \State $res \gets j.infoActualFantasmasVivos$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(1)$
+      \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -805,20 +801,27 @@
     \begin{algorithmic}[1]
       \State $res \gets siguiente(j.infoFantasmaEspecial)$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(1)$
+      \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
     \begin{algorithmic}[1]
+      \State $fantasmasVivosQueDisp \gets Vacio()$
+      \\
       \State // Recorro los fantasmas vivos y agrego a res los que estan vivos y disparando
-      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\BigO(\#fv)$
-      \State \tab $\textbf{if} \ (infoFan.vivo? \land \Pi_3(iEventoActualFan(infoFan, j.paso)))$ 
-      \State \ttab $\textbf{then} \ AgregarRapido(res, siguiente(infoFan.infoActual))$ \Comment $\Theta(copy(a))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
-      \State \tab $\textbf{end if}$
-      \State $\textbf{end for}$
+      \For{itInfoFan : \ j.infoFantasmasVivos}                 \Comment $\Theta(\#fv)$
+        \State $infoFan \gets Siguiente(itInfoFan)$
+        \\
+        \State $\textbf{if} \ iEventoActualFan(infoFan, j.paso).disparo?$ 
+        \State $\textbf{then} \ AgregarRapido(fantasmasVivosQueDisp,\ Siguiente(infoFan.infoActual))$ \Comment $\Theta(copy(infoActual))$
+        \State $\textbf{end if}$
+      \EndFor
+      \\
+      \State $res \gets fantasmasVivosQueDisp$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(\#fv)$
+      \Statex \underline{Complejidad:} $\Theta(\#fv)$
+      \Statex \underline{Justificacion:} Copiar una infoActual es $\Theta(1)$, ya que copiar tuplas y bools es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
