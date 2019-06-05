@@ -1014,26 +1014,26 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(lista(evento))}
+  \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(vector(evento))}
     \begin{algorithmic}[1]
+      \State res $\gets$ vacio()
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
       \State \tab  AgregarRapido(res, infoFan.eventos)                             \Comment $\Theta(infoFan.eventos)$ 
       \State $\textbf{end for}$
-      \State $res \gets j.infoFantasma$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(?)$
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ lista(evento)}
+  \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ vector(evento)}
     \begin{algorithmic}[1]
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
       \State \tab $\textbf{if} \ (siguiente(infoFan.infoActual) == siguiente(j.infoFantasmaEspecial))$ 
-      \State \ttab $\textbf{then} \ res \gets infoFan.eventos$ \Comment $\Theta(copy(infoFan.eventos))$ pero como infoFan.infoActual es una tupla, entonces $\Theta(1)$
+      \State \ttab $\textbf{then} \ res \gets infoFan.eventos$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#fantasmas + copy(infoFan.eventos))$
+      \Statex \underline{Complejidad:} $\Theta(\#fantasmas)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -1047,9 +1047,9 @@
 
   \begin{algorithm}[H]{\textbf{iAcciones}(\In{pj}{string}, \In{j}{estr}) $\to res:$ lista(evento)}
     \begin{algorithmic}[1]
-      \State $res \gets Significado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
+      \State $res \gets Significado(j.infoJugadores, pj).eventos$          \Comment $\Theta(|pj|)$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(|pj| + copy(iSignificado(j.infoJugadores, pj).eventos))$
+      \Statex \underline{Complejidad:} $\Theta(|pj|)$
     \end{algorithmic}
   \end{algorithm}
 
