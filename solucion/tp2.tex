@@ -1383,30 +1383,30 @@
 
   \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(vector(evento))}
     \begin{algorithmic}[1]
-      \State res $\gets$ vacio()
-      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \tab  AgregarRapido(res, infoFan.eventos)                             \Comment $\Theta(infoFan.eventos)$ 
+      \State $res \gets Vacio()$
+      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\BigO(\#f * Longitud(eventoMasLargo))$
+      \State \tab  $AgregarRapido(res, infoFan.eventos)$                             \Comment $\Theta(copy(infoFan.eventos)) = \Theta(Longitud(infoFan.eventos))$
       \State $\textbf{end for}$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(?)$
+      \Statex \underline{Complejidad:} $\BigO(\#f * Longitud(eventoMasLargo))$
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iFantasmaEspecial}(\In{j}{estr}) $\to res:$ vector(evento)}
     \begin{algorithmic}[1]
-      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#fantasmas)$
-      \State \tab $\textbf{if} \ (Siguiente(infoFan.infoActual) == Siguiente(j.infoFantasmaEspecial))$ 
+      \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\Theta(\#f)$
+      \State \tab $\textbf{if} \ (infoFan.infoActual == j.infoFantasmaEspecial)$ 
       \State \ttab $\textbf{then} \ res \gets infoFan.eventos$
       \State \tab $\textbf{end if}$
       \State $\textbf{end for}$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#fantasmas)$
+      \Statex \underline{Complejidad:} $\Theta(\#f)$
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iJugadores}(\In{j}{estr}) $\to res:$ conj(string)}
     \begin{algorithmic}[1]
-      \State $res \gets Claves(j.infoJugadores)$
+      \State $res \gets Claves(j.infoJugadores)$ \Comment $\Theta(1)$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
     \end{algorithmic}
