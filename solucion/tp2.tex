@@ -867,7 +867,8 @@
       \State \tab $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
       \State $\textbf{end if}$
       \medskip
-      \Statex \underline{Complejidad:} Sin cambiar de ronda $\BigO(|pj| + m + \#fv + \#fv * m + \#jv) \in \BigO(|pj| + \#fv * m + \#jv)$, cambiando $\BigO(?)$
+      \Statex \underline{Complejidad sin cambiar:} $\BigO(|pj| + m + \#fv + \#fv * m + \#jv) \in \BigO(|pj| + \#fv * m + \#jv)$
+      \Statex \underline{Complejidad cambiando:} $\BigO(|pj| + m^2 + \#f + locJugadores + \#j * (|pjMasLargo| + Longitud(eventoMasLargo)))$
     \end{algorithmic}
   \end{algorithm}
 
