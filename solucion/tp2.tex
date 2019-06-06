@@ -489,27 +489,23 @@
 
     \InterfazFuncion{fantasmas}{\In{j}{juego}}{conj(fantasma)}%
     {$res \igobs fantasmas(j)$}%
-    [$\Theta(\#fantasmas(j))$]
+    [$\BigO(\#f * long(eventoMasLargo))$]
     [devuelve por referencia un conjunto de todos los fantasmas del juego]
-    [res es no modificable]
 
     \InterfazFuncion{fantasmaEspecial}{\In{j}{juego}}{fantasma}%
     {$res \igobs fantasmaEspecial(j)$}%
-    [$\Theta(1)$]
+    [$\Theta(\#f)$]
     [devuelve por referencia un conjunto de todos los fantasmas del juego]
-    [res es no modificable]
 
     \InterfazFuncion{jugadores}{\In{j}{juego}}{conj(jugadores)}%
     {$res \igobs jugadores(j)$}%
-    [$\Theta(\#jugadores(j))$]
+    [$\Theta(1)$]
     [devuelve por referencia un conjunto de todos los jugadores del juego]
-    [res es no modificable]
 
     \InterfazFuncion{acciones}{\In{pj}{jugador}, \In{j}{juego}}{secu(evt)}%
     {$res \igobs acciones(pj, j)$}%
-    [$\Theta(|j|)$]
+    [$\Theta(|pj|)$]
     [devuelve por referencia un conjunto de todos los jugadores del juego]
-    [res es no modificable]
 
     \Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
 
