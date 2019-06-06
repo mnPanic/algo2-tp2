@@ -461,13 +461,13 @@
     $\bullet$ \InterfazFuncion{vivo?}{\In{j}{juego}, \In{pj}{string}}{bool}
     [$pj \in jugadores(j)$]
     {$res \igobs jugadorVivo(pj, j)$}
-    [$\BigO(|pj|)$]
+    [$\Theta(|pj|)$]
     [devuelve si un jugador está vivo]
 
     $\bullet$ \InterfazFuncion{ejecutarAccion}{\Inout{j}{juego}, \In{a}{accion}, \In{pj}{jugador}}{}%
     [$j \igobs j_0 \yluego pj \in jugadores(j) \yluego jugadorVivo(pj, j) \land \neg esPasar(a)$]
     {$j \igobs step(j_0, a, pj)$}%
-    [$\BigO(|j| + \#fv * m + \#jv)$]
+    [$\BigO(|pj| + \#fv * m + \#jv)$]
     [actualiza con la acción $a$ del jugador $pj$.]
 
     $\bullet$ \InterfazFuncion{pasarTiempo}{\Inout{j}{juego}}{}%
@@ -695,7 +695,7 @@
       \State // Lleno las estructuras de jugadores
       \State $\textbf{for} \ (pj,\ localizacion : \ localPJs) \ \ \textbf{do}$                                            \Comment $\BigO(\#pjs*(|pjMasLargo|+copy(infoMasGrande)))$
       \State \tab // Creo la infoActual y la agrego a su conjunto
-      \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$     \Comment $\Theta(1)$
+      \State \tab $infoActual \gets \tuple{identidad: pj,\ posicion: localizacion.pos,\ direccion: localizacion.dir}$     \Comment $\Theta(copy(pj)) = \Theta(|pj|)$
       \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos,\ infoActual)$                             \Comment $\Theta(copy(infoActual))$
       \\
       \State \tab // Creo la infoPJ con la actual
@@ -704,11 +704,11 @@
       \State \tab $infoPtr \gets \& Definir(j.infoJugadores,\ pj,\ info)$                                                 \Comment $\Theta(|pj|+copy(info))$
       \\
       \State \tab // Agrego al conjunto de jugadores vivos el puntero a la info del PJ
-      \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$                                                         \Comment $\Theta(copy(infoActual))$
+      \State \tab $AgregarRapido(j.infoJugadoresVivos,\ infoPtr)$                                                         \Comment $\Theta(1)$
       \State $\textbf{end for}$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(\#pjs*|pjMasLargo| + locJugadores)$
-      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Definir es $\Theta(|pj|)$ ya que copiar la tupla de info es $\Theta(1)$. Luego, definir \#pjs es $\BigO(\#pjs*|pjMasLargo|)$. Finalmente, la complejidad de todo el algoritmo es $\BigO(\#pjs*|pjMasLargo| + locJugadores)$.
+      \Statex \underline{Justificación:} Copiar y generar iteradores, tuplas y conjuntos es $\Theta(1)$. Definir es $\Theta(|pj|)$ ya que copiar la tupla de info es $\Theta(|pj|)$ (porque hay que copiar el nombre) y definir también. Luego, definir \#pjs es $\BigO(\#pjs*|pjMasLargo|)$. Finalmente, la complejidad de todo el algoritmo es $\BigO(\#pjs*|pjMasLargo| + locJugadores)$.
     \end{algorithmic}
   \end{algorithm}
 
@@ -743,7 +743,7 @@
       \\
       \State // Creo una lista con él
       \State $evts \gets Vacia()$                   \Comment $\Theta(1)$
-      \State $AgregarAtras(evts, evento)$           \Comment $\Theta(copy(evento))$
+      \State $AgregarAtras(evts,\ evento)$           \Comment $\Theta(copy(evento))$
       \\
       \State // La devuelvo
       \State $res \gets evts$
@@ -813,7 +813,7 @@
       \For{itInfoFan : \ j.infoFantasmasVivos}                 \Comment $\Theta(\#fv)$
         \State $infoFan \gets Siguiente(itInfoFan)$
         \\
-        \State $\textbf{if} \ iEventoActualFan(infoFan, j.paso).disparo?$ 
+        \State $\textbf{if} \ iEventoActualFan(infoFan, j.paso).dispara?$ 
         \State $\textbf{then} \ AgregarRapido(fantasmasVivosQueDisp,\ Siguiente(infoFan.infoActual))$ \Comment $\Theta(copy(infoActual))$
         \State $\textbf{end if}$
       \EndFor
@@ -827,171 +827,127 @@
 
   \begin{algorithm}[H]{\textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
     \begin{algorithmic}[1]
-      \State $res \gets Significado(j.infoJugadores, pj).vivo?$ \Comment $\BigO(|pj|)$
+      \State $res \gets Significado(j.infoJugadores, pj).vivo?$ \Comment $\Theta(|pj|)$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(|pj|)$
+      \Statex \underline{Complejidad:} $\Theta(|pj|)$
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iPasarTiempo}(\Inout{j}{estr})}
+  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\Inout{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
     \begin{algorithmic}[1]
       \State // Incremento el paso
-      \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
+      \State $j.paso \gets j.paso + 1$                            \Comment $\Theta(1)$
+      \\
+      \State // Actualizo la información del jugador con la nueva acción,
+      \State // y me guardo una referencia a su info modificada
+      \State $infoPJ \gets iActualizarPJ(pj,\ a)$                       \Comment $\Theta(|pj|)$
+      \State $evtPJ \gets iEventoActualPJ(infoPJ)$                      \Comment $\Theta(1)$
       \\
       \State // Reinicio los disparos de fantasmas
       \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
       \\
-      \State // Actualizo las acciones de los fantasmas,
-      \State // actualizando el mapa de disparos si disparan.
-      \State $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
+      \State // Modifico el mapa de disparos (solo si dispara)
+      \State $iActualizarMapaDisparosConPJ(j,\ evtPJ)$             \Comment $\BigO(m)$
       \\
-      \State // Veo que jugadores mueren
-      \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
+      \State // Veo que fantasmas mueren, guardandome si murió el fantasma especial
+      \State $murioFanEspecial \gets iChequearMuerteFantasmas(j)$  \Comment $\Theta(\#fv)$
       \\
-      \State // Agrego los 'pasar' faltantes
-      \State $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
+      \State // Si murió el fantasma especial, cambio de ronda
+      \State $\textbf{if}\ murioFanEspecial\ \textbf{then}$
+      \State \tab $iNuevaRonda(j,\ infoPJ)$  \Comment $\BigO(m^2 + \#f + locJugadores + \#j * (|pjMasLargo| + Longitud(evMasLarg)))$
+      \State $\textbf{else}$
+      \State \tab // Sigo en la misma ronda
+      \State \tab // Actualizo las acciones de los fantasmas,
+      \State \tab // actualizando el mapa de disparos si disparan.
+      \State \tab $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
+      \\
+      \State \tab // Veo que jugadores mueren
+      \State \tab $iChequearMuerteJugadores(j)$                        \Comment $\Theta(\#jv)$
+      \\
+      \State \tab // Agrego los 'pasar' faltantes
+      \State \tab $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
+      \State $\textbf{end if}$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(2(\#fv * m) + \#jv) \in \BigO(\#fv * m + \#jv)$
+      \Statex \underline{Complejidad:} Sin cambiar de ronda $\BigO(|pj| + m + \#fv + \#fv * m + \#jv) \in \BigO(|pj| + \#fv * m + \#jv)$, cambiando $\BigO(?)$
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iAgregarPasarFaltantes}(\Inout{j}{estr})} \Comment Funcion privada
+  \begin{algorithm}[H]{\textbf{iActualizarPJ}(\In{pj}{jugador}, \In{a}{accion}) $\to res:$ infoPJ} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State // Recorro a todos los jugadores vivos, y le agrego un pasar a los jugadores que no se movieron
-      \For{ptrInfoPJ : j.infoJugadoresVivos}  \Comment $\Theta(\#jv)$
-        \State // Si su lista de acciones no es de la misma longitud que el paso actual + 1,
-        \State // entonces es necesario agregarle una acción pasar
-        \State $\textbf{if}\ Longitud(infoPJ.eventos) \neq j.paso + 1\ \textbf{then}$
-        \State \tab // Genero el evento pasar
-        \State \tab $eventoPasar \gets \langle$ \Comment $\Theta(1)$
-        \State \ttab  $pos: Ultimo(infoPJ.eventos).pos,$
-        \State \ttab  $dir: Ultimo(infoPJ.eventos).dir,$   
-        \State \ttab  $disparo?: false$
-        \State \tab $\rangle$
-        \State \tab // Lo agrego al final
-        \State \tab $AgregarAtras(infoPJ.eventos, eventoPasar)$ \Comment $\Theta(copy(eventoPasar))$
-        \State $\textbf{end if}$
-      \EndFor
+      \State // Pre: $pj$ está definido en $j.infoJugadores$
+      \State // Post: Se actualiza la info del personaje y se devuelve una referencia a ella
+      \\
+      \State // Busco la información del PJ enviando infoJugadores como referencia modificable
+      \State $infoPJ \gets Significado(j.infoJugadores,\ pj)$          \Comment $\Theta(|pj|)$
+      \\
+      \State // Genero un evento con la acción y el evento anterior (el actual)
+      \State $evtPJ \gets Aplicar(a,\ j,\ iEventoActualPJ(infoPJ))$ \Comment $\Theta(1)$
+      \\
+      \State // Agrego el evento al jugador
+      \State $AgregarAtras(infoPJ.eventos,\ evtPJ)$                \Comment $\Theta(copy(evtPJ))$
+      \\
+      \State // Obtengo su información actual
+      \State $itInfoActual \gets infoPJ.infoActual$             \Comment $\Theta(1)$
+      \\
+      \State // La actualizo
+      \State $Siguiente(itInfoActual).posicion \gets evt.pos$   \Comment $\Theta(1)$
+      \State $Siguiente(itInfoActual).direccion \gets evt.dir$  \Comment $\Theta(1)$
+      \\
+      \State // Devuelvo la info del pj
+      \State $res \gets infoPJ$
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#jv)$
-      \Statex \underline{Justificacion:} Copiar un evento es $\Theta(1)$
+      \Statex \underline{Complejidad:} $\Theta(|pj|)$
+      \Statex \underline{Justificacion:} Copiar tuplas, naturales y operaciones del iterador son $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
+  \begin{algorithm}[H]{\textbf{iEventoActualPJ}(\In{info}{infoPJ}) $\to res:$ evento} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: Se devuelve el último evento de $info.eventos$
+      \\
+      \State $res \gets Ultimo(info.eventos)$     \Comment $\Theta(1)$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} La operación Último sobre una lista es $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iReiniciarDisparosFan}(\Inout{j}{estr})} \Comment Funcion privada
     \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: La lista de disparos de fantasmas es vacía
+      \\
       \State // Vacío la lista de disparos del ultimo paso
       \State // Al asignarle vacío, se libera la memoria que ocupaba anteriormente.
-      \State $j.disparosFanUltimoPaso \gets Vacio()$            \Comment $\Theta(Tam(j.disparosFanUltimoPaso))$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#fv * m)$
-      \Statex \underline{Justificación:} Vaciar un arreglo de longitud n es $\Theta(n)$. 
-      Este arreglo en particular siempre tendrá longitud $\Theta(\#fv * m)$, ya que se llena con los disparos de los fantasmas que estén vivos en ese paso.
-      Depende de que tan fino uno hile con el manejo de memoria, podría llegar a tomarse como $\Theta(1)$.
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iActualizarFantasmas}(\Inout{j}{estr})} \Comment Función privada
-    \begin{algorithmic}[1]
-      \State // Recorro los fantasmas vivos
-      \State $\textbf{for} \ (itInfoFan :\ j.infoFantasmasVivos) \ \ \textbf{do}$ \Comment $\Theta(\#fv)$
-      \State \tab // Obtengo la información del fantasma
-      \State \tab $infoFan \gets Siguiente(itInfoFan)$      \Comment $\Theta(1)$
-      \\
-      \State \tab // Actualizo su información actual, obteniendo el evento actual
-      \State \tab $eventoActual \gets iActualizarFan(infoFan,\ j.paso)$   \Comment $\Theta(1)$
-      \\
-      \State \tab // Si dispara, agrego su disparo a los del paso
-      \State \tab $\textbf{if} \ (eventoActual.dispara?) $       
-      \State \tab  $\textbf{then}\ iAgregarDisparo(j,\ eventoActual.pos,\ eventoActual.dir,\ true)$ \Comment $\BigO(m)$
-      \State \tab $\textbf{end if}$
-      \State $\textbf{end for}$
+      \State $j.disparosFanUltimoPaso \gets Vacio()$            \Comment $\BigO(Tam(j.disparosFanUltimoPaso))$
       \medskip
       \Statex \underline{Complejidad:} $\BigO(\#fv * m)$
-      \Statex \underline{Justificación:} Tomar referencia del elemento al que apunta un iterador y copiar un evento es $\Theta(1)$.
+      \Statex \underline{Justificación:} Vaciar un arreglo de longitud n es $\Theta(n)$. 
+      Este arreglo en particular siempre tendrá longitud $\BigO(\#fv * m)$, ya que se llena con los disparos de los fantasmas que estén vivos en ese paso.
+      Depende de que tan laxo uno sea con el manejo de memoria, podría llegar a tomarse como $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
-
-  \begin{algorithm}[H]{\textbf{iActualizarFan}(\Inout{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
+  \begin{algorithm}[H]{\textbf{iActualizarMapaDisparosConPJ}(\Inout{j}{estr}, \In{evtPJ}{evento})} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State // Obtengo el evento actual
-      \State $eventoActual \gets iEventoActualFan(infoFan, paso)$       \Comment $\Theta(1)$
+      \State // Pre: La posicion del evento es valida en el mapa del juego.
+      \State // Post: Si el evento es disparar, se llena el mapa con los disparos correctos.
       \\
-      \State // Obtengo el iterador a la info actual
-      \State $itInfoActual \gets info.infoActual$                       \Comment $\Theta(1)$
-      \\
-      \State // La actualizo con el $eventoActual$
-      \State $Siguiente(itInfoActual).posicion \gets eventoActual.pos$  \Comment $\Theta(1)$
-      \State $Siguiente(itInfoActual).direccion \gets eventoActual.dir$ \Comment $\Theta(1)$
-      \\
-      \State // Devuelvo el evento actual
-      \State $res \gets eventoActual$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} Actualizar el iterador y generar el eventoActual es $\Theta(1)$.
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iChequearMuerteJugadores}(\Inout{j}{estr})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Recorro los jugadores vivos con un iterador
-      \State $itPJVivos \gets CrearIt(j.infoJugadoresVivos)$            \Comment $\Theta(1)$
-      \While{HaySiguiente(itPJVivos)}                                   \Comment $\Theta(\#jv)$
-      \State // Obtengo su evento actual
-      \State $ptrInfoPJ \gets Siguiente(itPJVivos)$                     \Comment $\Theta(1)$
-      \State $eventoActual \gets iEventoActualPJ(*ptrInfoPJ)$           \Comment $\Theta(1)$
-      \\
-      \State $\textbf{if}\ iPJAfectadoPorDisparo?(j, eventoActual.pos)$ \Comment $\Theta(1)$
-      \State$\textbf{then}\ iMuerePJ(j, itPJVivos)$                    \Comment $\Theta(1)$
+      \State // Si dispara, agrego las posiciones afectadas por su disparo al mapa de disparos.
+      \State $\textbf{if}\ evtPJ.dispara?$
+      \State $\textbf{then}\ iAgregarDisparo(j,\ evtPJ.pos,\ evtPJ.dir,\ false)$ \Comment $\BigO(m)$
       \State $\textbf{end if}$
-      \\
-      \State // Avanzo el iterador
-      \State $Avanzar(itPJVivos)$                                       \Comment $\Theta(1)$
-      \EndWhile
       \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#jv)$
-      \Statex \underline{Justificación:} Crear punteros, iteradores y tuplas es $\Theta(1)$.
-      \State 
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iPJAfectadoPorDisparo?}(\In{j}{estr}, \In{pos}{pos}) $\to res:$ bool} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // El PJ estará afectado si en la posición en la que está hay un disparo de un fantasma
-      \State // Indexo por su posición en el mapa de disparos para obtener el paso en el que hubo un disparo del fantasma
-      \State $pasoDispFan \gets j.mapaDisparos[pos.x][pos.y].pasoDispFan$ \Comment $\Theta(1)$
-      \\
-      \State // Estará afectado si el paso del disparo del fantasma es igual al actual
-      \State $afectado? \gets (pasoDispFan == j.paso)$                    \Comment $\Theta(1)$
-      \State $res \gets afectado?$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(1)$
-   \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iMuerePJ}(\Inout{j}{estr}, \Inout{itPJVivos}{itConj(puntero(infoPJ))})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Obtengo su información
-      \State $infoPJ \gets *Siguiente(itPJVivos)$               \Comment $\Theta(1)$
-      \\
-      \State // Lo seteo como muerto
-      \State $infoPJ.vivo? \gets false$                         \Comment $\Theta(1)$
-      \\
-      \State // Lo borro del conjunto infoActualJugadoresVivos
-      \State $EliminarSiguiente(infoPJ.infoActual)$             \Comment $\Theta(1)$
-      \\
-      \State // Lo borro del conjunto infoJugadoresVivos
-      \State $EliminarSiguiente(itPJVivos)$                     \Comment $\Theta(1)$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} Las operaciones del iterador son $\Theta(1)$
+      \Statex \underline{Complejidad:} $\BigO(m)$
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iAgregarDisparo}(\Inout{j}{estr}, \In{pos}{pos}, \In{dir}{dir}, \In{esFan}{bool})} \Comment Funcion privada
     \begin{algorithmic}[1]
+      \State // Pre: La pos es valida en el mapa del juego.
+      \State // Post: Si el evento es disparar, se llena el mapa con los disparos correctos.
+      \\
       \State // Copio pos para no modificar el original
       \State $posCopy \gets copy(pos)$  \Comment $\Theta(1)$
       \\
@@ -1022,66 +978,387 @@
       \medskip
       \Statex \underline{Complejidad:} $\BigO(m)$
       \Statex \underline{Justificación:} Copiar naturales, indexar y tomar referencia son $\Theta(1)$. Luego, como hacemos operaciones que son $\Theta(1)$ y lo hacemos a lo sumo Tam(j.mapa) veces, tenemos $\BigO(Tam(j.mapa))$.
+    \end{algorithmic}
+  \end{algorithm}
 
+  \begin{algorithm}[H]{\textbf{iChequearMuerteFantasmas}(\Inout{j}{estr}) $\to res:$ bool} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: Mata a los fantasmas que están en posiciones en las que hay disparos en este paso
+      \\
+      \State // Me guardo si el fantasma especial muere
+      \State $muereFanEspecial \gets false$
+      \\
+      \State // Recorro los fantasmas vivos con un iterador
+      \State $itFanVivos \gets CrearIt(j.infoFantasmasVivos)$ \Comment $\Theta(\#fv)$
+      \\
+      \While{HaySiguiente(itFanVivos)}
+        \State // Obtengo su info
+        \State $infoFan \gets Siguiente(Siguiente(itFanVivos))$ \Comment $\Theta(1)$
+        \\
+        \State // Obtengo su evento actual
+        \State $eventoActual \gets iEventoActualFan(infoFan,\ j.paso)$  \Comment $\Theta(1)$
+        \\
+        \State $\textbf{if}\ iFanAfectadoPorDisparo(j,\ eventoActual.pos)$      \Comment $\Theta(1)$
+        \State $\textbf{then}\ muereFanEspecial \gets iMuereFan(j,\ itFanVivos)$ \Comment $\Theta(1)$
+        \State $\textbf{end if}$
+        \\
+        \State // Avanzo el iterador
+        \State $Avanzar(itFanVivos)$  \Comment $\Theta(1)$
+      \EndWhile
+      \\
+      \State // Retorno si murio el fan especial
+      \State $res \gets muereFanEspecial$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#fv)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iFanAfectadoPorDisparo}(\In{j}{estr}, \In{pos}{pos}) $\to res:$ bool} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: pos es valida en el mapa
+      \State // Post: res es true sii en pos hay un disparo de un jugador en este paso
+      \\
+      \State // El Fan estará afectado si en la posición en la que está hay un disparo de un PJ en el paso actual
+      \State // Indexo por su posición en el mapa de disparos
+      \State $pasoDispPJ \gets j.mapaDisparos[pos.x][pos.y].pasoDispPJ$ \Comment $\Theta(1)$
+      \\
+      \State // Estará afectado si el paso del disparo del PJ es igual al actual
+      \State $afectado? \gets (pasoDispPJ == j.paso)$                    \Comment $\Theta(1)$
+      \State $res \gets afectado?$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iMuereFan}(\Inout{j}{estr}, \Inout{itFanVivos}{itConj(itConj(infoFan))}) $\to res:$ bool} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: el iterador es valido
+      \State // Post: Saca al fantasma de las estructuras que solo tienen vivos
+      \\
+      \State // Obtengo la info
+      \State $infoFan \gets Siguiente(Siguiente(itFanVivos))$         \Comment $\Theta(1)$
+      \\
+      \State // Lo seteo como muerto
+      \State $infoFan.vivo? \gets false$                              \Comment $\Theta(1)$
+      \\
+      \State // Obtengo la info actual
+      \State $itInfoActual \gets infoFan.infoActual$  \Comment $\Theta(1)$
+      \\
+      \State // Veo si es el fantasma especial
+      \State $eraFanEspecial \gets (itInfoActual == j.infoFantasmaEspecial)$  \Comment $\Theta(1)$
+      \\
+      \State // Lo borro de infoActualFantasmasVivos
+      \State $EliminarSiguiente(itInfoActual)$  \Comment $\Theta(1)$
+      \\
+      \State // Lo borro de infoFantasmasVivos
+      \State $EliminarSiguiente(itFanVivos)$  \Comment $\Theta(1)$
+      \\
+      \State // Retorno si era el fantasma especial
+      \State $res \gets eraFanEspecial$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iNuevaRonda}(\Inout{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: el pj es uno de los del juego
+      \State // Post: se agrega un nuevo fantasma especial correspondiente al jugador que lo mató. $\land$
+      \State // \tab\ \        Se reinician todas las estructuras
+      \\
+      \State // Incremento la ronda
+      \State $j.ronda \gets j.ronda + 1$  \Comment $\Theta(1)$
+      \\
+      \State // Reinicio el paso
+      \State $j.paso \gets 0$             \Comment $\Theta(1)$
+      \\
+      \State // Reinicio el mapa de disparos y los disparos de los fantasmas
+      \State $iReiniciarMapaDisparos(j)$  \Comment $\Theta(m^2)$
+      \State $iReiniciarDisparosFan(j)$   \Comment $\BigO(\#fv * m)$
+      \\
+      \State // Reinicio los fantasmas
+      \State $iReiniciarFantasmas(j)$  \Comment $\Theta(\#f)$
+      \\
+      \State // Agrego el nuevo fan especial
+      \State $iNuevoFanEspecial(j, pjMatoFanEspecial.eventos)$ \Comment $\Theta(long(nuevosEventosFan))$
+      \\
+      \State // Reinicio los jugadores
+      \State $iReiniciarJugadores(j)$ \Comment $\BigO(locJugadores + \#j * (|pjMasLargo| + Longitud(eventoMasLargo)))$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(m^2 + \#f + locJugadores + \#j * (|pjMasLargo| + Longitud(eventoMasLargo)))$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarMapaDisparos}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: el mapa de disparos no tiene mas disparos
+      \\
+      \State // Recorro todas las posiciones y las pongo en 0
+      \State $\textbf{for}\ i \gets 0 ... Tam(j.mapaDisparos)$        \Comment $\Theta(m^2)$
+      \State \tab $\textbf{for}\ j \gets 0 ... Tam(j.mapaDisparos)$   \Comment $\Theta(m)$
+      \State \ttab $j.mapaDisparos[i][j].pasoDispFan \gets 0$         \Comment $\Theta(1)$
+      \State \ttab $j.mapaDisparos[i][j].pasoDispPJ \gets 0$          \Comment $\Theta(1)$
+      \State \tab $\textbf{end for}$
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(m^2)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarFantasmas}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: todos los fantasmas están en las estructuras de vivos
+      \\
+      \State // Vacío la información de los fantasmas vivos, liberando la memoria que ocupaba.
+      \State $infoFantasmasVivos \gets Vacio()$         \Comment $\Theta(\#fv)$
+      \State $infoActualFantasmasVivos \gets Vacio()$   \Comment $\Theta(\#fv)$
+      \\
+      \State // Recorro $infoFantasmas$ con un iterador
+      \State $itInfoFan \gets CrearIt(j.infoFantasmas)$ \Comment $\Theta(1)$
+      \While{HaySiguiente(itInfoFan)} \Comment $\Theta(\#f)$
+        \State // Obtengo su info
+        \State $info \gets Siguiente(itInfoFan)$ \Comment $\Theta(1)$
+        \\
+        \State // Lo seteo como vivo
+        \State $info.vivo? \gets true$  \Comment $\Theta(1)$
+        \\
+        \State // Creo su $infoActual$ y la agrego a $infoActualFantasmasVivos$, guardandome su iterador
+        \State $infoActualFan \gets \tuple{posicion: info.eventos[0].pos,\ direccion: info.eventos[0].dir}$ \Comment $\Theta(1)$
+        \State $itInfoActualFan \gets AgregarRapido(j.infoActualFantasmasVivos,\ infoActualFan)$             \Comment $\Theta(copy(infoActualFan))$
+        \\
+        \State // Le seteo el iterador a la info actual
+        \State $info.infoActual \gets itInfoActualFan$                \Comment $\Theta(1)$
+        \\
+        \State // Agrego un iterador a su info a $infoFantasmasVivos$ 
+        \State $AgregarRapido(j.infoFantasmasVivos,\ itInfoFan)$       \Comment $\Theta(copy(itInfoFan)))$
+      \EndWhile
+      \\
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#f)$
+      \Statex \underline{Justificación:} Copiar iteradores, tuplas, naturales, etc. es $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iReiniciarJugadores}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: todos los fantasmas están en las estructuras de vivos
+      \\
+      \State // Vacío las estructuras de vivos
+      \State $j.infoActualJugadoresVivos \gets Vacio()$ \Comment $\BigO(\#jv * |pjMasLargo|)$
+      \State $j.infoJugadoresVivos \gets Vacio()$       \Comment $\BigO(\#jv * Longitud(eventoMasLargo))$
+      \\
+      \State // Obtengo sus localizaciones
+      \State $localPJs \gets localizarJugadores(j.mapa, Claves(j.infoJugadores))$ \Comment $\Theta(locJugadores)$
+      \\
+      \State // Por cada clave y valor de las localizaciones,
+      \State $\textbf{for}\ pj, localizacion : localPJs\ \textbf{do}$ \Comment $\BigO(\#j * (|pjMasLargo| + Longitud(eventoMasLargo))$
+      \State \tab // Obtengo $infoPJ$ del trie por referencia modificable (enviandole infoJugadores como modificable)
+      \State \tab $infoPJ \gets Significado(j.infoJugadores, pj)$   \Comment $\Theta(|pj|)$
+      \\
+      \State \tab // Vacío los eventos, así liberando la memoria que ocupaban
+      \State \tab $infoPJ.eventos \gets Vacia()$    \Comment $\Theta(Longitud(infoPJ.eventos))$
+      \\
+      \State \tab // Creo una lista de eventos con la localización y se la seteo
+      \State \tab $infoPJ.eventos \gets iCrearEventosConLocalizacion(localizacion)$ \Comment $\Theta(1)$
+      \\
+      \State \tab // Lo seteo como vivo
+      \State \tab $infoPJ.vivo? \gets true$ \Comment $\Theta(1)$
+      \\
+      \State \tab // Creo una info actual
+      \State \tab $infoActualPJ \gets \tuple{identidad: pj, posicion: localizacion.pos, direccion: localizacion.dir}$ \Comment $\Theta(|pj|)$
+      \\
+      \State \tab // La agrego a $infoActualJugadoresVivos$ y me guardo itInfoActual
+      \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos, infoActualPJ)$  \Comment $\Theta(1)$
+      \\
+      \State \tab // Le seteo infoActual a infoPJ con el iterador
+      \State \tab $infoPJ.infoActual \gets itInfoActual$  \Comment $\Theta(1)$
+      \\
+      \State \tab // Agrego un puntero a la infoPJ a $infoJugadoresVivos$
+      \State \tab $AgregarRapido(j.infoJugadoresVivos, \&infoPJ)$ \Comment $\Theta(1)$      \medskip
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(locJugadores + \#j * (|pjMasLargo| + Longitud(eventoMasLargo)))$
+      \Statex \underline{Justificacion:} Copiar tuplas, iteradores y direcciones es $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iActualizarFantasmas}(\Inout{j}{estr})} \Comment Función privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: actualiza las acciones de los fantasmas, actualizando el mapa de disparos si disparan.
+      \\
+      \State // Recorro los fantasmas vivos
+      \State $\textbf{for} \ (itInfoFan :\ j.infoFantasmasVivos) \ \ \textbf{do}$ \Comment $\Theta(\#fv)$
+      \State \tab // Obtengo la información del fantasma
+      \State \tab $infoFan \gets Siguiente(itInfoFan)$      \Comment $\Theta(1)$
+      \\
+      \State \tab // Actualizo su información actual, obteniendo el evento actual
+      \State \tab $eventoActual \gets iActualizarFan(infoFan,\ j.paso)$   \Comment $\Theta(1)$
+      \\
+      \State \tab // Si dispara, agrego su disparo a los del paso
+      \State \tab $\textbf{if} \ eventoActual.dispara?$       
+      \State \tab  $\textbf{then}\ iAgregarDisparo(j,\ eventoActual.pos,\ eventoActual.dir,\ true)$ \Comment $\BigO(m)$
+      \State \tab $\textbf{end if}$
+      \State $\textbf{end for}$
+      \medskip
+      \Statex \underline{Complejidad:} $\BigO(\#fv * m)$
+      \Statex \underline{Justificación:} Tomar referencia del elemento al que apunta un iterador y copiar un evento es $\Theta(1)$.
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iActualizarFan}(\Inout{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: actualiza la info actual del fantasma
+      \\
+      \State // Obtengo el evento actual
+      \State $eventoActual \gets iEventoActualFan(infoFan, paso)$       \Comment $\Theta(1)$
+      \\
+      \State // Obtengo el iterador a la info actual
+      \State $itInfoActual \gets info.infoActual$                       \Comment $\Theta(1)$
+      \\
+      \State // La actualizo con el $eventoActual$
+      \State $Siguiente(itInfoActual).posicion \gets eventoActual.pos$  \Comment $\Theta(1)$
+      \State $Siguiente(itInfoActual).direccion \gets eventoActual.dir$ \Comment $\Theta(1)$
+      \\
+      \State // Devuelvo el evento actual
+      \State $res \gets eventoActual$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Actualizar el iterador y generar el eventoActual es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
   \begin{algorithm}[H]{\textbf{iEventoActualFan}(\In{info}{infoFan}, \In{paso}{nat}) $\to res:$ evento} \Comment Funcion privada
     \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: devuelve el evento que corresponde al paso actual
+      \\
       \State $idx \gets mod(j.paso, Longitud(info.eventos))$ \Comment $\Theta(1)$
       \State $res \gets info.eventos[idx]$          \Comment $\Theta(1)$
             \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} La operacions matemáticas y la indexación en un vector es $\Theta(1)$.
+      \Statex \underline{Justificación:} La operaciones matemáticas y la indexación en un vector es $\Theta(1)$.
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iEventoActualPJ}(\In{info}{infoPJ}) $\to res:$ evento} \Comment Funcion privada
+
+  \begin{algorithm}[H]{\textbf{iChequearMuerteJugadores}(\Inout{j}{estr})} \Comment Funcion privada
     \begin{algorithmic}[1]
-      \State $res \gets Ultimo(info.eventos)$     \Comment $\Theta(1)$
+      \State // Pre: true
+      \State // Post: quita al jugador de las estr de vivos y lo deja como muerto si está en una pos en la que hay un disparo de un fan
+      \\
+      \State // Recorro los jugadores vivos con un iterador
+      \State $itPJVivos \gets CrearIt(j.infoJugadoresVivos)$            \Comment $\Theta(1)$
+      \\
+      \While{HaySiguiente(itPJVivos)}                                   \Comment $\Theta(\#jv)$
+      \State // Obtengo su evento actual
+      \State $ptrInfoPJ \gets Siguiente(itPJVivos)$                     \Comment $\Theta(1)$
+      \State $eventoActual \gets iEventoActualPJ(*ptrInfoPJ)$           \Comment $\Theta(1)$
+      \\
+      \State $\textbf{if}\ iPJAfectadoPorDisparo?(j, eventoActual.pos)$ \Comment $\Theta(1)$
+      \State$\textbf{then}\ iMuerePJ(j, itPJVivos)$                    \Comment $\Theta(1)$
+      \State $\textbf{end if}$
+      \\
+      \State // Avanzo el iterador
+      \State $Avanzar(itPJVivos)$                                       \Comment $\Theta(1)$
+      \EndWhile
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#jv)$
+      \Statex \underline{Justificación:} Crear punteros, iteradores y tuplas es $\Theta(1)$.
+      \State 
+    \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iPJAfectadoPorDisparo?}(\In{j}{estr}, \In{pos}{pos}) $\to res:$ bool} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: la pos es válida en el mapa del juego
+      \State // Post: El PJ estará afectado si en la posición en la que está hay un disparo de un fantasma
+      \\
+      \State // El PJ estará afectado si en la posición en la que está hay un disparo de un fantasma
+      \State // Indexo por su posición en el mapa de disparos para obtener el paso en el que hubo un disparo del fantasma
+      \State $pasoDispFan \gets j.mapaDisparos[pos.x][pos.y].pasoDispFan$ \Comment $\Theta(1)$
+      \\
+      \State // Estará afectado si el paso del disparo del fantasma es igual al actual
+      \State $afectado? \gets (pasoDispFan == j.paso)$                    \Comment $\Theta(1)$
+      \State $res \gets afectado?$
       \medskip
       \Statex \underline{Complejidad:} $\Theta(1)$
-      \Statex \underline{Justificación:} La operación Último sobre una lista es $\Theta(1)$
+      \Statex \underline{Justificacion:} La indexación en arreglos es $\Theta(1)$
+   \end{algorithmic}
+  \end{algorithm}
+
+  \begin{algorithm}[H]{\textbf{iMuerePJ}(\Inout{j}{estr}, \Inout{itPJVivos}{itConj(puntero(infoPJ))})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: el iterador es válido
+      \State // Post: modifica el booleano y quita su info de las estr de vivos
+      \\
+      \State // Obtengo una referencia modificable a su información
+      \State $infoPJ \gets *Siguiente(itPJVivos)$               \Comment $\Theta(1)$
+      \\
+      \State // Lo seteo como muerto
+      \State $infoPJ.vivo? \gets false$                         \Comment $\Theta(1)$
+      \\
+      \State // Lo borro del conjunto infoActualJugadoresVivos
+      \State $EliminarSiguiente(infoPJ.infoActual)$             \Comment $\Theta(1)$
+      \\
+      \State // Lo borro del conjunto infoJugadoresVivos
+      \State $EliminarSiguiente(itPJVivos)$                     \Comment $\Theta(1)$
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(1)$
+      \Statex \underline{Justificación:} Las operaciones del iterador son $\Theta(1)$
     \end{algorithmic}
   \end{algorithm}
 
+  \begin{algorithm}[H]{\textbf{iAgregarPasarFaltantes}(\Inout{j}{estr})} \Comment Funcion privada
+    \begin{algorithmic}[1]
+      \State // Pre: true
+      \State // Post: agrega 'pasar' a los jugadores que no hayan realizado una acción
+      \\
+      \State // Recorro a todos los jugadores vivos, y le agrego un pasar a los jugadores que no se movieron
+      \For{ptrInfoPJ : j.infoJugadoresVivos}  \Comment $\Theta(\#jv)$
+        \State // Si su lista de acciones no es de la misma longitud que el paso actual + 1,
+        \State // entonces es necesario agregarle una acción pasar
+        \State $\textbf{if}\ Longitud(infoPJ.eventos) \neq j.paso + 1\ \textbf{then}$
+        \State \tab // Genero el evento pasar
+        \State \tab $eventoPasar \gets \langle$ \Comment $\Theta(1)$
+        \State \ttab  $pos: Ultimo(infoPJ.eventos).pos,$
+        \State \ttab  $dir: Ultimo(infoPJ.eventos).dir,$   
+        \State \ttab  $disparo?: false$
+        \State \tab $\rangle$
+        \State \tab // Lo agrego al final
+        \State \tab $AgregarAtras(infoPJ.eventos, eventoPasar)$ \Comment $\Theta(copy(eventoPasar))$
+        \State $\textbf{end if}$
+      \EndFor
+      \medskip
+      \Statex \underline{Complejidad:} $\Theta(\#jv)$
+      \Statex \underline{Justificacion:} Copiar un evento es $\Theta(1)$
+    \end{algorithmic}
+  \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\Inout{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
+  \begin{algorithm}[H]{\textbf{iPasarTiempo}(\Inout{j}{estr})}
     \begin{algorithmic}[1]
       \State // Incremento el paso
-      \State $j.paso \gets j.paso + 1$                            \Comment $\Theta(1)$
-      \\
-      \State // Actualizo la información del jugador con la nueva acción,
-      \State // y me guardo una referencia a su info modificada
-      \State $infoPJ \gets iActualizarPJ(pj,\ a)$                       \Comment $\BigO(|j|)$
-      \State $evtPJ \gets iEventoActualPJ(infoPJ)$                      \Comment $\Theta(1)$
+      \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
       \\
       \State // Reinicio los disparos de fantasmas
       \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
       \\
-      \State // Modifico el mapa de disparos (solo si dispara)
-      \State $iActualizarMapaDisparosConPJ(j,\ evtPJ)$             \Comment $\BigO(m)$
+      \State // Actualizo las acciones de los fantasmas,
+      \State // actualizando el mapa de disparos si disparan.
+      \State $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
       \\
-      \State // Veo que fantasmas mueren, guardandome si murió el fantasma especial
-      \State $murioFanEspecial \gets iChequearMuerteFantasmas(j)$  \Comment $\Theta(\#fv)$
+      \State // Veo que jugadores mueren
+      \State $iChequearMuerteJugadores(j)$        \Comment $\Theta(\#jv)$
       \\
-      \State // Si murió el fantasma especial, cambio de ronda
-      \State $\textbf{if}\ murioFanEspecial\ \textbf{then}$
-      \State \tab $iNuevaRonda(j,\ infoPJ)$  \Comment $\Theta(??)$
-      \State $\textbf{else}$
-      \State \tab // Sigo en la misma ronda
-      \State \tab // Actualizo las acciones de los fantasmas,
-      \State \tab // actualizando el mapa de disparos si disparan.
-      \State \tab $iActualizarFantasmas(j)$   \Comment $\BigO(\#fv * m)$
-      \\
-      \State \tab // Veo que jugadores mueren
-      \State \tab $iChequearMuerteJugadores(j)$                        \Comment $\Theta(\#jv)$
-      \\
-      \State \tab // Agrego los 'pasar' faltantes
-      \State \tab $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
-      \State $\textbf{end if}$
+      \State // Agrego los 'pasar' faltantes
+      \State $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
       \medskip
-      \Statex \underline{Complejidad:} Sin cambiar de ronda $\BigO(|j| + m + \#fv + \#fv * m + \#jv) \in \BigO(|j| + \#fv * m + \#jv)$, cambiando $\BigO(?)$
+      \Statex \underline{Complejidad:} $\BigO(2(\#fv * m) + \#jv) \in \BigO(\#fv * m + \#jv)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -1139,219 +1416,6 @@
       \Statex \underline{Complejidad:} $\Theta(|pj|)$
     \end{algorithmic}
   \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iActualizarMapaDisparosConPJ}(\Inout{j}{estr}, \In{evtPJ}{evento})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Si dispara, agrego las posiciones afectadas por su disparo al mapa de disparos.
-      \State $\textbf{if}\ evtPJ.dispara?$
-      \State $\textbf{then}\ iAgregarDisparo(j, evtPJ.pos, evtPJ.dir, false)$ \Comment $\BigO(m)$
-      \State $\textbf{end if}$
-      \medskip
-      \Statex \underline{Complejidad:} $\BigO(m)$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iChequearMuerteFantasmas}(\Inout{j}{estr}) $\to res:$ bool} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Me guardo si el fantasma especial muere
-      \State $muereFanEspecial \gets false$
-      \\
-      \State // Recorro los fantasmas vivos con un iterador
-      \State $itFanVivos \gets CrearIt(j.infoFantasmasVivos)$ \Comment $\Theta(\#fv)$
-      \\
-      \While{HaySiguiente(itFanVivos)}
-        \State // Obtengo su info
-        \State $infoFan \gets Siguiente(Siguiente(itFanVivos))$ \Comment $\Theta(1)$
-        \\
-        \State // Obtengo su evento actual
-        \State $eventoActual \gets iEventoActualFan(infoFan,\ j.paso)$  \Comment $\Theta(1)$
-        \\
-        \State $\textbf{if}\ iFanAfectadoPorDisparo(j,\ eventoActual.pos)?$      \Comment $\Theta(1)$
-        \State $\textbf{then}\ muereFanEspecial \gets iMuereFan(j,\ itFanVivos)$ \Comment $\Theta(1)$
-        \State $\textbf{end if}$
-        \\
-        \State // Avanzo el iterador
-        \State $Avanzar(itFanVivos)$  \Comment $\Theta(1)$
-      \EndWhile
-      \\
-      \State // Retorno si murio el fan especial
-      \State $res \gets muereFanEspecial$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#fv)$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iFanAfectadoPorDisparo}(\In{j}{estr}, \In{pos}{pos}) $\to res:$ bool} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // El Fan estará afectado si en la posición en la que está hay un disparo de un PJ en el paso actual
-      \State // Indexo por su posición en el mapa de disparos
-      \State $pasoDispPJ \gets j.mapaDisparos[pos.x][pos.y].pasoDispPJ$ \Comment $\Theta(1)$
-      \\
-      \State // Estará afectado si el paso del disparo del PJ es igual al actual
-      \State $afectado? \gets (pasoDispPJ == j.paso)$                    \Comment $\Theta(1)$
-      \State $res \gets afectado?$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(1)$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iMuereFan}(\Inout{j}{estr}, \Inout{itFanVivos}{itConj(itConj(infoFan))}) $\to res:$ bool} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Obtengo la info
-      \State $infoFan \gets Siguiente(Siguiente(itFanVivos))$         \Comment $\Theta(1)$
-      \\
-      \State // Lo seteo como muerto
-      \State $infoFan.vivo? \gets false$                              \Comment $\Theta(1)$
-      \\
-      \State // Obtengo la info actual
-      \State $itInfoActual \gets infoFan.infoActual$  \Comment $\Theta(1)$
-      \\
-      \State // Veo si es el fantasma especial
-      \State $eraFanEspecial \gets (itInfoActual == j.infoFantasmaEspecial)$  \Comment $\Theta(1)$
-      \\
-      \State // Lo borro de infoActualFantasmasVivos
-      \State $EliminarSiguiente(itInfoActual)$  \Comment $\Theta(1)$
-      \\
-      \State // Lo borro de infoFantasmasVivos
-      \State $EliminarSiguiente(itFanVivos)$  \Comment $\Theta(1)$
-      \\
-      \State // Retorno si era el fantasma especial
-      \State $res \gets eraFanEspecial$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(1)$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iNuevaRonda}(\Inout{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Incremento la ronda
-      \State $j.ronda \gets j.ronda + 1$  \Comment $\Theta(1)$
-      \\
-      \State // Reinicio el paso
-      \State $j.paso \gets 0$             \Comment $\Theta(1)$
-      \\
-      \State // Reinicio el mapa de disparos y los disparos de los fantasmas
-      \State $iReiniciarMapaDisparos(j)$  \Comment $\Theta(m^2)$
-      \State $iReiniciarDisparosFan(j)$   \Comment $\BigO(\#fv * m)$
-      \\
-      \State // Reinicio los fantasmas
-      \State $iReiniciarFantasmas(j, pjMatoFanEspecial)$  \Comment $\Theta(\#fv + long(pjMatoFanEspecial.eventos))$
-      \\
-      \State // Reinicio los jugadores
-      \State $iReiniciarJugadores(j)$ \Comment $\BigO(locJugadores + \sum{long(eventos\ pjs)})$
-      \medskip
-      \Statex \underline{Complejidad:} $\BigO(m^2 + \#fv + \sum{long(eventos\ pjs)}))$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iReiniciarMapaDisparos}(\Inout{j}{estr})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Recorro todas las posiciones y las pongo en 0
-      \State $\textbf{for}\ i \gets 0 ... Tam(j.mapaDisparos)$        \Comment $\Theta(m^2)$
-      \State \tab $\textbf{for}\ j \gets 0 ... Tam(j.mapaDisparos)$   \Comment $\Theta(m)$
-      \State \ttab $j.mapaDisparos[i][j].pasoDispFan \gets 0$         \Comment $\Theta(1)$
-      \State \ttab $j.mapaDisparos[i][j].pasoDispPJ \gets 0$          \Comment $\Theta(1)$
-      \State \tab $\textbf{end for}$
-      \State $\textbf{end for}$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(m^2)$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iReiniciarFantasmas}(\Inout{j}{estr}, \In{pjMatoFanEspecial}{infoPJ})} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Vacío la información de los fantasmas vivos, liberando la memoria que ocupaba.
-      \State $infoFantasmasVivos \gets Vacio()$         \Comment $\Theta(\#fv)$
-      \State $infoActualFantasmasVivos \gets Vacio()$   \Comment $\Theta(\#fv)$
-      \\
-      \State // Recorro $infoFantasmas$ con un iterador
-      \State $itInfoFan \gets CrearIt(j.infoFantasmas)$ \Comment $\Theta(1)$
-      \While{HaySiguiente(itInfoFan)}
-        \State // Obtengo su info
-        \State $info \gets Siguiente(itInfoFan)$ \Comment $\Theta(1)$
-        \\
-        \State // Lo seteo como vivo
-        \State $info.vivo? \gets true$  \Comment $\Theta(1)$
-        \\
-        \State // Creo su $infoActual$ y la agrego a $infoActualFantasmasVivos$, guardandome su iterador
-        \State $infoActualFan \gets \tuple{posicion: info.eventos[0].pos,\ direccion: info.eventos[0].dir}$ \Comment $\Theta(1)$
-        \State $itInfoActualFan \gets AgregarRapido(infoActualFan, j.infoActualFantasmasVivos)$             \Comment $\Theta(1)$
-        \\
-        \State // Le seteo el iterador a la info actual
-        \State $info.infoActual \gets itInfoActualFan$                \Comment $\Theta(1)$
-        \\
-        \State // Agrego un iterador a su info a $infoFantasmasVivos$ 
-        \State $AgregarRapido(itInfoFan, j.infoFantasmasVivos)$       \Comment $\Theta(copy(itInfoFan)))$
-      \EndWhile
-      \\
-      \State // Agrego un nuevo fantasma especial con los eventos del personaje
-      \State $iNuevoFanEspecial(j, pjMatoFanEspecial.eventos)$ \Comment $\Theta(long(nuevosEventosFan))$
-      \medskip
-      \Statex \underline{Complejidad:} $\Theta(\#fv + long(pjMatoFanEspecial.eventos))$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iReiniciarJugadores}(\Inout{j}{estr}} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Obtengo sus localizaciones
-      \State $localPJs \gets localizarJugadores(j.mapa, Claves(j.infoJugadores))$ \Comment $\Theta(locJugadores)$
-      \\
-      \State // Por cada clave y valor de las localizaciones,
-      \State $\textbf{for}\ pj, localizacion : localPJs\ \textbf{do}$
-      \State \tab // Obtengo $infoPJ$ del trie por referencia modificable
-      \State \tab $infoPJ \gets Significado(j.infoJugadores, pj)$
-      \\
-      \State \tab // Vacío los eventos, así liberando la memoria que ocupaban
-      \State \tab $infoPJ.eventos \gets Vacia()$    \Comment $\Theta(\#infoPJ.eventos)$
-      \\
-      \State \tab // Creo una lista de eventos con la localización y se la seteo
-      \State \tab $infoPJ.eventos \gets iCrearEventosConLocalizacion(localizacion)$ \Comment $\Theta(1)$
-      \\
-      \State \tab // Lo seteo como vivo
-      \State \tab $infoPJ.vivo? \gets true$ \Comment $\Theta(1)$
-      \\
-      \State \tab // Creo una info actual
-      \State \tab $infoActualPJ \gets \tuple{identidad: pj, posicion: localizacion.pos, direccion: localizacion.dir}$ \Comment $\Theta(1)$
-      \\
-      \State \tab // La agrego a $infoActualJugadoresVivos$ y me guardo itInfoActual
-      \State \tab $itInfoActual \gets AgregarRapido(j.infoActualJugadoresVivos, infoActualPJ)$  \Comment $\Theta(1)$
-      \\
-      \State \tab // Le seteo infoActual a infoPJ con el iterador
-      \State \tab $infoPJ.infoActual \gets itInfoActual$  \Comment $\Theta(1)$
-      \\
-      \State \tab // Agrego un puntero a la infoPJ a $infoJugadoresVivos$
-      \State \tab $AgregarRapido(j.infoJugadoresVivos, \&infoPJ)$ \Comment $\Theta(1)$      \medskip
-      \State $\textbf{end for}$
-      \medskip
-      \Statex \underline{Complejidad:} $\BigO(locJugadores + \sum{long(eventos\ pjs)})$
-    \end{algorithmic}
-  \end{algorithm}
-
-  \begin{algorithm}[H]{\textbf{iActualizarPJ}(\In{pj}{jugador}, \In{a}{accion}) $\to res:$ infoPJ} \Comment Funcion privada
-    \begin{algorithmic}[1]
-      \State // Busco la información del PJ
-      \State $infoPJ \gets Significado(j.infoJugadores,\ pj)$          \Comment $\BigO(|j|)$
-      \\
-      \State // Genero un evento con la acción y el evento anterior (el actual)
-      \State $evtPJ \gets Aplicar(a,\ j,\ iEventoActualPJ(infoPJ))$ \Comment $\Theta(1)$
-      \\
-      \State // Agrego el evento al jugador
-      \State $AgregarAtras(infoPJ.eventos,\ evtPJ)$                \Comment $\Theta(1)$
-      \\
-      \State // Obtengo su información actual
-      \State $itInfoActual \gets infoPJ.infoActual$             \Comment $\Theta(1)$
-      \\
-      \State // La actualizo
-      \State $Siguiente(itInfoActual).posicion \gets evt.pos$   \Comment $\Theta(1)$
-      \State $Siguiente(itInfoActual).direccion \gets evt.dir$  \Comment $\Theta(1)$
-      \\
-      \State // Devuelvo la info del pj
-      \State $res \gets infoPJ$
-      \medskip
-      \Statex \underline{Complejidad:} $\BigO(|j|)$
-    \end{algorithmic}
-  \end{algorithm}
-
   \end{Algoritmos}
 
 \newpage
