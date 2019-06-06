@@ -645,7 +645,7 @@
   \Titulo{Algoritmos del módulo}
       \medskip
     
-  \begin{algorithm}[H]{\textbf{iIniciar}(\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento)}) $\to$ $res$ : estr}
+  \begin{algorithm}[H]{\textbf{$\bullet$ iIniciar}(\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento)}) $\to$ $res$ : estr}
         \begin{algorithmic}[1]
         \State // Inicializo la estructura
         \State $res: \langle$
@@ -781,7 +781,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualPjVivos}(\In{j}{estr}) $\to res:$ conj(infoActualPJ)}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iInfoActualPjVivos}(\In{j}{estr}) $\to res:$ conj(infoActualPJ)}
     \begin{algorithmic}[1]
       \State $res \gets j.infoActualJugadoresVivos$
       \medskip
@@ -789,7 +789,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualFanVivos}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iInfoActualFanVivos}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
     \begin{algorithmic}[1]
       \State $res \gets j.infoActualFantasmasVivos$
       \medskip
@@ -797,7 +797,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFan}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iInfoActualFanEspecial}(\In{j}{estr}) $\to res:$ infoActualFan}
     \begin{algorithmic}[1]
       \State $res \gets Siguiente(j.infoFantasmaEspecial)$
       \medskip
@@ -805,7 +805,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
     \begin{algorithmic}[1]
       \State $fantasmasVivosQueDisp \gets Vacio()$
       \\
@@ -825,7 +825,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iVivo?}(\In{j}{estr}, \In{pj}{string}) $\to res:$ bool}
     \begin{algorithmic}[1]
       \State $res \gets Significado(j.infoJugadores, pj).vivo?$ \Comment $\Theta(|pj|)$
       \medskip
@@ -833,7 +833,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iEjecutarAccion}(\Inout{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iEjecutarAccion}(\Inout{j}{estr}, \In{a}{accion}, \In{pj}{jugador}) $\to res$ :estr}
     \begin{algorithmic}[1]
       \State // Incremento el paso
       \State $j.paso \gets j.paso + 1$                            \Comment $\Theta(1)$
@@ -1340,7 +1340,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iPasarTiempo}(\Inout{j}{estr})}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iPasarTiempo}(\Inout{j}{estr})}
     \begin{algorithmic}[1]
       \State // Incremento el paso
       \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
@@ -1362,7 +1362,7 @@
     \end{algorithmic}
   \end{algorithm}
 
-  \begin{algorithm}[H]{\textbf{iPosOcupadasPorDisparosFan}(\In{j}{estr}) $\to res:$ conj(posicion)}
+  \begin{algorithm}[H]{$\bullet$ \textbf{iPosOcupadasPorDisparosFan}(\In{j}{estr}) $\to res:$ conj(posicion)}
     \begin{algorithmic}[1]
       \State $res \gets j.disparosFanUltimoPaso$
       \medskip
