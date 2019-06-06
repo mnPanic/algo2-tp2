@@ -202,7 +202,12 @@
 
     - $evento$ es $\tuple{pos: \textbf{pos},\ dir: \textbf{dir},\ dispara?: \textbf{bool}}$
 
-    - $pasoDisparos$ es $\tuple{pasoDispFan: nat,\ pasoDispPJ: nat}$
+    - $pasoDisparos$ es $\tuple{pasoDispFan: nat,\ pasoDispPJ: nat}$ \\
+
+    Suponemos que el módulo vector tiene una función \\
+    \tab  \textbf{Vectorizar}: lista($\alpha$) $\rightarrow$ vector($\alpha$) \\
+    \tab esta función puede ser fácilmente implementada iterando y tomando referencia de los elementos de la lista y \tab agregándolos atrás del vector.
+    \\ \tab La complejidad de esta función será $\BigO(n)$ siempre y cuando $\alpha$ se copie en $\BigO(1)$.
 
 \newpage
 
@@ -1061,8 +1066,9 @@
       \State // Reinicio los fantasmas
       \State $iReiniciarFantasmas(j)$  \Comment $\Theta(\#f)$
       \\
-      \State // Agrego el nuevo fan especial
-      \State $iNuevoFanEspecial(j, pjMatoFanEspecial.eventos)$ \Comment $\Theta(long(nuevosEventosFan))$
+      \State // Agrego el nuevo fan especial luego de convertir la lista en un vector
+      \State $nuevoFan \gets Vectorizar(pjmatoFanEspecial.eventos)$
+      \State $iNuevoFanEspecial(j, nuevoFan)$ \Comment $\Theta(long(nuevoFan))$
       \\
       \State // Reinicio los jugadores
       \State $iReiniciarJugadores(j)$ \Comment $\BigO(locJugadores + \#j * (|pjMasLargo| + Longitud(eventoMasLargo)))$
