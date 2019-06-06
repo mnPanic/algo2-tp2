@@ -221,217 +221,6 @@
 
 \newpage
 
-\section{Diccionario Trie ($\alpha$)}
-
-  \noindent{El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.\\
-  Solo se definen e implementan las operaciones que serán utilizadas.
-
-  \begin{Interfaz}
-
-    \textbf{parámetros formales}\hangindent=2\parindent\\
-    \parbox{1.7cm}{\textbf{géneros}}$\alpha$\\
-    \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
-      \InterfazFuncion{Copiar}{\In{s}{$\alpha$}}{$\alpha$}
-      {$res \igobs s$}
-      [$\Theta(copy(s))$]
-      [función de copia de $\alpha$]
-    }
-
-    \textbf{se explica con}: \tadNombre{Diccionario$(string, \alpha)$}.
-
-    \textbf{géneros}: \TipoVariable{diccTrie$(string, \alpha)$}.
-
-    \Titulo{Operaciones básicas de diccionario}
-
-    \InterfazFuncion{Vacío}{}{diccTrie$(string, \alpha)$}%
-    {$res$ $\igobs$ vacio}%
-    [$\Theta(1)$]
-    [genera un diccionario vacío.]
-
-    \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{$\alpha$}
-    [$d \igobs d_0$]
-    {$d$ $\igobs$ definir($d, k, s$)}
-    [$\Theta(|k| + copy(s))$]
-    [define la clave $k$ con el significado $s$ en el diccionario.]
-    [los elemnetos $k$ y $s$ se definen por copia.]
-
-    \InterfazFuncion{Definido?}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{bool}
-    {$res$ $\igobs$ def?($d$, $k$)}
-    [$\BigO(|k|)$]
-    [devuelve \texttt{true} si $k$ está definido en el diccionario.]
-
-    \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\alpha$}
-    [def?($d$, $k$)]
-    {alias($res$ $\igobs$ obtener($d$, $k$))}
-    [$\Theta(|k|)$]
-    [devuelve el significado de la clave $k$ en $d$.]
-    [$res$ es modificable si y sólo si $d$ es modificable.]
-
-
-    \InterfazFuncion{Claves}{\In{d}{diccTrie($string$, $\alpha$)}}{conj(string)}
-    {$res$ $\igobs$ claves($d$)}
-    [$\Theta(1)$]
-    [devuelve las claves definidas en el diccionario]
-
-  \end{Interfaz}
-
-  \begin{Representacion}
-    
-    \Titulo{Representación del diccionario}
-    \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
-
-      \begin{Tupla}[dic]%
-        \tupItemF{raiz}{puntero(nodo)},\\
-        \tupItemF{claves}{conj(string)}
-      \end{Tupla}
-
-      \mbox{}
-
-      \begin{Tupla}[nodo]
-        \tupItem{significado}{puntero($\alpha$)}\\
-        \tupItemF{siguientes}{arreglo(puntero(nodo))[256]}
-      \end{Tupla}
-
-    \end{Estructura}
-
-    \Rep[dic][d]{\\
-      (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
-      La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
-      Todas las hojas tienen un significado distinto de NULL. $\land$ \\
-      Un s string pertenece a d.claves $\iff$ estáDefinido(s, d.claves)) \\ \\
-      // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
-    }
-
-    ~
-
-    \Abs[dic]{dicc($string$, $\alpha$)}[e]{d}{ \\
-    (\paratodo s : string)(def?(s,d) $\igobs$ estáDefinido(e.raiz, s)) $\land$ \\
-    (\paratodo s : string)(def?(s,d) $\impluego$ obtener(s, d) $\igobs$ significado(e.raiz, s)) $\land$ \\
-    claves(d) $\igobs$ e.claves}\\ 
-  
-  estáDefinido(r, s) $\equiv$ 
-  \textbf{if} vacia?(s) \\
-  \ttab \textbf{then} r $\DRef$ significado $\neq$ NULL \\ 
-  \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estáDefinido(r.siguientes[int(prim(s))], fin(s)) 
-  \textbf{fi} \\
-
-  significado(r,s)  $\equiv$ 
-  \textbf{if} vacia?(s) \\
-  \ttab \textbf{then} r $\DRef$ significado \\ 
-  \ttab \textbf{else} significado(r.siguientes[int(prim(s))], fin(s)) 
-  \textbf{fi} \\
-
-\end{Representacion}
-
-
-\begin{Algoritmos}
-
-    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : \&dic}
-      \begin{algorithmic}[1]
-           \State // Le asigna un nuevo nodo a la raiz
-           \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
-    
-          \medskip
-          \Statex \underline{Complejidad:} $\Theta(1)$
-          \Statex \underline{Justificación:} La complejidad de crear un nuevo nodo es $\Theta(1)$
-          \end{algorithmic}
-    \end{algorithm}
-
-    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{dic}, \In{k}{$string$})$\to$ $res$ : \&$\alpha$}
-      \begin{algorithmic}[1]
-        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
-
-        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-        \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
-        \State $\textbf{end for}$                                    
-
-        \State $res \gets *(actual \DRef significado)$                                          \Comment $\Theta(1)$
-
-          \medskip
-          \Statex \underline{Complejidad:} $\Theta(|k|)$
-          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad será $\Theta(|k|)$.
-          \end{algorithmic}
-    \end{algorithm}
-
-    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : conj(string)}
-      \begin{algorithmic}[1]
-        \State $res \gets e.claves$                                            \Comment $\Theta(1)$
-  
-          \medskip
-          \Statex \underline{Complejidad:} $\Theta(1)$
-          \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
-          \end{algorithmic}
-    \end{algorithm}
-  
-
-
-    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dic}, \In{k}{$string$}) $\to$ $res$ : bool}
-      \begin{algorithmic}[1]
-        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
-
-        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
-        \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $        \Comment $\Theta(1)$
-        \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
-        \State \ttab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
-        \State \tab $\textbf{end if}$
-        \State $\textbf{end for}$                                    
-
-        \State $res \gets ((actual \DRef significado) \neq NULL)$                                                                  \Comment $\Theta(1)$
-
-          \medskip
-          \Statex \underline{Complejidad:} $\BigO(|k|)$
-          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como máximo. Luego la complejidad será $\BigO(|k|)$.
-          \end{algorithmic}
-    \end{algorithm}
-
-    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{dic}, \In{k}{$string$}, \In{s}{$\alpha$}) $\to$ $res$ : $\&\alpha$}
-      \begin{algorithmic}[1]
-          \State $Nodo \ actual \gets d.raiz$
-          \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
-          \State \tab   // Si no tengo siguiente, lo creo
-          \State \tab   $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
-          \State \ttab  $\ actual \DRef siguientes[toInt(c)] = nuevoNodo()$                                   \Comment $\Theta(1)$
-          \State \tab   $\textbf{end if}$
-          \State \tab   $actual \gets (actual \DRef siguientes [toInt(c)])$                                   \Comment $\Theta(1)$
-          \State $\textbf{end for}$  
-          \State
-          \State // Estoy parado en el nodo que va a tener el puntero al significado.
-          \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
-          \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
-         
-       \\ \State // Si el significado no está definido, agrego la nueva clave al conjunto de claves 
-          \State $\textbf{if} \ (actual \DRef significado \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
-          \State // Como precondición se que no existe así que la agrego rápido
-          \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
-          \State $\textbf{end if}$
-
-       \\ \State // Asigno al significado del nodo el puntero creado con s y libero la memoria que contenía al valor anterior.
-          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
-
-
-      \\  \State // Devuelvo por referencia el significado.
-          \State res $\gets sig$
-
-          \medskip
-          \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
-          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$. Además $\Theta(|k| + copy(s) + copy(k))$ $\in$ $\Theta(|k| + copy(s))$. 
-          \end{algorithmic}
-    \end{algorithm}
-  
-    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Función privada que crea un nuevo nodo
-      \begin{algorithmic}[1]
-        \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacios
-        \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ puntero(Nodo)}$ 				\Comment $\Theta(1)$
- 
-          \medskip
-          \Statex \underline{Complejidad:} $\Theta(1)$
-          \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
-          \end{algorithmic}
-    \end{algorithm}
-  \end{Algoritmos}
-
-\newpage
-
 \section{Módulo Juego}
 
   \begin{Interfaz}
@@ -1911,5 +1700,213 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
 
 \newpage
 
+\section{Diccionario Trie ($\alpha$)}
+
+  \noindent{El módulo Diccionario Trie provee un diccionario básico montado sobre un trie.\\
+  Solo se definen e implementan las operaciones que serán utilizadas.
+
+  \begin{Interfaz}
+
+    \textbf{parámetros formales}\hangindent=2\parindent\\
+    \parbox{1.7cm}{\textbf{géneros}}$\alpha$\\
+    \parbox[t]{1.7cm}{\textbf{función}}\parbox[t]{.5\textwidth-\parindent-1.7cm}{%
+      \InterfazFuncion{Copiar}{\In{s}{$\alpha$}}{$\alpha$}
+      {$res \igobs s$}
+      [$\Theta(copy(s))$]
+      [función de copia de $\alpha$]
+    }
+
+    \textbf{se explica con}: \tadNombre{Diccionario$(string, \alpha)$}.
+
+    \textbf{géneros}: \TipoVariable{diccTrie$(string, \alpha)$}.
+
+    \Titulo{Operaciones básicas de diccionario}
+
+    \InterfazFuncion{Vacío}{}{diccTrie$(string, \alpha)$}%
+    {$res$ $\igobs$ vacio}%
+    [$\Theta(1)$]
+    [genera un diccionario vacío.]
+
+    \InterfazFuncion{Definir}{\Inout{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}, \In{s}{$\alpha$}}{$\alpha$}
+    [$d \igobs d_0$]
+    {$d$ $\igobs$ definir($d, k, s$)}
+    [$\Theta(|k| + copy(s))$]
+    [define la clave $k$ con el significado $s$ en el diccionario.]
+    [los elemnetos $k$ y $s$ se definen por copia.]
+
+    \InterfazFuncion{Definido?}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{bool}
+    {$res$ $\igobs$ def?($d$, $k$)}
+    [$\BigO(|k|)$]
+    [devuelve \texttt{true} si $k$ está definido en el diccionario.]
+
+    \InterfazFuncion{Significado}{\In{d}{diccTrie($string$, $\alpha$)}, \In{k}{$string$}}{$\alpha$}
+    [def?($d$, $k$)]
+    {alias($res$ $\igobs$ obtener($d$, $k$))}
+    [$\Theta(|k|)$]
+    [devuelve el significado de la clave $k$ en $d$.]
+    [$res$ es modificable si y sólo si $d$ es modificable.]
+
+
+    \InterfazFuncion{Claves}{\In{d}{diccTrie($string$, $\alpha$)}}{conj(string)}
+    {$res$ $\igobs$ claves($d$)}
+    [$\Theta(1)$]
+    [devuelve las claves definidas en el diccionario]
+
+  \end{Interfaz}
+
+  \begin{Representacion}
+    
+    \Titulo{Representación del diccionario}
+    \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
+
+      \begin{Tupla}[dic]%
+        \tupItemF{raiz}{puntero(nodo)},\\
+        \tupItemF{claves}{conj(string)}
+      \end{Tupla}
+
+      \mbox{}
+
+      \begin{Tupla}[nodo]
+        \tupItem{significado}{puntero($\alpha$)}\\
+        \tupItemF{siguientes}{arreglo(puntero(nodo))[256]}
+      \end{Tupla}
+
+    \end{Estructura}
+
+    \Rep[dic][d]{\\
+      (Los nodos del diccionario (excepto la raiz) tienen un unico padre. Es decir, no hay dos Nodos en la estructura que tengan punteros iguales en los siguientes del Nodo. $\land$\\
+      La raiz no tiene padre. Es decir, no hay un camino de hijos por el cual se llegue a dicho Nodo. $\land$\\
+      Todas las hojas tienen un significado distinto de NULL. $\land$ \\
+      Un s string pertenece a d.claves $\iff$ estáDefinido(s, d.claves)) \\ \\
+      // La primer condicion implica que no hay ciclos ni Nodos con hijos de menor nivel\\
+    }
+
+    ~
+
+    \Abs[dic]{dicc($string$, $\alpha$)}[e]{d}{ \\
+    (\paratodo s : string)(def?(s,d) $\igobs$ estáDefinido(e.raiz, s)) $\land$ \\
+    (\paratodo s : string)(def?(s,d) $\impluego$ obtener(s, d) $\igobs$ significado(e.raiz, s)) $\land$ \\
+    claves(d) $\igobs$ e.claves}\\ 
+  
+  estáDefinido(r, s) $\equiv$ 
+  \textbf{if} vacia?(s) \\
+  \ttab \textbf{then} r $\DRef$ significado $\neq$ NULL \\ 
+  \ttab \textbf{else} r $\DRef$ sigueintes[int(prim(s))] $\neq$ NULL $\yluego$ estáDefinido(r.siguientes[int(prim(s))], fin(s)) 
+  \textbf{fi} \\
+
+  significado(r,s)  $\equiv$ 
+  \textbf{if} vacia?(s) \\
+  \ttab \textbf{then} r $\DRef$ significado \\ 
+  \ttab \textbf{else} significado(r.siguientes[int(prim(s))], fin(s)) 
+  \textbf{fi} \\
+
+\end{Representacion}
+
+
+\begin{Algoritmos}
+
+    \begin{algorithm}[H]{\textbf{iVacía}() $\to$ $res$ : \&dic}
+      \begin{algorithmic}[1]
+           \State // Le asigna un nuevo nodo a la raiz
+           \State $res \gets \tuple{raiz: nuevoNodo()}$				\Comment $\Theta(1)$
+    
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(1)$
+          \Statex \underline{Justificación:} La complejidad de crear un nuevo nodo es $\Theta(1)$
+          \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}[H]{\textbf{iSignificado}(\Inout{d}{dic}, \In{k}{$string$})$\to$ $res$ : \&$\alpha$}
+      \begin{algorithmic}[1]
+        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+        \State \tab $actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
+        \State $\textbf{end for}$                                    
+
+        \State $res \gets *(actual \DRef significado)$                                          \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta |k| veces, se ejecutaran dichas asignaciones |k| veces. Luego la complejidad será $\Theta(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}[H]{\textbf{iClaves}(\In{d}{dic})$\to$ $res$ : conj(string)}
+      \begin{algorithmic}[1]
+        \State $res \gets e.claves$                                            \Comment $\Theta(1)$
+  
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(1)$
+          \Statex \underline{Justificación:} Devolver por referencia un conjunto es $\Theta(1)$.
+          \end{algorithmic}
+    \end{algorithm}
+  
+
+
+    \begin{algorithm}[H]{\textbf{iDefinido?}(\Inout{d}{dic}, \In{k}{$string$}) $\to$ $res$ : bool}
+      \begin{algorithmic}[1]
+        \State $Nodo \ actual \gets d.raiz$                                                      \Comment $\Theta(1)$
+
+        \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                               \Comment $\BigO(|k|)$  
+        \State \tab  $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ \neq  \ NULL) $        \Comment $\Theta(1)$
+        \State \ttab   $\textbf{then} \ actual \gets (actual \DRef siguientes [toInt(c)])$       \Comment $\Theta(1)$
+        \State \ttab  $\textbf{else} \ res \gets false$                                           \Comment $\Theta(1)$
+        \State \tab $\textbf{end if}$
+        \State $\textbf{end for}$                                    
+
+        \State $res \gets ((actual \DRef significado) \neq NULL)$                                                                  \Comment $\Theta(1)$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\BigO(|k|)$
+          \Statex \underline{Justificación:} Los accesos y las asignaciones de punteros son $\Theta(1)$. Como el ciclo se ejecuta a lo sumo |k| veces, se ejecutaran dichas asignaciones |k| veces como máximo. Luego la complejidad será $\BigO(|k|)$.
+          \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}[H]{\textbf{iDefinir}(\Inout{d}{dic}, \In{k}{$string$}, \In{s}{$\alpha$}) $\to$ $res$ : $\&\alpha$}
+      \begin{algorithmic}[1]
+          \State $Nodo \ actual \gets d.raiz$
+          \State $\textbf{for} \ (char \ c \ : \ k) \ \ \textbf{do}$                                          \Comment $\Theta(|k|)$  
+          \State \tab   // Si no tengo siguiente, lo creo
+          \State \tab   $\textbf{if} \ (actual \DRef siguientes [toInt(c)] \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
+          \State \ttab  $\ actual \DRef siguientes[toInt(c)] = nuevoNodo()$                                   \Comment $\Theta(1)$
+          \State \tab   $\textbf{end if}$
+          \State \tab   $actual \gets (actual \DRef siguientes [toInt(c)])$                                   \Comment $\Theta(1)$
+          \State $\textbf{end for}$  
+          \State
+          \State // Estoy parado en el nodo que va a tener el puntero al significado.
+          \State // Reservo un lugar en memoria y hago una copia del provisto en dicho lugar.
+          \State $sig \gets s$                                                                                \Comment $\Theta(copy(s))$
+         
+       \\ \State // Si el significado no está definido, agrego la nueva clave al conjunto de claves 
+          \State $\textbf{if} \ (actual \DRef significado \ == \ NULL) \ \ \textbf{then}$    \Comment $\Theta(1)$
+          \State // Como precondición se que no existe así que la agrego rápido
+          \State AgregarRapido(e.claves, k)                                                                   \Comment $\Theta(copy(k))$
+          \State $\textbf{end if}$
+
+       \\ \State // Asigno al significado del nodo el puntero creado con s y libero la memoria que contenía al valor anterior.
+          \State $(actual \DRef significado) \gets \&sig$                                                     \Comment $\Theta(1)$
+
+
+      \\  \State // Devuelvo por referencia el significado.
+          \State res $\gets sig$
+
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
+          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$. Además $\Theta(|k| + copy(s) + copy(k))$ $\in$ $\Theta(|k| + copy(s))$. 
+          \end{algorithmic}
+    \end{algorithm}
+  
+    \begin{algorithm}[H]{\textbf{inuevoNodo}() $\to$ $res$ : puntero(nodo)} \Comment Función privada que crea un nuevo nodo
+      \begin{algorithmic}[1]
+        \State // Reserva la memoria para un nuevo nodo con significado null y siguientes vacios
+        \State $res \gets \& \tuple{significado: NULL, \ siguientes: arreglo\_estatico[256] \ de\ puntero(Nodo)}$ 				\Comment $\Theta(1)$
+ 
+          \medskip
+          \Statex \underline{Complejidad:} $\Theta(1)$
+          \Statex \underline{Justificación:} El tiempo de creación de un array de 255 posiciones es $\BigO(255) \in \BigO(1)$
+          \end{algorithmic}
+    \end{algorithm}
+  \end{Algoritmos}
 
 \end{document}
