@@ -105,7 +105,7 @@
 }{}
 
 
-\newcommand{\Titulo}[1]{
+\newcommand{\TituloModulo}[1]{
   \vspace*{1ex}\par\noindent\textbf{\large #1}\par
 }
 
@@ -228,7 +228,7 @@
 
     \textbf{se explica con}: \tadNombre{Juego}.
 
-    \Titulo{Operaciones básicas de Juego}
+    \TituloModulo{Operaciones básicas de Juego}
     
     // Generador
 
@@ -309,7 +309,7 @@
     [$\Theta(|pj|)$]
     [devuelve por referencia un conjunto de todos los jugadores del juego]
 
-    \Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
+    \TituloModulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
 
     \begin{tad}{Juego Extendido($\alpha$)}
       \parskip=0pt
@@ -346,7 +346,7 @@
 
   \begin{Representacion}
     
-    \Titulo{Representación de Juego}
+    \TituloModulo{Representación de Juego}
     \begin{Estructura}{juego}[estr]
       \begin{Tupla}[j]
         \Comentario{General}
@@ -443,7 +443,7 @@
 
   \medskip
     
-  \Titulo{Algoritmos del módulo}
+  \TituloModulo{Algoritmos del módulo}
       \medskip
     
   \begin{algorithm}[H]{\textbf{$\bullet$ iIniciar}(\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento)}) $\to$ $res$ : estr}
@@ -1208,7 +1208,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
   \textbf{se explica con}: \tadNombre{Habitación}.
 
-  \Titulo{Operaciones básicas del mapa}
+  \TituloModulo{Operaciones básicas del mapa}
   \InterfazFuncion{nuevoMapa}{\In{n}{nat}}{mapa}%
   {$res \igobs nuevaHab(n)$}%
   [$\Theta(n^2)$]
@@ -1248,7 +1248,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
 \begin{Representacion}
   
-  \Titulo{Representación del mapa}
+  \TituloModulo{Representación del mapa}
   \mbox{}
 
   El objetivo de este módulo es implementar una matriz de tamaño n con vectores de booleanos que indican si una posición está ocupada. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
@@ -1279,7 +1279,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
   %%Si quieren agregar algún abstract antes de los algoritmos, ponganlo aquí%%
 \medskip
 	
- \Titulo{Algoritmos del módulo}
+ \TituloModulo{Algoritmos del módulo}
   	\medskip
   
 \begin{algorithm}[H]{\textbf{iTam}(\In{m}{map}) $\to$ $res$ : nat}
@@ -1367,7 +1367,7 @@ El módulo Dirección provee una dirección y una función que permite invertir las 
 
   \textbf{se explica con}: \tadNombre{Dirección}.
 
-  \Titulo{Operaciones básicas de Dirección}
+  \TituloModulo{Operaciones básicas de Dirección}
 
   \InterfazFuncion{arriba}{}{dir}%
   {$res \igobs  \uparrow$}%
@@ -1400,7 +1400,7 @@ El módulo Dirección provee una dirección y una función que permite invertir las 
   
   El objetivo de este módulo es implementar una dirección utilizando strings. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
 
-  \Titulo{Representación de Dirección}
+  \TituloModulo{Representación de Dirección}
 
   \begin{Estructura}
     {dir}[string]
@@ -1427,7 +1427,7 @@ El módulo Dirección provee una dirección y una función que permite invertir las 
 \bigskip
 
 \begin{Algoritmos}
-  \Titulo{Algoritmos del módulo}
+  \TituloModulo{Algoritmos del módulo}
   \medskip
   
   \begin{algorithm}[H]{\textbf{iArriba}() $\to$ $res$ : dir}
@@ -1493,7 +1493,7 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
 
   \textbf{se explica con}: \tadNombre{Acción}.
 
-  \Titulo{Operaciones básicas de Acción}
+  \TituloModulo{Operaciones básicas de Acción}
 
   \InterfazFuncion{Mover}{\In{d}{dir}}{accion}%
   {$res \igobs mover(d)$}%
@@ -1536,7 +1536,7 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
 
 \end{Interfaz}
 
-\Titulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
+\TituloModulo{Especificación de las operaciones auxiliares utilizadas en la interfaz}
     \begin{tad}{Acción Extendida($\alpha$)}
       \parskip=0pt
       \tadExtiende{\tadNombre{Acción}}
@@ -1551,7 +1551,7 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
 
 \begin{Representacion}
   
-  \Titulo{Representación de Acción}
+  \TituloModulo{Representación de Acción}
   \mbox{}
 
   El objetivo de este módulo es implementar una acción utilizando una tupla de string y dirección. La estructura de representación, su invariante de representación y su función de abstracción son las siguientes.
@@ -1586,7 +1586,7 @@ El módulo Acción provee una acción y una funciones que permiten operar con accio
 Esto no importa ya que la dirección es ignorada en general para esas acciones.
 \medskip
 	
- \Titulo{Algoritmos del módulo}
+ \TituloModulo{Algoritmos del módulo}
   	\medskip
     
   \begin{algorithm}[H]{\textbf{iPasar}() $\to$ $res$ : acción}
@@ -1720,7 +1720,7 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
 
     \textbf{géneros}: \TipoVariable{diccTrie$(string, \alpha)$}.
 
-    \Titulo{Operaciones básicas de diccionario}
+    \TituloModulo{Operaciones básicas de diccionario}
 
     \InterfazFuncion{Vacío}{}{diccTrie$(string, \alpha)$}%
     {$res$ $\igobs$ vacio}%
@@ -1756,7 +1756,7 @@ Esto no importa ya que la dirección es ignorada en general para esas acciones.
 
   \begin{Representacion}
     
-    \Titulo{Representación del diccionario}
+    \TituloModulo{Representación del diccionario}
     \begin{Estructura}{diccTrie$(string, \alpha)$}[dic]
 
       \begin{Tupla}[dic]%
