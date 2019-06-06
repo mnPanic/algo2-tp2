@@ -419,8 +419,6 @@
 
 \section{Módulo Juego}
 
-  Aqui va la descripción
-
   \begin{Interfaz}
     \textbf{generos}: \TipoVariable{juego}.
 
@@ -806,7 +804,7 @@
 
   \begin{algorithm}[H]{$\bullet$ \textbf{iInfoActualFanVivosQueDisp}(\In{j}{estr}) $\to res:$ conj(infoActualFan)}
     \begin{algorithmic}[1]
-      \State $fantasmasVivosQueDisp \gets Vacio()$
+      \State $fantasmasVivosQueDisp \gets Vacio()$        \Comment $\Theta(1)$
       \\
       \State // Recorro los fantasmas vivos y agrego a res los que estan vivos y disparando
       \For{itInfoFan : \ j.infoFantasmasVivos}                 \Comment $\Theta(\#fv)$
@@ -843,7 +841,7 @@
       \State $evtPJ \gets iEventoActualPJ(infoPJ)$                      \Comment $\Theta(1)$
       \\
       \State // Reinicio los disparos de fantasmas
-      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
+      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(1)$
       \\
       \State // Modifico el mapa de disparos (solo si dispara)
       \State $iActualizarMapaDisparosConPJ(j,\ evtPJ)$             \Comment $\BigO(m)$
@@ -919,12 +917,10 @@
       \\
       \State // Vacío la lista de disparos del ultimo paso
       \State // Al asignarle vacío, se libera la memoria que ocupaba anteriormente.
-      \State $j.disparosFanUltimoPaso \gets Vacio()$            \Comment $\BigO(Tam(j.disparosFanUltimoPaso))$
+      \State $j.disparosFanUltimoPaso \gets Vacio()$            \Comment $\BigO(1)$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(\#fv * m)$
-      \Statex \underline{Justificación:} Vaciar un arreglo de longitud n es $\Theta(n)$. 
-      Este arreglo en particular siempre tendrá longitud $\BigO(\#fv * m)$, ya que se llena con los disparos de los fantasmas que estén vivos en ese paso.
-      Depende de que tan laxo uno sea con el manejo de memoria, podría llegar a tomarse como $\Theta(1)$.
+      \Statex \underline{Complejidad:} $\BigO(1)$
+      \Statex \underline{Justificación:} Liberar la memoria de un conjunto de tuplas de naturales es $\BigO(1)$.
     \end{algorithmic}
   \end{algorithm}
 
@@ -989,9 +985,9 @@
       \State $muereFanEspecial \gets false$
       \\
       \State // Recorro los fantasmas vivos con un iterador
-      \State $itFanVivos \gets CrearIt(j.infoFantasmasVivos)$ \Comment $\Theta(\#fv)$
+      \State $itFanVivos \gets CrearIt(j.infoFantasmasVivos)$ 
       \\
-      \While{HaySiguiente(itFanVivos)}
+      \While{HaySiguiente(itFanVivos)} \Comment $\Theta(\#fv)$
         \State // Obtengo su info
         \State $infoFan \gets Siguiente(Siguiente(itFanVivos))$ \Comment $\Theta(1)$
         \\
@@ -1074,7 +1070,7 @@
       \\
       \State // Reinicio el mapa de disparos y los disparos de los fantasmas
       \State $iReiniciarMapaDisparos(j)$  \Comment $\Theta(m^2)$
-      \State $iReiniciarDisparosFan(j)$   \Comment $\BigO(\#fv * m)$
+      \State $iReiniciarDisparosFan(j)$   \Comment $\BigO(1)$
       \\
       \State // Reinicio los fantasmas
       \State $iReiniciarFantasmas(j)$  \Comment $\Theta(\#f)$
@@ -1112,8 +1108,8 @@
       \State // Post: todos los fantasmas están en las estructuras de vivos
       \\
       \State // Vacío la información de los fantasmas vivos, liberando la memoria que ocupaba.
-      \State $infoFantasmasVivos \gets Vacio()$         \Comment $\Theta(\#fv)$
-      \State $infoActualFantasmasVivos \gets Vacio()$   \Comment $\Theta(\#fv)$
+      \State $infoFantasmasVivos \gets Vacio()$         \Comment $\Theta(1)$
+      \State $infoActualFantasmasVivos \gets Vacio()$   \Comment $\Theta(1)$
       \\
       \State // Recorro $infoFantasmas$ con un iterador
       \State $itInfoFan \gets CrearIt(j.infoFantasmas)$ \Comment $\Theta(1)$
@@ -1147,8 +1143,8 @@
       \State // Post: todos los fantasmas están en las estructuras de vivos
       \\
       \State // Vacío las estructuras de vivos
-      \State $j.infoActualJugadoresVivos \gets Vacio()$ \Comment $\BigO(\#jv * |pjMasLargo|)$
-      \State $j.infoJugadoresVivos \gets Vacio()$       \Comment $\BigO(\#jv * Longitud(eventoMasLargo))$
+      \State $j.infoActualJugadoresVivos \gets Vacio()$ \Comment $\BigO(1)$
+      \State $j.infoJugadoresVivos \gets Vacio()$       \Comment $\BigO(1)$
       \\
       \State // Obtengo sus localizaciones
       \State $localPJs \gets localizarJugadores(j.mapa, Claves(j.infoJugadores))$ \Comment $\Theta(locJugadores)$
@@ -1159,7 +1155,7 @@
       \State \tab $infoPJ \gets Significado(j.infoJugadores, pj)$   \Comment $\Theta(|pj|)$
       \\
       \State \tab // Vacío los eventos, así liberando la memoria que ocupaban
-      \State \tab $infoPJ.eventos \gets Vacia()$    \Comment $\Theta(Longitud(infoPJ.eventos))$
+      \State \tab $infoPJ.eventos \gets Vacia()$    \Comment $\Theta(1)$
       \\
       \State \tab // Creo una lista de eventos con la localización y se la seteo
       \State \tab $infoPJ.eventos \gets iCrearEventosConLocalizacion(localizacion)$ \Comment $\Theta(1)$
@@ -1345,7 +1341,7 @@
       \State $j.paso \gets j.paso + 1$            \Comment $\Theta(1)$
       \\
       \State // Reinicio los disparos de fantasmas
-      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(\#fv * m)$
+      \State $iReiniciarDisparosFan(j)$                             \Comment $\BigO(1)$
       \\
       \State // Actualizo las acciones de los fantasmas,
       \State // actualizando el mapa de disparos si disparan.
@@ -1357,7 +1353,7 @@
       \State // Agrego los 'pasar' faltantes
       \State $iAgregarPasarFaltantes(j)$          \Comment $\Theta(\#jv)$
       \medskip
-      \Statex \underline{Complejidad:} $\BigO(2(\#fv * m) + \#jv) \in \BigO(\#fv * m + \#jv)$
+      \Statex \underline{Complejidad:} $\BigO(\#fv * m + \#jv)$
     \end{algorithmic}
   \end{algorithm}
 
@@ -1379,7 +1375,7 @@
 
   \begin{algorithm}[H]{\textbf{iFantasmas}(\In{j}{estr}) $\to res:$ conj(vector(evento))}
     \begin{algorithmic}[1]
-      \State $res \gets Vacio()$
+      \State $res \gets Vacio()$ \Comment $\Theta(1)$
       \State $\textbf{for} \ (infoFan : \ j.infoFantasmas) \ \ \textbf{do}$                         \Comment $\BigO(\#f * Longitud(eventoMasLargo))$
       \State \tab  $AgregarRapido(res, infoFan.eventos)$                             \Comment $\Theta(copy(infoFan.eventos)) = \Theta(Longitud(infoFan.eventos))$
       \State $\textbf{end for}$
@@ -1460,7 +1456,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
   \InterfazFuncion{Copiar}{\In{m}{mapa}}{mapa}%
   {$res$ $\igobs$ $m$}
-  [$\Theta(m.tamano^2)$]
+  [$\Theta(m^2)$]
   [devuelve si una posición está ocupada.]
   [se devuelve una copia del elemento ingresado por referencia.]
 
