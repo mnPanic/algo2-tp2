@@ -399,7 +399,7 @@
 
           \medskip
           \Statex \underline{Complejidad:} $\Theta(|k| + copy(s))$
-          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$.
+          \Statex \underline{Justificación:} Siempre se recorre toda la palabra para definirla, entonces el $for$ siempre tiene $|k|$ ciclos. La dereferenciación y comparación de punteros, e indexación en arreglos estáticos son $\Theta(1)$. Además $\Theta(|k| + copy(s) + copy(k))$ $\in$ $\Theta(|k| + copy(s))$. 
           \end{algorithmic}
     \end{algorithm}
   
@@ -433,7 +433,7 @@
     $\bullet$ \InterfazFuncion{iniciar}{\In{m}{mapa}, \In{pjs}{conj(jugador)}, \In{eventosFan}{vector(evento))}}{juego}%
     [$\neg vacio(pjs) \land (\forall e: evento) (esta?(e,\ eventosFan) \impluego e.pos \in libres(m))$]
     {$res \igobs nuevoJuego(m, pjs, eventosFan)$}%
-    [$\Theta(?)$ TODO]
+    [$\Theta()$]
     [crea un nuevo juego con el mapa dado, un conjunto de jugadores, y los eventos de un fantasma.]
 
     // Operaciones pedidas
@@ -531,18 +531,21 @@
       
       \tadAxiomas
       \tadAxioma{infoActualPjVivos($j$)}{infoActualPjVivosAux(j, jugadores(j))}
-      \tadAxioma{infoActualPjVivosAux($j, js$)}{\IF jugadorVivo(dameuno(js), j) THEN Ag($\tuple{posJugador(dameuno(js), j), dirJugador(dameuno(js),\ j)}$, \\infoActualPjVivosAux(j, sinuno(js))) 
-      ELSE infoActualPjVivosAux(j, sinuno(js)) 
-      FI}
+      \tadAxioma{infoActualPjVivosAux($j, js$)}{\textbf{if} $\emptyset?(js)$ \textbf{then} $\emptyset$ \textbf{else} \\
+        \IF jugadorVivo(dameUno(js), j) THEN Ag($\tuple{posJugador(dameUno(js), j), dirJugador(dameUno(js),\ j)}$, \\infoActualPjVivosAux(j, sinUno(js))) 
+      ELSE infoActualPjVivosAux(j, sinUno(js)) 
+      FI \textbf{fi}\\}
       \tadAxioma{infoActualFanVivos($j$)}{infoActualPjVivosAux(j, jugadores(j)}
-      \tadAxioma{infoActualFanVivosAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) THEN Ag($\tuple{posFantasma(dameuno(fs), j), dirFantasma(dameuno(fs),\ j)}$, \\infoActualFanVivosAux(j, sinuno(fs))) 
-      ELSE infoActualFanVivosAux(j, sinuno(fs)) 
-      FI}
+      \tadAxioma{infoActualFanVivosAux($j, fs$)}{ \textbf{if} $\emptyset?(fs)$ \textbf{then} $\emptyset$ \textbf{else} \\
+      \IF fantasmaVivo(dameUno(fs), j) THEN Ag($\tuple{posFantasma(dameUno(fs), j), dirFantasma(dameUno(fs),\ j)}$, \\infoActualFanVivosAux(j, sinUno(fs))) 
+      ELSE infoActualFanVivosAux(j, sinUno(fs)) 
+      FI \textbf{fi}\\}
       \tadAxioma{infoActualFanEspecial($j$)}{$\tuple{posFantasma(fantasmaEspecial(j), j), \ dirFantasma(fantasmaEspecial(j), j)}$}
       \tadAxioma{infoActualFanVivosQueDisp($j$)}{infoActualFanVivosAux(j, infoActualFanVivosQueDisAux(j, fantasmas(j)))}
-      \tadAxioma{infoActualFanVivosQueDispAux($j, fs$)}{\IF fantasmaVivo(dameuno(fs), j) $\land$ disparando(dameuno(fs), step(j))  
-      THEN Ag(dameuno(fs), infoActualFanVivosQueDispAux(j, sinuno(fs)))
-      ELSE infoActualFanVivosQueDispAux(j, sinuno(fs)) FI}
+      \tadAxioma{infoActualFanVivosQueDispAux($j, fs$)}{\textbf{if} $\emptyset?(fs)$ \textbf{then} $\emptyset$ \textbf{else} \\
+      \IF fantasmaVivo(dameUno(fs), j) $\land$ disparando(dameUno(fs), step(j))  
+      THEN Ag(dameUno(fs), infoActualFanVivosQueDispAux(j, sinUno(fs)))
+      ELSE infoActualFanVivosQueDispAux(j, sinUno(fs)) FI \textbf{fi}\\}
 
     \end{tad}
   \end{Interfaz}
@@ -1387,7 +1390,7 @@ El módulo Mapa provee una habitación en la que se puede ocupar y consultar por u
 
   \InterfazFuncion{Copiar}{\In{m}{mapa}}{mapa}%
   {$res$ $\igobs$ $m$}
-  [$\Theta(????)$]
+  [$\Theta(m.tamano^2)$]
   [devuelve si una posición está ocupada.]
   [se devuelve una copia del elemento ingresado por referencia.]
 

@@ -1,10 +1,3 @@
-General
-    - Chequear las cosas que van por ref y copia
-    - Chequear cuando eliminamos punteros que estemos liberando la memoria.
-    - Chequear que pedimos la memoria al crear  cosas que nos interesa que permanezcan.
-
 Juego
-    - (TAD) Precondicion en iniciar -> evt fantasma no vacio Y DARLE FORMA NECESARIA PARA NUESTRO REP
-    - Pre y Post condiciones de funciones auxiliares
     - Convertir lista de eventos de pj a vector de fantasmas.
-    - Agregar que al ejecutar un "pasar" a todos los jugadores se les agrega "pasar".
+    - Ver lo de liberar memoria.
